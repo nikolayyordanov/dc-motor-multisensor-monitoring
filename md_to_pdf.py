@@ -17,6 +17,7 @@ Usage:
 
 from __future__ import annotations
 
+import glob
 import os
 import re
 import sys
@@ -25,31 +26,107 @@ import markdown
 from xhtml2pdf import pisa
 
 
+def _find_dejavu_dir() -> str | None:
+    """Locate the DejaVu TrueType fonts bundled with matplotlib.
+
+    DejaVu Sans / Sans Mono cover Latin, Cyrillic, Greek, arrows and the math
+    symbols used in this report, so registering them fixes the tofu (black
+    box) rendering that the built-in Helvetica fonts produce for Cyrillic.
+    """
+    try:
+        import matplotlib
+    except ImportError:
+        return None
+    ttf = os.path.join(os.path.dirname(matplotlib.__file__),
+                       "mpl-data", "fonts", "ttf")
+    if os.path.exists(os.path.join(ttf, "DejaVuSans.ttf")):
+        return ttf
+    hits = glob.glob(os.path.join(ttf, "DejaVuSans.ttf"))
+    return ttf if hits else None
+
+
+_DEJAVU_DIR = _find_dejavu_dir()
+
+
+def _register_fonts() -> bool:
+    """Register the DejaVu TTFs with reportlab so xhtml2pdf can use them.
+
+    Registering directly (rather than via CSS @font-face) avoids xhtml2pdf's
+    temp-file font handling, which fails on Windows. Returns True on success.
+    """
+    if not _DEJAVU_DIR:
+        return False
+    from reportlab.pdfbase import pdfmetrics
+    from reportlab.pdfbase.pdfmetrics import registerFontFamily
+    from reportlab.pdfbase.ttfonts import TTFont
+    from xhtml2pdf.default import DEFAULT_FONT
+
+    d = _DEJAVU_DIR
+    faces = {
+        "Body": "DejaVuSans.ttf",
+        "Body-Bold": "DejaVuSans-Bold.ttf",
+        "Body-Oblique": "DejaVuSans-Oblique.ttf",
+        "Body-BoldOblique": "DejaVuSans-BoldOblique.ttf",
+        "Mono": "DejaVuSansMono.ttf",
+        "Mono-Bold": "DejaVuSansMono-Bold.ttf",
+    }
+    try:
+        for name, fn in faces.items():
+            pdfmetrics.registerFont(TTFont(name, os.path.join(d, fn)))
+    except Exception as exc:  # noqa: BLE001
+        print(f"  [warning] could not register DejaVu fonts: {exc}")
+        return False
+    registerFontFamily("Body", normal="Body", bold="Body-Bold",
+                       italic="Body-Oblique", boldItalic="Body-BoldOblique")
+    registerFontFamily("Mono", normal="Mono", bold="Mono-Bold",
+                       italic="Mono", boldItalic="Mono-Bold")
+    # Make xhtml2pdf resolve the CSS family names to the registered fonts.
+    DEFAULT_FONT["body"] = "Body"
+    DEFAULT_FONT["mono"] = "Mono"
+    return True
+
+
+_FONTS_OK = _register_fonts()
+
+
+# Use the Unicode DejaVu faces when present, else fall back to the built-ins.
+_BODY = '"Body", Helvetica, Arial, sans-serif' if _FONTS_OK \
+    else "Helvetica, Arial, sans-serif"
+_MONO = '"Mono", "Courier New", monospace' if _FONTS_OK \
+    else '"Courier New", monospace'
+
+
 # Simple print-friendly stylesheet (xhtml2pdf supports a subset of CSS 2.1).
-CSS = """
-@page { size: A4; margin: 1.8cm 1.6cm; }
-body { font-family: Helvetica, Arial, sans-serif; font-size: 10.5pt;
-       line-height: 1.4; color: #1a1a1a; }
-h1 { font-size: 20pt; color: #0b3d66; border-bottom: 2px solid #0b3d66;
-     padding-bottom: 4px; margin-top: 4px; }
-h2 { font-size: 15pt; color: #0b3d66; border-bottom: 1px solid #bcd; margin-top: 18px; }
-h3 { font-size: 12.5pt; color: #145a8d; margin-top: 14px; }
-h4 { font-size: 11pt; color: #145a8d; }
-p, li { font-size: 10.5pt; }
-code { font-family: "Courier New", monospace; background: #f2f4f7;
-       padding: 1px 3px; font-size: 9.5pt; }
-pre { background: #f2f4f7; border: 1px solid #d6dde5; padding: 8px;
-      font-size: 9pt; white-space: pre-wrap; }
-table { border-collapse: collapse; width: 100%; margin: 8px 0;
-        table-layout: fixed; }
-th, td { border: 1px solid #b9c4cf; padding: 4px 6px; font-size: 9pt;
+CSS = f"""
+@page {{ size: A4; margin: 1.8cm 1.6cm; }}
+body {{ font-family: {_BODY}; font-size: 10.5pt;
+       line-height: 1.4; color: #1a1a1a; }}
+h1 {{ font-size: 20pt; color: #0b3d66; border-bottom: 2px solid #0b3d66;
+     padding-bottom: 4px; margin-top: 4px; }}
+h2 {{ font-size: 15pt; color: #0b3d66; border-bottom: 1px solid #bcd; margin-top: 18px; }}
+h3 {{ font-size: 12.5pt; color: #145a8d; margin-top: 14px; }}
+h4 {{ font-size: 11pt; color: #145a8d; }}
+p, li {{ font-size: 10.5pt; }}
+code {{ font-family: {_MONO}; background: #f2f4f7;
+       padding: 1px 3px; font-size: 9.5pt; }}
+pre {{ background: #f2f4f7; border: 1px solid #d6dde5; padding: 8px;
+      font-size: 9pt; white-space: pre-wrap; }}
+table {{ border-collapse: collapse; width: 100%; margin: 8px 0;
+        table-layout: fixed; }}
+th, td {{ border: 1px solid #b9c4cf; padding: 4px 6px; font-size: 9pt;
          text-align: left; vertical-align: top;
-         word-wrap: break-word; word-break: break-word; }
-th { background: #e7eef5; color: #0b3d66; }
-blockquote { border-left: 3px solid #9bbcd6; margin: 8px 0; padding: 4px 10px;
-             color: #33475b; background: #f6f9fc; }
-img { max-width: 480px; }
-hr { border: 0; border-top: 1px solid #ccd; }
+         word-wrap: break-word; word-break: break-word; }}
+th {{ background: #e7eef5; color: #0b3d66; }}
+blockquote {{ border-left: 3px solid #9bbcd6; margin: 8px 0; padding: 4px 10px;
+             color: #33475b; background: #f6f9fc; }}
+img {{ max-width: 480px; }}
+hr {{ border: 0; border-top: 1px solid #ccd; }}
+/* Table of contents */
+.toc {{ background: #f6f9fc; border: 1px solid #d6dde5; padding: 6px 14px;
+       margin: 10px 0 18px; }}
+.toc ul {{ list-style: none; margin: 2px 0; padding-left: 14px; }}
+.toc > ul {{ padding-left: 0; }}
+.toc a {{ color: #145a8d; text-decoration: none; }}
 """
 
 
@@ -127,7 +204,10 @@ def convert(md_path: str, pdf_path: str) -> bool:
     html_body = markdown.markdown(
         md_text,
         extensions=["tables", "fenced_code", "codehilite", "toc", "sane_lists"],
-        extension_configs={"codehilite": {"noclasses": True}},
+        extension_configs={
+            "codehilite": {"noclasses": True},
+            "toc": {"toc_depth": "2-3"},
+        },
     )
 
     html_body = add_colgroups(html_body)

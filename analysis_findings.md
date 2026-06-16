@@ -13,6 +13,12 @@ time/voltage quantization.
 
 ---
 
+**Contents**
+
+[TOC]
+
+---
+
 ## 1. Side-by-side summary
 
 The two CSV files below are the **same acquisition**; the binary file is a
