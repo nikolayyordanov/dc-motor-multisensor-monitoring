@@ -1,0 +1,29 @@
+# --- Raw measurement data (too large for git / store externally) ---
+# Oscilloscope current captures
+*.csv
+*.bin
+*.wfm
+# Acoustic recordings
+*.wav
+# Raw data folders
+вибрации/
+звук/
+ток осцилоскоп/
+# Keep the small CSV schema (config, not data)
+!*.schema.json
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.vscode/
+
+# --- Scratch ---
+*_thumb.*
+tmp_*.py
