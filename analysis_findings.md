@@ -1063,6 +1063,156 @@ probe gives the actual current at the `1×` setting, **`1v.bin` is correct** and
 > Затова не стягай повече мащаба (рискуваш пика при 100%+реверс) — за повече
 > битове ползвай **High-Res режим** (§7.3) при същия 1 V/div.
 
+### 11.5 Later setup change — `1.50 V/div, 0.00 V offset, centred`
+
+A subsequent scope photo shows a **changed vertical setup**: `CH1 1.50 V/div`
+with **offset 0.00 V** (trace centred), still `1 MSa/s / 20 Mpts / 2.00 s/div`
+(20 s window), STOP. A capture from this configuration was then exported as
+**`90percent.bin`** (90 % load, 2026-06-16 19:15:07), so the screen reading is
+now **confirmed by the data**.
+
+**Verdict: it "catches everything" but it is a step *back* on vertical
+resolution** — and the exported `90percent.bin` proves it is **worse** than
+estimated from the photo alone. Two separate issues:
+
+| Aspect | This setup — measured in `90percent.bin` | Better (§11.4) |
+|---|---|---|
+| Time axis (1 MSa/s, 20 Mpts, 20 s) | ✅ confirmed exactly (20 M pts, 0→20 s, 1 MSa/s) | same |
+| Clipping | ✅ none — min −283.6 mV, max 850.8 mV, far from rails | none |
+| **Offset placement** | ⚠️ **0 V centred wastes most of the screen** — current is unipolar (≥ 0); signal sits near mid-screen | 0 near the **bottom rail** (§7.2/§10.3) |
+| **Vertical fill** | ⚠️ **1.134 V p-p at 1.50 V/div ≈ 0.76 of 8 divisions (~9.5 % of screen)** | 80–90 % of screen |
+| **Scale** | ⚠️ 1.50 V/div is **coarser** than the validated 1 V/div | **1 V/div** |
+| **Distinct levels** | ⚠️ **only 17** (vs 122 in `1v.bin`) | ~122+ |
+| Effective bits | ⚠️ **~4.0 bits** — nearly **3 bits worse** than the ~6.9 of `1v.bin` | ~6.9, or +1–4 with High-Res |
+| Dominant freq | 300 Hz (converter ripple) still clearly resolved | 300 Hz |
+
+> **Measured confirmation (`90percent.bin`):** 20,000,000 pts at 1 MSa/s over
+> 0–20 s; CH1 min −283.6 mV / max 850.8 mV / p-p **1.134 V**; **17 distinct
+> levels**, LSB **70.9 mV → ~4.0 effective bits**; dominant **300 Hz**. The
+> ~1.1 V signal on a 1.50 V/div (≈12 V full-screen) range fills **<1 division**,
+> which is exactly why so few ADC codes are used.
+
+> **Is the low fill just because this was steady work, no reverse? — Yes,
+> partly (verified).** A per-second envelope scan of `90percent.bin` shows a
+> **completely uniform** signal: per-second RMS ~170 mV (std ~1 mV), per-second
+> p-p 851–993 mV (**CV only 4.7 %**), the first second is no larger than the rest
+> (**no startup inrush**), and there is **no large bipolar excursion (no
+> reverse)**. So the small 1.134 V span is indeed because the record is pure
+> steady 90 % running — the **1.50 V/div range was reserving headroom for
+> start/reverse peaks that this capture never contains**, so that headroom is
+> wasted. This **refines** the diagnosis rather than excusing it, and a second
+> clue confirms both factors stack: `1v.bin` reached **5.06 V** (big excursions)
+> and used **122 levels**, while this steady ripple peaks at only **0.85 V** and
+> uses **17**. The core 8-bit tradeoff stands: you cannot get **both** high
+> steady-state resolution **and** capture large transients on one fixed scale —
+> scale a **steady** record for steady state (tight V/div, 0 at the bottom), and
+> capture **transients as separate records** (§9.6/§12.6) or use **High-Res**.
+
+**Why this happened:** the vertical range was widened to fit the start/reverse
+**current peaks**, so it does catch the transients — but at the cost of
+**steady-state resolution**, because the running current then fills only a sliver
+of the screen and half the range (below 0 V) is unused.
+
+**Recommended fix (still catches everything):**
+1. **Put 0 at the bottom**, do **not** centre it — for a unipolar current this
+   reclaims the whole screen for the positive signal (the §7.2/§10.3 strategy you
+   already validated).
+2. **Tighten back to 1 V/div** (the validated worst-case for 100 %+reverse,
+   §11.4) so the running ripple **and** the peaks fill **80–90 %** without
+   clipping.
+3. If you must keep a wide range to capture large transient spikes, **turn on
+   `Acquire → High Res`** (§7.3) to recover ~1–4 bits instead of losing them to
+   the coarse, centred scale.
+
+> **Накратко (BG):** Новата настройка (`1.50 V/div`, offset **0.00 V**,
+> центрирана, `1 MSa/s / 20 Mpts / 20 s`) наистина **хваща всичко** (няма
+> клипинг, целият запис) — **времевата ос е отлична**. НО е **стъпка назад по
+> вертикална резолюция**, и **изнесеният `90percent.bin` го доказва**: само
+> **17 различни нива → ~4.0 бита** (срещу 122 нива / ~6.9 бита при `1v.bin`) —
+> почти **3 бита по-зле**. Сигналът е едва **1.134 V p-p**, а при 1.50 V/div
+> (≈12 V цял екран) запълва **под 1 деление (~9.5 %)**, затова се ползват толкова
+> малко ADC кодове. При **еднополярен ток** центрираната 0 V **хаби по-голямата
+> част** от екрана. **Защо:** разширили сте обхвата за да съберете пиковете при
+> пуск/реверс — но за сметка на резолюцията в установен режим. **Поправка (пак
+> хваща всичко):** върни **0 на дъното** (не центрирано), стегни обратно към
+> **1 V/div** да запълни 80–90 % без клипинг; ако държиш широкия обхват за
+> транзиентните пикове — включи **High-Res** (§7.3), за да върнеш битовете.
+>
+> **Заради ли е, че е само установена работа без реверс? — Да, отчасти
+> (проверено).** Сегментен анализ на `90percent.bin` (по 1 s) показва
+> **напълно еднороден** сигнал: RMS ~170 mV всяка секунда (std ~1 mV), p-p
+> 851–993 mV (**CV само 4.7 %**), първата секунда **не е по-голяма** (няма пусков
+> пик), и **няма голяма биполярна екскурзия (няма реверс)**. Значи малкият размах
+> 1.134 V наистина е защото записът е чист установен режим 90 % — обхватът
+> **1.50 V/div пазеше запас за пуск/реверс пикове, които този запис ги няма**, и
+> този запас е похабен. Това **уточнява**, а не оправдава диагнозата; и втора
+> улика потвърждава, че двата фактора се наслагват: `1v.bin` стига **5.06 V**
+> (големи екскурзии) и ползва **122 нива**, а тази установена пулсация стига едва
+> **0.85 V** и ползва **17**. Основният компромис при 8 бита остава: не можеш да
+> имаш **едновременно** висока резолюция в установен режим **и** да хванеш
+> големи транзиенти на един фиксиран мащаб — мащабирай **установения** запис за
+> установен режим (стегнат V/div, 0 на дъното), а **транзиентите снимай отделно**
+> (§9.6/§12.6) или ползвай **High-Res**.
+
+### 11.6 The unified setup — one fixed configuration for every regime
+
+The whole study needs **one fixed scope configuration** reused for *every*
+capture (all loads, plus startup/reverse), so files stay **directly
+comparable** — re-scaling per regime breaks comparability. The conflict is the
+8-bit tradeoff: a single fixed scale must (a) **survive the worst-case peak**
+(startup inrush / 100 %+reverse) without clipping, yet (b) still give usable
+**steady-state resolution** at every load. On 8-bit hardware the only way to get
+both is a **wide-enough fixed range plus High-Res**, not a tighter scale.
+
+**Recommended unified configuration:**
+
+| Setting | Value | Why |
+|---|---|---|
+| Vertical scale | **1.00 V/div** (fixed) | Validated worst-case: fits 100 %+reverse without clipping (§11.4); **not** 1.50 V/div (needlessly coarse) |
+| Offset | **0 V at the bottom rail** (offset down, **not** centred) | Current is unipolar (≥ 0) → reclaim the whole screen for the positive signal (§7.2/§10.3); the centred 0 V of `90percent.bin` wasted half the screen |
+| Acquisition | **`Acquire → High Res` ON** | The key enabler: recovers ~2–4 bits within the fixed range, so steady, small-signal records (like `90percent.bin`) are no longer stuck at ~4 bits |
+| Coupling | **DC** | Preserves the DC/offset component of the armature current |
+| Horizontal | **1 MSa/s, 20 Mpts, 20 s** | Already validated (§11.4): full record, no aliasing, covers 300 Hz + commutation |
+| Export | **Memory → `.bin`** | Self-describing, exact, compact (§5, §8) |
+
+**Why this single setup works for all regimes:**
+- **Worst-case peaks** (startup, 100 %+reverse, up to ~5 V seen in `1v.bin`) fit
+  inside the 8 V screen (8 div × 1 V/div) with 0 at the bottom → **no clipping**,
+  ever, on any capture.
+- **Steady, small signals** (e.g. 90 % running ≈ 1.1 V p-p, filling only ~14 % of
+  the screen) would natively give only ~5 raw bits — but **High-Res averages the
+  heavy oversampling** (1 MSa/s on a 300 Hz signal) back up to **~7–9 effective
+  bits**. This is what rescues exactly the case `90percent.bin` failed.
+- Every file shares **identical scale + offset**, so loads and conditions
+  (A/B/C of §12.6) are directly comparable with no per-file re-scaling.
+
+**What to stop doing:** the `1.50 V/div, 0 V centred` setup (§11.5) — it is
+coarser than needed, wastes half the screen on a unipolar signal, and without
+High-Res collapses to ~4 bits on steady records. Replace it everywhere with the
+table above.
+
+> **One-line rule:** *Fix the range for the worst-case transient (1 V/div, 0 at
+> the bottom) and turn on High-Res — then never touch the vertical controls
+> again for the whole campaign.*
+
+> **Накратко (BG):** За **единна постановка** трябва **една фиксирана настройка**
+> за всички записи (всички товари + пуск/реверс), за да са файловете **директно
+> сравними**. Конфликтът е 8-битовият компромис: фиксираната скала трябва и
+> **да побере най-големия пик** (пуск/100 %+реверс) без клипинг, и да дава
+> **използваема резолюция в установен режим**. Решението е **достатъчно широк
+> фиксиран обхват + High-Res**, а не по-стегната скала. **Препоръка:** **1 V/div**
+> (валидиран worst-case, §11.4), **0 на дъното** (не центрирано — токът е
+> еднополярен), **`Acquire → High Res` ВКЛ.**, **DC**, **1 MSa/s / 20 Mpts /
+> 20 s**, **Memory → `.bin`**. Така: пиковете (до ~5 V от `1v.bin`) се събират в
+> 8 V екран без клипинг; а малките установени сигнали (90 % ≈ 1.1 V, ~14 % от
+> екрана, иначе ~5 бита) се вдигат до **~7–9 ефективни бита** чрез High-Res
+> (усреднява огромния oversampling при 1 MSa/s). Всички файлове са с **еднакъв
+> мащаб и офсет** → директно сравними (A/B/C, §12.6). **Спри** настройката
+> `1.50 V/div, 0 V центрирано` (§11.5) — груба е, хаби половината екран и пада до
+> ~4 бита. **Правило:** *фиксирай обхвата за най-тежкия транзиент (1 V/div, 0 на
+> дъното) + High-Res — и не пипай повече вертикалните настройки до края на
+> кампанията.*
+
 ---
 
 ## 12. Acoustic + vibration folders (`звук/`, `вибрации/`) and a 1 m phone test
