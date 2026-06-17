@@ -1283,6 +1283,64 @@ remains optional.
 
 ---
 
+### 11.8 High-Res re-test (`100%rev_V2.bin`) and why finer bits need *programming*
+
+A second 100 %+reverse file (`100%rev_V2.bin`, captured to check whether
+High-Res had finally taken effect) was analysed. **It is byte-for-byte the same
+class of 8-bit record as before — High-Res did *not* reach the file.**
+
+**Measured `100%rev_V2.bin`:**
+
+| Check | Measured | Same as `100%revers0.bin`? |
+|---|---|---|
+| Samples / rate / window | 20 M @ 1 MSa/s, 0–20 s | ✅ identical |
+| Peak / p-p | 5.105 V / 5.317 V, unipolar, no clip | ✅ same heavy regime, captured well |
+| Distinct levels | **76** | ✅ (~78 before) |
+| Quantisation LSB | **70.897 mV** | ✅ exactly the same step |
+| Effective bits | **~6.2** | ✅ no improvement |
+| Grid test | every value on the same coarse grid, 100 % slot fill, off-grid residual 0.0003 | ✅ pure 8-bit |
+| PSD noise floor | roughly flat to Nyquist; a real spur survives at **31–60 kHz**, *above* the High-Res cutoff fs/32 (~31 kHz) | ✅ Normal mode — no High-Res low-pass |
+
+The decisive evidence is the **spur living above 31 kHz**: an active High-Res
+filter (band-limit ≈ fs/32) would have crushed it. Its survival proves no
+High-Res filtering is present in the data.
+
+**Root cause — and why we are *not* chasing it further.** The front-panel save
+menu offers only the *file type* (`.bin` / `.csv` / `.ref` …); it has **no
+bit-depth choice**, so a panel `.bin` export is **always BYTE (8-bit)**,
+regardless of whether High-Res is switched on. The 8-bit ADC's native single-shot
+limit is therefore what every file shows.
+
+**To actually capture the extra High-Res bits you must drive the scope over
+SCPI (i.e. write a program) — it cannot be done from the front panel:**
+
+| Where | What it offers | Bit depth |
+|---|---|---|
+| Front panel `Save → Type` (User Guide, *Store and Recall*) | `.png/.bmp/.ref/.bin/.csv/.stp` | `.bin`/`.csv` = **8-bit BYTE only** |
+| SCPI `:WAVeform` subsystem (Programming Guide) | `:WAV:FORMat WORD\|BYTE\|ASCii`, `:WAV:MODE RAW`, `:WAV:DATA?` | **WORD = 16-bit** (carries High-Res bits) |
+
+A working High-Res capture would need a `pyvisa` (USB/LAN) script doing roughly:
+`:ACQuire:TYPE HRESolution` → `:WAV:SOURce CHAN1` → `:WAV:MODE RAW` →
+`:WAV:FORMat WORD` → read `:WAV:PREamble?` + block `:WAV:DATA?`.
+
+➜ **Decision: we keep the current 8-bit setup as-is** (§11.7 already proves it is
+adequate for a quality study). Pursuing finer vertical resolution would require
+writing an SCPI acquisition program, which is **out of scope** for this campaign.
+
+> **Накратко (BG):** Новият файл `100%rev_V2.bin` е **същият 8-бит запис** — High-Res
+> пак не е стигнал до данните: **76 нива, LSB 70.897 mV, ~6.2 бита**, чиста 8-битова
+> решетка, а в спектъра **оцелява смущение при 31–60 kHz** (над среза fs/32) — т.е.
+> няма High-Res филтър. Причината: менюто за запис на осцилоскопа дава само **типа
+> файл**, но **не и битова дълбочина** — `.bin` от панела е **винаги BYTE (8-бит)**.
+> За да хванем реално High-Res битовете трябва **WORD (16-бит)**, а WORD се избира
+> **само през SCPI** (`:WAVeform:FORMat WORD`, `:WAV:MODE RAW`, `:WAV:DATA?`) — т.е.
+> **трябва да се програмира** (напр. `pyvisa` скрипт по USB/LAN с
+> `:ACQuire:TYPE HRESolution`). **Решение:** оставяме настройките така — §11.7 вече
+> доказва, че стигат за качествено изследване; по-фина разделителна способност би
+> изисквала да напишем програма, което е извън обхвата на тази кампания.
+
+---
+
 ## 12. Acoustic + vibration folders (`звук/`, `вибрации/`) and a 1 m phone test
 
 Both companion datasets were analysed with the new helper
