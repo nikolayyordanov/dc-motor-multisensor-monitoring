@@ -1213,6 +1213,74 @@ table above.
 > дъното) + High-Res — и не пипай повече вертикалните настройки до края на
 > кампанията.*
 
+### 11.7 Are the current settings good enough? — verified against `100%revers0.bin`
+
+**Question:** with no further access to the scope, can the study be done well on
+the settings as they are now (1.50 V/div, 0 V centred, 1 MSa/s, 20 Mpts, 20 s,
+`.bin`, no confirmed High-Res)?
+
+**Answer: yes — and the worst-case file `100%revers0.bin` proves it is
+adequate.** The settings are *not* optimal (§11.5–11.6 still stand), but they are
+**sufficient for a quality multi-sensor study**.
+
+**Measured quality of `100%revers0.bin` (100 % load + reverse, the heaviest
+regime):**
+
+| Check | Measured | Verdict |
+|---|---|---|
+| Samples / rate / window | 20 M @ 1 MSa/s, 0–20 s | ✅ full record, Δf = 0.05 Hz |
+| Clipping | 45 samples at top code, longest run **2 samples (0.00 ms)** | ✅ none — the 5.246 V peak is real |
+| Headroom | peak 5.246 V vs +6 V rail → ~754 mV spare | ✅ safe |
+| Unipolar | only 0.016 % below −50 mV | ✅ current stays ≥ 0 even in reverse |
+| Reverse events | clear envelope cycling (full ~5.1 V bursts ↔ ~2.6 V dips) | ✅ transitions captured |
+| Resolution | **78 levels / ~6.3 bits** (LSB 70.9 mV) | ✅ good *here* |
+
+**Why it is enough — but read the caveat:**
+- This file gets **~6.3 bits** even on the coarse 1.50 V/div **only because the
+  100 %+reverse signal is large** (5.2 V p-p fills most of the screen). The same
+  settings collapsed to **17 levels / ~4 bits** on the small steady
+  `90percent.bin` (§11.5). So the current setup is **adequate for high-amplitude
+  regimes** (full load, reverse, transients) but **weak for light/steady loads**.
+- For the **physics being measured** — 300 Hz converter ripple, commutation,
+  rotational harmonics, reverse current pulses — these are **large, low-frequency
+  signatures** that ~6–7 bits capture comfortably. High-Res would only help the
+  faintest early-bearing sidebands, which are better seen in the **vibration and
+  acoustic** channels anyway (§9.3).
+- The **diagnostic power is cross-confirmation** across current + vibration +
+  sound, not extra current bits. A fault visible in three domains is a finding
+  regardless of 8-bit vs 10-bit.
+
+**Verdict for finishing the study on these settings:**
+
+| Aspect | Status |
+|---|---|
+| Time axis / rate / memory / no-clip / unipolar | ✅ Confirmed good (`100%revers0.bin`) |
+| High-amplitude regimes (100 %, reverse, transients) | ✅ Quality sufficient (~6–7 bits) |
+| Multi-sensor cross-confirmation | ✅ The real strength |
+| Light/steady-load resolution | ⚠️ Lower (~4 bits) on coarse scale — acceptable, since those regimes are also covered by vibration/sound |
+| High-Res / WORD export | Bonus only — **not required** for a quality study |
+
+➜ **Conclusion: the study can be completed to a high standard on the current
+settings.** If even one quick scope session becomes possible later, the single
+highest-value change is **1 V/div with 0 at the bottom** (§11.6) — that alone
+lifts the steady/light regimes from ~4 to ~7 bits with no other change. High-Res
+remains optional.
+
+> **Накратко (BG):** Да — **с текущите настройки изследването може да се направи
+> качествено**, и най-тежкият файл `100%revers0.bin` го доказва: 20 M @ 1 MSa/s,
+> **без клипинг** (пик 5.246 V истински), **еднополярен** ток, реверсът е хванат,
+> **78 нива / ~6.3 бита**. Това стига, защото при 100 %+реверс сигналът е **голям**
+> и запълва екрана. Внимание: същата настройка падна до **~4 бита** при малкия
+> установен `90percent.bin` — значи е **достатъчна за силните режими** (пълен
+> товар, реверс, транзиенти), но **слаба за леки/установени**. За твоята физика
+> (300 Hz, комутация, оборотни хармоници, токови импулси) ~6–7 бита стигат
+> напълно; High-Res би помогнал само на най-слабите лагерни подписи, които и без
+> това се виждат по-добре във **вибрациите/звука**. Силата е в **кръстосаното
+> потвърждение** (ток+вибрации+звук), не в битовете. **Извод:** приключи спокойно
+> с тези настройки. Ако се отвори дори една сесия на осцилоскопа, единствената
+> най-полезна промяна е **1 V/div + 0 на дъното** (§11.6) — вдига леките режими от
+> ~4 на ~7 бита; High-Res остава по желание.
+
 ---
 
 ## 12. Acoustic + vibration folders (`звук/`, `вибрации/`) and a 1 m phone test
