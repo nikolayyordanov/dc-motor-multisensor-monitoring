@@ -12,6 +12,13 @@
 # Keep the small CSV schema (config, not data)
 !*.schema.json
 
+# --- Secrets / credentials (NEVER commit) ---
+client_secret*.json
+token.json
+*.apps.googleusercontent.com.json
+service_account*.json
+*sa-key*.json
+
 # --- Python ---
 __pycache__/
 *.py[cod]
@@ -27,3 +34,8 @@ Thumbs.db
 # --- Scratch ---
 *_thumb.*
 tmp_*.py
+
+
+DCData/
+DCData_dl/
+DCData_mendeley/
