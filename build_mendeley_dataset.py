@@ -48,6 +48,12 @@ for _stream in (sys.stdout, sys.stderr):
 OPERATION_MAP = {
     "нормална работа": ("normal", "Normal operation"),
     "разхлабен фундамент": ("loose_foundation", "Loose foundation"),
+    "неоптимално управление": (
+        "suboptimal_control",
+        "Suboptimal control (non-optimal speed-regulator gain coefficient)"),
+    "неоптимално управление - коеф. рт": (
+        "suboptimal_control_rt",
+        "Suboptimal control (non-optimal speed-regulator gain, current-regulator coeff. variant)"),
     # Add explicit names here if you want nicer labels, e.g. a controller
     # fault branch:  "дефект от контролера": ("controller_fault", "Controller-induced fault"),
 }
@@ -97,9 +103,40 @@ SENSOR_MAP = {
     "звук - телефон": ("sound_phone", ".m4a"),
     "ток осцилоскоп": ("current", ".bin"),
     "ток": ("current", ".bin"),
+    "ток - кр2=0.1": ("current", ".bin"),
 }
 
 SENSOR_ORDER = ["current", "sound_vibrometer", "sound_phone", "vibration"]
+
+# Discrete load levels (% of rated power) targeted for every branch.
+EXPECTED_LOADS = [1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+
+# The plain "suboptimal_control" branch cannot be loaded past ~65 %: the
+# controller / DC-link protection trips, so the sweep stops at a 65 % top level
+# instead of 70-100 % (intentional, not a gap). The "coeff. РТ" variant is a
+# milder detuning and is recorded across the full 1-100 % range.
+SUBOPTIMAL_CAPPED_KEYS = {"suboptimal_control"}
+SUBOPTIMAL_TOP_LOAD = 65
+
+# All load levels that may appear anywhere (for table columns).
+ALL_LOADS = [1, 2, 5, 10, 20, 30, 40, 50, 60, 65, 70, 80, 90, 100]
+
+# Vibration is a spot RMS reading and is negligible at near-zero load, so the
+# 1 % / 2 % points are intentionally absent for the vibration sensor.
+VIBRATION_SKIP_LOADS = {1, 2}
+
+
+def expected_loads_for(operation_key: str, sensor: str) -> list[int]:
+    """Loads that *should* exist for a given operation/sensor combination."""
+    if operation_key in SUBOPTIMAL_CAPPED_KEYS:
+        loads = [l for l in EXPECTED_LOADS if l < SUBOPTIMAL_TOP_LOAD]
+        loads.append(SUBOPTIMAL_TOP_LOAD)
+    else:
+        loads = list(EXPECTED_LOADS)
+    if sensor == "vibration":
+        loads = [l for l in loads if l not in VIBRATION_SKIP_LOADS]
+    return loads
+
 
 
 def parse_load(filename: str):
@@ -180,6 +217,9 @@ def build(src_root: Path, out_root: Path):
                 for f in sorted(sensor_dir.iterdir()):
                     if not f.is_file():
                         continue
+                    if f.suffix == ".part":
+                        print(f"  [!] skipping incomplete download: {f.name}")
+                        continue
                     load = parse_load(f.name)
                     if load is None:
                         print(f"  [!] cannot parse load from {f.name}; skipped")
@@ -248,7 +288,7 @@ def write_metadata(rows: list[dict], out_root: Path) -> None:
 
 
 def coverage_table(rows: list[dict], conds: list[str]) -> str:
-    loads = [1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    loads = ALL_LOADS
     sensors = SENSOR_ORDER
     lines = ["| Condition | Sensor | " + " | ".join(str(l) for l in loads) +
              " | Count |",
@@ -416,6 +456,14 @@ audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/load020_sound_vibr
 
 - Not every condition is crossed with reversal — see the table below for the
   exact combinations.
+- **Suboptimal control (`suboptimal_control_*`)** is recorded only up to a
+  **65 % top load level**: above it the controller / DC-link protection trips,
+  so 70–100 % cannot be captured. This is a physical limit of that detuned
+  setting, not a missing recording.
+- **Current-regulator-coefficient variant (`suboptimal_control_rt_*`)** is a
+  milder detuning that does reach 100 %; its `current` and `vibration`
+  recordings are **scheduled to be added** — those folders may be empty in the
+  current release and will be filled in a later version.
 - **Vibration (XLS)** are spot readings, not waveforms; the 1 % / 2 % points are
   absent because vibration is negligible at near-zero load (expected).
 - **Current (BIN)** coverage is near-complete (8-bit Rigol ADC); a few load
@@ -449,18 +497,111 @@ def write_license(out_root: Path) -> None:
     (out_root / "LICENSE.txt").write_text(text, encoding="utf-8")
 
 
+# --------------------------------------------------------------------------- #
+# Consistency analysis (read-only; does not copy anything).
+# --------------------------------------------------------------------------- #
+def scan_source(src_root: Path):
+    """Walk the raw tree and return found points + discovered labels.
+
+    Returns ``(found, cond_meta, unknown)`` where ``found`` maps
+    ``(cond_key, sensor) -> set(load)``, ``cond_meta`` maps
+    ``cond_key -> (operation_key, label)`` and ``unknown`` lists unmapped
+    sensor folders.
+    """
+    found: dict[tuple[str, str], set[int]] = {}
+    cond_meta: dict[str, tuple[str, str]] = {}
+    unknown: list[str] = []
+
+    for op_dir in sorted(p for p in src_root.iterdir() if p.is_dir()):
+        for rev_dir in sorted(p for p in op_dir.iterdir() if p.is_dir()):
+            cond = resolve_condition(op_dir.name, rev_dir.name)
+            cond_meta.setdefault(cond["key"], (cond["operation"], cond["label"]))
+            for sensor_dir in sorted(p for p in rev_dir.iterdir() if p.is_dir()):
+                sk = SENSOR_MAP.get(sensor_dir.name.strip().lower())
+                if not sk:
+                    rel = sensor_dir.relative_to(src_root)
+                    unknown.append(str(rel).replace("\\", "/"))
+                    continue
+                sensor = sk[0]
+                for f in sensor_dir.iterdir():
+                    if not f.is_file() or f.suffix == ".part":
+                        continue
+                    load = parse_load(f.name)
+                    if load is not None:
+                        found.setdefault((cond["key"], sensor), set()).add(load)
+    return found, cond_meta, unknown
+
+
+def analyze(src_root: Path) -> None:
+    """Print a folder-consistency report for the raw source tree."""
+    found, cond_meta, unknown = scan_source(src_root)
+    conds = list(cond_meta.keys())
+
+    print(f"Consistency report for: {src_root}")
+    print(f"Conditions discovered: {len(conds)}\n")
+
+    total_present = total_gaps = 0
+    for cond in conds:
+        op_key, label = cond_meta[cond]
+        print(f"== {cond}  ({label}) ==")
+        for sensor in SENSOR_ORDER:
+            present = found.get((cond, sensor), set())
+            expected = expected_loads_for(op_key, sensor)
+            missing = [l for l in expected if l not in present]
+            extra = sorted(l for l in present if l not in expected)
+            if not present and not expected:
+                continue
+            total_present += len(present)
+            total_gaps += len(missing)
+            status = "OK" if not missing else f"MISSING {missing}"
+            line = (f"  {sensor:16s} {len(present):2d}/{len(expected):2d}  "
+                    f"{status}")
+            if extra:
+                line += f"  [unexpected loads: {extra}]"
+            if not present:
+                line += "  (folder empty / not yet recorded)"
+            print(line)
+        print()
+
+    if unknown:
+        print("Unmapped sensor folders (add to SENSOR_MAP):")
+        for u in unknown:
+            print(f"  [!] {u}")
+        print()
+
+    print(f"Summary: {total_present} files present, {total_gaps} expected "
+          f"points still missing across {len(conds)} conditions.")
+    print("Notes:")
+    print(f"  - 'suboptimal_control' is capped at a {SUBOPTIMAL_TOP_LOAD} % top "
+          "level (controller/DC protection trips above it); 70-100 % are "
+          "intentionally absent, not gaps.")
+    print(f"  - vibration skips {sorted(VIBRATION_SKIP_LOADS)} % (negligible at "
+          "near-zero load), not counted as gaps.")
+    print("  - 'suboptimal_control_rt' (коеф. РТ): current and vibration are "
+          "scheduled to be recorded later; those folders are expected to fill "
+          "in soon.")
+
+
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--src", default="DCData_dl/изследвания",
                    help="Raw source tree (default: DCData_dl/изследвания).")
     p.add_argument("--out", default="DCData_mendeley",
                    help="Output dataset folder (default: DCData_mendeley).")
+    p.add_argument("--analyze-only", action="store_true",
+                   help="Print a folder-consistency report and exit "
+                        "(does not copy or build anything).")
     args = p.parse_args()
 
     src_root = Path(args.src)
     out_root = Path(args.out)
     if not src_root.is_dir():
         raise SystemExit(f"Source not found: {src_root}")
+
+    if args.analyze_only:
+        analyze(src_root)
+        return
+
     out_root.mkdir(parents=True, exist_ok=True)
 
     print(f"Source: {src_root}\nOutput: {out_root}\n")

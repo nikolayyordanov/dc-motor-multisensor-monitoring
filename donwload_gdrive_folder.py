@@ -82,6 +82,23 @@ def extract_folder_id(url_or_id: str) -> str:
     raise ValueError(f"Could not parse a folder ID from: {url_or_id!r}")
 
 
+def _make_progress(total, desc):
+    """Return a tqdm byte progress bar, or None if tqdm isn't installed."""
+    try:
+        from tqdm import tqdm
+    except ImportError:
+        return None
+    return tqdm(
+        total=total,
+        unit="B",
+        unit_scale=True,
+        unit_divisor=1024,
+        desc=desc[:40],
+        leave=False,
+        dynamic_ncols=True,
+    )
+
+
 def safe_name(name: str) -> str:
     """Make a file/folder name safe for the local filesystem."""
     name = name.replace("\x00", "")
@@ -208,10 +225,10 @@ def download_file(service, file_meta, dest_path: Path, *, overwrite: bool):
     if dest_path.exists() and not overwrite:
         remote_size = file_meta.get("size")
         if remote_size is not None and dest_path.stat().st_size == int(remote_size):
-            print(f"  = skip (exists) {dest_path.name}")
+            print(f"  = skip (exists)  {file_meta['name']}  ->  {dest_path}")
             return
         if export is not None:  # Google-native: no reliable size, skip if present
-            print(f"  = skip (exists) {dest_path.name}")
+            print(f"  = skip (exists)  {file_meta['name']}  ->  {dest_path}")
             return
 
     dest_path.parent.mkdir(parents=True, exist_ok=True)
@@ -225,17 +242,32 @@ def download_file(service, file_meta, dest_path: Path, *, overwrite: bool):
         request = service.files().get_media(
             fileId=file_meta["id"], supportsAllDrives=True)
 
+    # Known size enables a real percentage bar (binary get_media only;
+    # Google-native exports don't report a reliable size up front).
+    total = None
+    if export is None and file_meta.get("size") is not None:
+        total = int(file_meta["size"])
+
     def _run():
         with io.FileIO(tmp, "wb") as fh:
             downloader = MediaIoBaseDownload(fh, request, chunksize=8 * 1024 * 1024)
+            bar = _make_progress(total, dest_path.name)
             done = False
             while not done:
                 status, done = downloader.next_chunk()
+                if bar is not None and status is not None:
+                    # status.resumable_progress is cumulative bytes downloaded.
+                    bar.update(status.resumable_progress - bar.n)
+            if bar is not None:
+                if total is not None and bar.n < total:
+                    bar.update(total - bar.n)
+                bar.close()
         return True
 
+    print(f"  > downloading  {file_meta['name']}  ->  {dest_path}")
     with_backoff(_run, what=f"download {file_meta['name']}")
     tmp.replace(dest_path)
-    print(f"  + {dest_path.name}")
+    print(f"  + done         {file_meta['name']}  ->  {dest_path}")
 
 
 def walk_and_download(service, folder_id: str, dest: Path, *,
@@ -244,6 +276,7 @@ def walk_and_download(service, folder_id: str, dest: Path, *,
 
     def _walk(fid: str, local_dir: Path):
         local_dir.mkdir(parents=True, exist_ok=True)
+        print(f"\n[folder] {local_dir}")
         for item in list_children(service, fid):
             name = safe_name(item["name"])
             if item["mimeType"] == FOLDER_MIME:
