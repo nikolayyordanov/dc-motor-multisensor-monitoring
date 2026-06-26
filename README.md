@@ -1,6 +1,6 @@
 # Multi-Sensor Condition-Monitoring Dataset of a Brushed DC Servo Motor
 
-**Built:** 2026-06-19  ·  **Files:** 334 (72 BIN, 98 M4A, 1 STP, 98 WAV, 65 XLS)  ·  **License:** CC BY 4.0
+**Built:** 2026-06-26  ·  **Files:** 373 (85 BIN, 98 M4A, 1 STP, 98 WAV, 91 XLS)  ·  **License:** CC BY 4.0
 
 ## 1. Overview
 
@@ -172,14 +172,14 @@ audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/load020_sound_vibr
 | suboptimal_control_with_reversal | sound_vibrometer | x | x | x | x | x | x | x | x | x | x | · | · | · | · | 10 |
 | suboptimal_control_with_reversal | sound_phone | x | x | x | x | x | x | x | x | x | x | · | · | · | · | 10 |
 | suboptimal_control_with_reversal | vibration | x | x | x | x | x | x | x | x | x | x | · | · | · | · | 10 |
-| suboptimal_control_rt_no_reversal | current | · | · | · | · | · | · | · | · | · | · | · | · | · | · | 0 |
+| suboptimal_control_rt_no_reversal | current | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
 | suboptimal_control_rt_no_reversal | sound_vibrometer | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
 | suboptimal_control_rt_no_reversal | sound_phone | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| suboptimal_control_rt_no_reversal | vibration | · | · | · | · | · | · | · | · | · | · | · | · | · | · | 0 |
+| suboptimal_control_rt_no_reversal | vibration | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
 | suboptimal_control_rt_with_reversal | current | · | · | · | · | · | · | · | · | · | · | · | · | · | · | 0 |
 | suboptimal_control_rt_with_reversal | sound_vibrometer | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
 | suboptimal_control_rt_with_reversal | sound_phone | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| suboptimal_control_rt_with_reversal | vibration | · | · | · | · | · | · | · | · | · | · | · | · | · | · | 0 |
+| suboptimal_control_rt_with_reversal | vibration | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
 | normal_no_reversal | current | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
 | normal_no_reversal | sound_vibrometer | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
 | normal_no_reversal | sound_phone | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |

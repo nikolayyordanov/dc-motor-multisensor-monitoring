@@ -53,7 +53,7 @@ OPERATION_MAP = {
         "Suboptimal control (non-optimal speed-regulator gain coefficient)"),
     "неоптимално управление - коеф. рт": (
         "suboptimal_control_rt",
-        "Suboptimal control (non-optimal speed-regulator gain, current-regulator coeff. variant)"),
+        "Suboptimal control (non-optimal speed-regulator gain coefficient + non-optimal current-regulator gain coefficient)"),
     # Add explicit names here if you want nicer labels, e.g. a controller
     # fault branch:  "дефект от контролера": ("controller_fault", "Controller-induced fault"),
 }
@@ -103,6 +103,7 @@ SENSOR_MAP = {
     "звук - телефон": ("sound_phone", ".m4a"),
     "ток осцилоскоп": ("current", ".bin"),
     "ток": ("current", ".bin"),
+    "tок": ("current", ".bin"),  # mixed-script typo: Latin 'T' + Cyrillic 'ок'
     "ток - кр2=0.1": ("current", ".bin"),
 }
 
@@ -365,6 +366,10 @@ Each condition is a folder under `data/`, recorded at up to **13 load levels**
 | Folder (`data/`) | Description |
 |---|---|
 {cond_rows}
+
+Naming note: `suboptimal_control_*` means a non-optimal **speed-regulator
+gain coefficient**, while `suboptimal_control_rt_*` means non-optimal
+**speed-regulator and current-regulator gain coefficients** (RT variant).
 
 ## 4. Sensors
 
