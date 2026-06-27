@@ -1,6 +1,6 @@
 # Multi-Sensor Condition-Monitoring Dataset of a Brushed DC Servo Motor
 
-**Built:** 2026-06-26  ·  **Files:** 373 (85 BIN, 98 M4A, 1 STP, 98 WAV, 91 XLS)  ·  **License:** CC BY 4.0
+**Built:** 2026-06-26  ·  **Files:** 386 (98 BIN, 98 M4A, 1 STP, 98 WAV, 91 XLS)  ·  **License:** CC BY 4.0
 
 ## 1. Overview
 
@@ -49,12 +49,16 @@ Each condition is a folder under `data/`, recorded at up to **13 load levels**
 |---|---|
 | `suboptimal_control_no_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient), без реверсиране |
 | `suboptimal_control_with_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient), с реверсиране |
-| `suboptimal_control_rt_no_reversal` | Suboptimal control (non-optimal speed-regulator gain, current-regulator coeff. variant), без реверсиране |
-| `suboptimal_control_rt_with_reversal` | Suboptimal control (non-optimal speed-regulator gain, current-regulator coeff. variant), с реверсиране |
+| `suboptimal_control_rt_no_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient + non-optimal current-regulator gain coefficient), без реверсиране |
+| `suboptimal_control_rt_with_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient + non-optimal current-regulator gain coefficient), с реверсиране |
 | `normal_no_reversal` | Normal operation, без реверсиране |
 | `normal_with_reversal` | Normal operation, с реверсиране |
 | `loose_foundation_no_reversal` | Loose foundation, без реверсиране |
 | `loose_foundation_with_reversal` | Loose foundation, с реверсиране |
+
+Naming note: `suboptimal_control_*` means a non-optimal **speed-regulator
+gain coefficient**, while `suboptimal_control_rt_*` means non-optimal
+**speed-regulator and current-regulator gain coefficients** (RT variant).
 
 ## 4. Sensors
 
@@ -176,7 +180,7 @@ audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/load020_sound_vibr
 | suboptimal_control_rt_no_reversal | sound_vibrometer | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
 | suboptimal_control_rt_no_reversal | sound_phone | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
 | suboptimal_control_rt_no_reversal | vibration | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| suboptimal_control_rt_with_reversal | current | · | · | · | · | · | · | · | · | · | · | · | · | · | · | 0 |
+| suboptimal_control_rt_with_reversal | current | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
 | suboptimal_control_rt_with_reversal | sound_vibrometer | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
 | suboptimal_control_rt_with_reversal | sound_phone | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
 | suboptimal_control_rt_with_reversal | vibration | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
