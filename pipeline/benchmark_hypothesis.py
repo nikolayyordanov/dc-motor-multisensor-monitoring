@@ -5,6 +5,7 @@ Outputs:
 - paired_manifest.csv
 - features_<modality>.csv
 - fold_metrics.csv
+- oof_predictions.csv
 - hypothesis_report.md
 """
 
@@ -29,9 +30,35 @@ from sklearn.metrics import (
     mean_squared_error,
     r2_score,
 )
-from sklearn.model_selection import GroupKFold
+from sklearn.model_selection import StratifiedGroupKFold
 
 MODALITIES = ["sound_phone", "sound_vibrometer", "current"]
+MIN_CURRENT_DURATION_S = 20.0
+DURATION_TOLERANCE_S = 1e-3
+
+
+def _probe_rigol_duration(path: Path) -> float | None:
+    with path.open("rb") as fh:
+        header = fh.read(300)
+    if header[0:2] not in (b"RG", b"AG"):
+        return None
+
+    waveform_header_offset = 12
+    waveform_header_size = struct.unpack_from("<i", header, waveform_header_offset)[0]
+    with path.open("rb") as fh:
+        fh.seek(waveform_header_offset)
+        waveform_header = fh.read(waveform_header_size)
+        buffer_header = fh.read(12)
+
+    sample_interval = struct.unpack_from("<d", waveform_header, 32)[0]
+    bytes_per_point = struct.unpack_from("<h", buffer_header, 6)[0]
+    buffer_size = struct.unpack_from("<i", buffer_header, 8)[0]
+    if sample_interval <= 0 or bytes_per_point <= 0:
+        raise ValueError(f"Invalid Rigol timing header: {path}")
+    payload_offset = waveform_header_offset + waveform_header_size + len(buffer_header)
+    available_payload_size = max(0, path.stat().st_size - payload_offset)
+    payload_size = min(buffer_size, available_payload_size)
+    return float(payload_size // bytes_per_point) * sample_interval
 
 
 def parse_args() -> argparse.Namespace:
@@ -40,8 +67,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--out-dir", type=Path, default=Path("pipeline_outputs"))
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--n-splits", type=int, default=5)
-    parser.add_argument("--offset-seconds", type=float, default=1.0)
-    parser.add_argument("--max-seconds", type=float, default=8.0)
+    parser.add_argument("--offset-seconds", type=float, default=0.0)
+    parser.add_argument(
+        "--max-seconds",
+        type=float,
+        default=20.0,
+        help="Analysis-duration cap; defaults to the full 20-second acquisition",
+    )
+    parser.add_argument("--window-seconds", type=float, default=2.0)
+    parser.add_argument("--window-overlap", type=float, default=0.5)
     parser.add_argument("--target-fs-current", type=float, default=20000.0)
     parser.add_argument("--target-fs-audio", type=float, default=16000.0)
     parser.add_argument("--bootstrap-iter", type=int, default=5000)
@@ -72,6 +106,44 @@ def build_paired_manifest(dataset_root: Path) -> pd.DataFrame:
     for sensor in MODALITIES:
         pivot[f"path_{sensor}"] = pivot[sensor].apply(lambda p: str((dataset_root / p).resolve()))
 
+        sensor_meta = meta[meta["sensor"].eq(sensor)].set_index(
+            ["condition", "operation", "reversal", "load_percent"]
+        )["duration_s"]
+        pivot[f"duration_{sensor}"] = [
+            sensor_meta.get(
+                (row.condition, row.operation, row.reversal, row.load_percent),
+                np.nan,
+            )
+            for row in pivot.itertuples()
+        ]
+
+    missing_phone_duration = pivot["duration_sound_phone"].isna()
+    for idx in pivot.index[missing_phone_duration]:
+        with av.open(pivot.at[idx, "path_sound_phone"]) as container:
+            stream = container.streams.audio[0]
+            if stream.duration is not None:
+                duration = float(stream.duration * stream.time_base)
+            elif container.duration is not None:
+                duration = float(container.duration / av.time_base)
+            else:
+                raise ValueError(
+                    f"Cannot determine audio duration: {pivot.at[idx, 'path_sound_phone']}"
+                )
+        pivot.at[idx, "duration_sound_phone"] = duration
+
+    duration_cols = [f"duration_{sensor}" for sensor in MODALITIES]
+    for idx in pivot.index:
+        measured_duration = _probe_rigol_duration(Path(pivot.at[idx, "path_current"]))
+        if measured_duration is not None:
+            pivot.at[idx, "duration_current"] = measured_duration
+
+    if pivot[duration_cols].isna().any().any():
+        raise ValueError("Missing recording duration for at least one paired modality")
+    pivot = pivot[
+        pivot["duration_current"] >= MIN_CURRENT_DURATION_S - DURATION_TOLERANCE_S
+    ].copy()
+    pivot["common_duration_s"] = pivot[duration_cols].min(axis=1)
+
     keep_cols = [
         "group_id",
         "condition",
@@ -81,6 +153,10 @@ def build_paired_manifest(dataset_root: Path) -> pd.DataFrame:
         "path_sound_phone",
         "path_sound_vibrometer",
         "path_current",
+        "duration_sound_phone",
+        "duration_sound_vibrometer",
+        "duration_current",
+        "common_duration_s",
     ]
     return pivot[keep_cols].sort_values(["condition", "load_percent"]).reset_index(drop=True)
 
@@ -104,7 +180,7 @@ def extract_signal_features(sig: np.ndarray, fs: float) -> dict[str, float]:
     zcr = np.mean((sig[:-1] * sig[1:]) < 0)
     crest = peak / (rms + 1e-12)
 
-    nperseg = min(4096, sig.size)
+    nperseg = min(16384, sig.size)
     freqs, pxx = welch(sig, fs=fs, nperseg=nperseg, scaling="density")
     pxx = np.maximum(pxx, 1e-18)
     pxx_sum = np.sum(pxx)
@@ -149,7 +225,7 @@ def load_audio_segment(path: Path, offset_s: float, max_s: float, target_fs: flo
         with sf.SoundFile(str(path)) as f:
             fs = float(f.samplerate)
             start = int(max(0.0, offset_s) * fs)
-            n_frames = int(max_s * fs)
+            n_frames = int(round(max_s * fs))
             f.seek(start)
             sig = f.read(frames=n_frames, dtype="float32", always_2d=False)
         if sig.ndim > 1:
@@ -187,7 +263,7 @@ def load_audio_segment(path: Path, offset_s: float, max_s: float, target_fs: flo
         fs = float(target_fs)
 
         start = int(max(0.0, offset_s) * fs)
-        stop = start + int(max_s * fs)
+        stop = start + int(round(max_s * fs))
         sig = sig[start:stop]
 
     if sig.size == 0:
@@ -232,7 +308,7 @@ def _load_rigol_rg01_segment(
     n_samples = int(buf_size // bpp)
 
     start = int(max(0.0, offset_s) * fs)
-    stop = int(min(n_samples, start + max_s * fs))
+    stop = int(min(n_samples, start + round(max_s * fs)))
     if stop <= start:
         return np.zeros(0, dtype=np.float32), target_fs
 
@@ -251,10 +327,9 @@ def _load_rigol_rg01_segment(
     if dtype == np.uint8:
         sig = sig - np.mean(sig)
 
-    if fs > target_fs:
-        step = max(1, int(round(fs / target_fs)))
-        sig = sig[::step]
-        fs = fs / step
+    if fs != target_fs:
+        sig = resample_poly(sig, up=int(target_fs), down=int(fs))
+        fs = float(target_fs)
 
     return sig.astype(np.float32), float(fs)
 
@@ -273,17 +348,41 @@ def load_current_segment(path: Path, offset_s: float, max_s: float, target_fs: f
 
     fs = target_fs
     start = int(max(0.0, offset_s) * fs)
-    stop = int(min(raw.size, start + max_s * fs))
+    stop = int(min(raw.size, start + round(max_s * fs)))
     sig = np.asarray(raw[start:stop], dtype=np.float32)
     sig = sig - np.mean(sig)
     return sig, fs
+
+
+def iter_window_bounds(
+    signal_size: int,
+    fs: float,
+    window_s: float,
+    window_overlap: float,
+):
+    """Yield fixed-length window bounds without emitting a partial tail window."""
+    if window_s <= 0:
+        raise ValueError("window_s must be greater than zero")
+    if not 0 <= window_overlap < 1:
+        raise ValueError("window_overlap must be in [0, 1)")
+
+    window_samples = int(round(window_s * fs))
+    hop_samples = max(1, int(round(window_samples * (1 - window_overlap))))
+    for segment_index, start in enumerate(
+        range(0, max(0, signal_size - window_samples) + 1, hop_samples)
+    ):
+        stop = start + window_samples
+        if stop <= signal_size:
+            yield segment_index, start, stop
 
 
 def extract_features_for_modality(
     manifest: pd.DataFrame,
     modality: str,
     offset_s: float,
-    max_s: float,
+    max_s: float | None,
+    window_s: float,
+    window_overlap: float,
     target_fs_audio: float,
     target_fs_current: float,
 ) -> pd.DataFrame:
@@ -291,27 +390,59 @@ def extract_features_for_modality(
     path_col = f"path_{modality}"
     for idx, rec in manifest.iterrows():
         p = Path(rec[path_col])
+        available_s = float(rec["common_duration_s"]) - offset_s
+        analysis_s = min(available_s, max_s) if max_s is not None else available_s
+        if analysis_s <= 0:
+            raise ValueError(f"Recording {p} has no samples after the requested offset")
+        hop_s = window_s * (1.0 - window_overlap)
+        common_window_count = (
+            int(
+                np.floor(
+                    (analysis_s - window_s + DURATION_TOLERANCE_S) / hop_s
+                )
+            )
+            + 1
+            if analysis_s >= window_s
+            else 0
+        )
+        if common_window_count == 0:
+            raise ValueError(f"Recording {p} is shorter than one {window_s:g}-second window")
         if modality in ("sound_phone", "sound_vibrometer"):
             sig, fs = load_audio_segment(
-                p, offset_s=offset_s, max_s=max_s, target_fs=target_fs_audio
+                p, offset_s=offset_s, max_s=analysis_s, target_fs=target_fs_audio
             )
         else:
-            sig, fs = load_current_segment(
-                p, offset_s=offset_s, max_s=max_s, target_fs=target_fs_current
-            )
+            sig, fs = load_current_segment(p, offset_s, analysis_s, target_fs_current)
 
-        feats = extract_signal_features(sig, fs)
-        out = {
-            "group_id": rec["group_id"],
-            "condition": rec["condition"],
-            "operation": rec["operation"],
-            "reversal": rec["reversal"],
-            "load_percent": rec["load_percent"],
-            "modality": modality,
-            "path": str(p),
-        }
-        out.update(feats)
-        rows.append(out)
+        segment_count = 0
+        for segment_index, start, stop in iter_window_bounds(
+            sig.size, fs, window_s, window_overlap
+        ):
+            if segment_index >= common_window_count:
+                break
+            feats = extract_signal_features(sig[start:stop], fs)
+            out = {
+                "group_id": rec["group_id"],
+                "segment_id": f"{rec['group_id']}__seg{segment_index:03d}",
+                "segment_index": segment_index,
+                "segment_start_s": offset_s + start / fs,
+                "segment_end_s": offset_s + stop / fs,
+                "condition": rec["condition"],
+                "operation": rec["operation"],
+                "reversal": rec["reversal"],
+                "load_percent": rec["load_percent"],
+                "modality": modality,
+                "path": str(p),
+            }
+            out.update(feats)
+            rows.append(out)
+            segment_count += 1
+
+        if segment_count != common_window_count:
+            raise ValueError(
+                f"Recording {p} produced {segment_count} windows; "
+                f"expected {common_window_count} from the paired common span"
+            )
 
         if (idx + 1) % 20 == 0:
             print(f"[{modality}] processed {idx + 1}/{len(manifest)}")
@@ -319,25 +450,41 @@ def extract_features_for_modality(
     return pd.DataFrame(rows)
 
 
-def get_group_folds(manifest: pd.DataFrame, n_splits: int) -> list[tuple[np.ndarray, np.ndarray]]:
-    gkf = GroupKFold(n_splits=n_splits)
+def get_group_folds(
+    manifest: pd.DataFrame,
+    n_splits: int,
+    seed: int,
+) -> list[tuple[set[str], set[str]]]:
+    splitter = StratifiedGroupKFold(
+        n_splits=n_splits,
+        shuffle=True,
+        random_state=seed,
+    )
     y = manifest["condition"].to_numpy()
     groups = manifest["group_id"].to_numpy()
     idx = np.arange(len(manifest))
-    return list(gkf.split(idx, y=y, groups=groups))
+    return [
+        (set(groups[train]), set(groups[test]))
+        for train, test in splitter.split(idx, y=y, groups=groups)
+    ]
 
 
 def evaluate_modality(
     feat_df: pd.DataFrame,
-    folds: list[tuple[np.ndarray, np.ndarray]],
+    folds: list[tuple[set[str], set[str]]],
     seed: int,
-) -> pd.DataFrame:
+    n_estimators: int = 500,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     use_cols = [
         c
         for c in feat_df.columns
         if c
         not in {
             "group_id",
+            "segment_id",
+            "segment_index",
+            "segment_start_s",
+            "segment_end_s",
             "condition",
             "operation",
             "reversal",
@@ -352,36 +499,82 @@ def evaluate_modality(
     y_reg = feat_df["load_percent"].to_numpy()
 
     rows = []
-    for fold_id, (tr, te) in enumerate(folds, start=1):
+    pred_rows = []
+    for fold_id, (train_groups, test_groups) in enumerate(folds, start=1):
+        tr = feat_df["group_id"].isin(train_groups).to_numpy()
+        te = feat_df["group_id"].isin(test_groups).to_numpy()
         clf = RandomForestClassifier(
-            n_estimators=500,
+            n_estimators=n_estimators,
             random_state=seed + fold_id,
             class_weight="balanced",
+            n_jobs=-1,
         )
         reg = RandomForestRegressor(
-            n_estimators=500,
+            n_estimators=n_estimators,
             random_state=seed + fold_id,
+            n_jobs=-1,
         )
 
-        clf.fit(X[tr], y_cls[tr])
-        reg.fit(X[tr], y_reg[tr])
+        train_group_counts = feat_df.loc[tr, "group_id"].value_counts()
+        sample_weight = (
+            1.0 / feat_df.loc[tr, "group_id"].map(train_group_counts)
+        ).to_numpy(copy=True)
+        sample_weight *= sample_weight.size / sample_weight.sum()
 
-        pred_cls = clf.predict(X[te])
-        pred_reg = reg.predict(X[te])
+        clf.fit(X[tr], y_cls[tr], sample_weight=sample_weight)
+        reg.fit(X[tr], y_reg[tr], sample_weight=sample_weight)
+
+        segment_prob = clf.predict_proba(X[te])
+        segment_load = reg.predict(X[te])
+        test_frame = feat_df.loc[
+            te, ["group_id", "condition", "load_percent"]
+        ].copy()
+        test_frame["segment_load_pred"] = segment_load
+        probability_cols = [f"prob_{label}" for label in clf.classes_]
+        test_frame[probability_cols] = segment_prob
+
+        fold_true_cls = []
+        fold_pred_cls = []
+        fold_true_reg = []
+        fold_pred_reg = []
+        for group_id, group in test_frame.groupby("group_id", sort=False):
+            mean_prob = group[probability_cols].mean().to_numpy()
+            condition_pred = clf.classes_[int(np.argmax(mean_prob))]
+            load_pred = float(group["segment_load_pred"].median())
+            condition_true = str(group["condition"].iloc[0])
+            load_true = float(group["load_percent"].iloc[0])
+
+            fold_true_cls.append(condition_true)
+            fold_pred_cls.append(condition_pred)
+            fold_true_reg.append(load_true)
+            fold_pred_reg.append(load_pred)
+            pred_rows.append(
+                {
+                    "modality": feat_df["modality"].iloc[0],
+                    "fold": fold_id,
+                    "group_id": group_id,
+                    "n_segments": len(group),
+                    "condition_true": condition_true,
+                    "condition_pred": condition_pred,
+                    "load_true": load_true,
+                    "load_pred": load_pred,
+                }
+            )
 
         rows.append(
             {
                 "modality": feat_df["modality"].iloc[0],
                 "fold": fold_id,
-                "macro_f1": f1_score(y_cls[te], pred_cls, average="macro"),
-                "balanced_acc": balanced_accuracy_score(y_cls[te], pred_cls),
-                "mae": mean_absolute_error(y_reg[te], pred_reg),
-                "rmse": np.sqrt(mean_squared_error(y_reg[te], pred_reg)),
-                "r2": r2_score(y_reg[te], pred_reg),
+                "n_recordings": len(fold_true_cls),
+                "macro_f1": f1_score(fold_true_cls, fold_pred_cls, average="macro"),
+                "balanced_acc": balanced_accuracy_score(fold_true_cls, fold_pred_cls),
+                "mae": mean_absolute_error(fold_true_reg, fold_pred_reg),
+                "rmse": np.sqrt(mean_squared_error(fold_true_reg, fold_pred_reg)),
+                "r2": r2_score(fold_true_reg, fold_pred_reg),
             }
         )
 
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows), pd.DataFrame(pred_rows)
 
 
 def bootstrap_ci(values: np.ndarray, rng: np.random.Generator, n_iter: int = 5000) -> tuple[float, float, float]:
@@ -453,6 +646,10 @@ def build_report(
     comparisons: list[dict],
     args: argparse.Namespace,
 ) -> str:
+    analysis_duration = manifest["common_duration_s"] - args.offset_seconds
+    if args.max_seconds is not None:
+        analysis_duration = analysis_duration.clip(upper=args.max_seconds)
+
     summary = (
         fold_metrics.groupby("modality")
         .agg(
@@ -475,7 +672,20 @@ def build_report(
     lines.append(f"- Paired groups used: {len(manifest)}")
     lines.append(f"- Grouped folds: {args.n_splits}")
     lines.append(f"- Segment offset (s): {args.offset_seconds}")
-    lines.append(f"- Segment duration (s): {args.max_seconds}")
+    lines.append(
+        f"- Current-duration eligibility (s): >= {MIN_CURRENT_DURATION_S:g} "
+        f"(tolerance {DURATION_TOLERANCE_S:g})"
+    )
+    lines.append("- Analysis span: longest common span of the three paired modalities")
+    lines.append(
+        "- Analysis duration range (s): "
+        f"{analysis_duration.min():.3f}-{analysis_duration.max():.3f}"
+    )
+    if args.max_seconds is not None:
+        lines.append(f"- User-specified duration cap (s): {args.max_seconds}")
+    lines.append(f"- Window duration (s): {args.window_seconds}")
+    lines.append(f"- Window overlap: {args.window_overlap * 100:.0f}%")
+    lines.append("- Predictions aggregated at recording level")
     lines.append(f"- Random seed: {args.seed}")
     lines.append("")
     lines.append("## Cross-Validation Metrics (mean over folds)")
@@ -529,10 +739,15 @@ def main() -> None:
     manifest.to_csv(out_dir / "paired_manifest.csv", index=False)
     print(f"Paired groups: {len(manifest)}")
 
-    fold_indices = get_group_folds(manifest, n_splits=args.n_splits)
+    fold_indices = get_group_folds(
+        manifest,
+        n_splits=args.n_splits,
+        seed=args.seed,
+    )
 
     feature_tables = {}
     all_fold_metrics = []
+    all_predictions = []
     for modality in MODALITIES:
         print(f"Extracting features for: {modality}")
         feat_df = extract_features_for_modality(
@@ -540,6 +755,8 @@ def main() -> None:
             modality,
             offset_s=args.offset_seconds,
             max_s=args.max_seconds,
+            window_s=args.window_seconds,
+            window_overlap=args.window_overlap,
             target_fs_audio=args.target_fs_audio,
             target_fs_current=args.target_fs_current,
         )
@@ -547,11 +764,15 @@ def main() -> None:
         feat_df.to_csv(out_dir / f"features_{modality}.csv", index=False)
 
         print(f"Evaluating modality: {modality}")
-        fold_df = evaluate_modality(feat_df, fold_indices, seed=args.seed)
+        fold_df, pred_df = evaluate_modality(feat_df, fold_indices, seed=args.seed)
         all_fold_metrics.append(fold_df)
+        all_predictions.append(pred_df)
 
     fold_metrics = pd.concat(all_fold_metrics, ignore_index=True)
     fold_metrics.to_csv(out_dir / "fold_metrics.csv", index=False)
+
+    predictions = pd.concat(all_predictions, ignore_index=True)
+    predictions.to_csv(out_dir / "oof_predictions.csv", index=False)
 
     comparisons = [
         compare_phone_vs_reference(

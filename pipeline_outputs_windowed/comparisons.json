@@ -1,0 +1,30 @@
+[
+  {
+    "reference": "sound_vibrometer",
+    "delta_f1_mean": 0.5226785714285713,
+    "delta_f1_ci_low": 0.4555357142857144,
+    "delta_f1_ci_high": 0.6064880952380952,
+    "delta_f1_wilcoxon_p": 0.0625,
+    "delta_mae_mean": 2.4047210860484536,
+    "delta_mae_ci_low": 0.7032440100250626,
+    "delta_mae_ci_high": 4.218027017543857,
+    "delta_mae_wilcoxon_p": 0.125,
+    "noninferior_f1": true,
+    "noninferior_mae": true,
+    "noninferior_overall": true
+  },
+  {
+    "reference": "current",
+    "delta_f1_mean": 0.30559523809523814,
+    "delta_f1_ci_low": 0.2001190476190476,
+    "delta_f1_ci_high": 0.3952380952380952,
+    "delta_f1_wilcoxon_p": 0.0625,
+    "delta_mae_mean": 2.978831929824561,
+    "delta_mae_ci_low": 1.4283898245614028,
+    "delta_mae_ci_high": 4.630779298245615,
+    "delta_mae_wilcoxon_p": 0.0625,
+    "noninferior_f1": true,
+    "noninferior_mae": true,
+    "noninferior_overall": true
+  }
+]

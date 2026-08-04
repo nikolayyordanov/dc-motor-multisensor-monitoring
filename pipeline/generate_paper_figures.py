@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from sklearn.metrics import confusion_matrix
 
 
 def parse_args() -> argparse.Namespace:
@@ -71,6 +72,20 @@ def modality_label(modality: str) -> str:
         "current": "Armature current",
     }
     return mapping.get(modality, modality)
+
+
+def condition_label(condition: str) -> str:
+    mapping = {
+        "loose_foundation_no_reversal": "Loose foundation\n(no reversal)",
+        "loose_foundation_with_reversal": "Loose foundation\n(with reversal)",
+        "normal_no_reversal": "Normal operation\n(no reversal)",
+        "normal_with_reversal": "Normal operation\n(with reversal)",
+        "suboptimal_control_no_reversal": "Suboptimal control\n(no reversal)",
+        "suboptimal_control_with_reversal": "Suboptimal control\n(with reversal)",
+        "suboptimal_control_rt_no_reversal": "Suboptimal control RT\n(no reversal)",
+        "suboptimal_control_rt_with_reversal": "Suboptimal control RT\n(with reversal)",
+    }
+    return mapping.get(condition, condition)
 
 
 def write_table(df: pd.DataFrame, stem: str, out_tables: Path) -> None:
@@ -378,6 +393,69 @@ def plot_fold_metric_distributions(fold_metrics: pd.DataFrame, out_figures: Path
     save_fig(fig, out_figures / "fig_fold_distributions", dpi)
 
 
+def plot_confusion_matrices(predictions: pd.DataFrame, out_figures: Path, dpi: int) -> None:
+    order = [
+        "loose_foundation_no_reversal",
+        "loose_foundation_with_reversal",
+        "normal_no_reversal",
+        "normal_with_reversal",
+        "suboptimal_control_no_reversal",
+        "suboptimal_control_with_reversal",
+        "suboptimal_control_rt_no_reversal",
+        "suboptimal_control_rt_with_reversal",
+    ]
+    labels = [condition_label(c) for c in order]
+    titles = {
+        "sound_phone": "Smartphone audio",
+        "sound_vibrometer": "Vibrometer waveform",
+        "current": "Armature current",
+    }
+
+    fig, axes = plt.subplots(1, 3, figsize=(18, 6), constrained_layout=True)
+    for ax, modality in zip(axes, ["sound_phone", "sound_vibrometer", "current"]):
+        subset = predictions[predictions["modality"] == modality]
+        cm = confusion_matrix(
+            subset["condition_true"],
+            subset["condition_pred"],
+            labels=order,
+            normalize="true",
+        )
+        counts = confusion_matrix(
+            subset["condition_true"],
+            subset["condition_pred"],
+            labels=order,
+            normalize=None,
+        )
+
+        annot = np.empty_like(cm).astype(object)
+        for i in range(cm.shape[0]):
+            for j in range(cm.shape[1]):
+                annot[i, j] = f"{cm[i, j]*100:.0f}%\n({counts[i, j]})" if counts[i, j] else ""
+
+        sns.heatmap(
+            cm,
+            ax=ax,
+            cmap="Blues",
+            vmin=0,
+            vmax=1,
+            cbar=(ax is axes[-1]),
+            annot=annot,
+            fmt="",
+            linewidths=0.5,
+            linecolor="white",
+            xticklabels=labels,
+            yticklabels=labels,
+            annot_kws={"fontsize": 7},
+        )
+        ax.set_title(titles[modality])
+        ax.set_xlabel("Predicted condition")
+        ax.set_ylabel("True condition")
+        ax.tick_params(axis="x", rotation=45)
+        ax.tick_params(axis="y", rotation=0)
+
+    save_fig(fig, out_figures / "fig_confusion_matrices", dpi)
+
+
 def main() -> None:
     args = parse_args()
     in_dir = args.in_dir
@@ -391,6 +469,7 @@ def main() -> None:
 
     manifest = pd.read_csv(in_dir / "paired_manifest.csv")
     fold_metrics = pd.read_csv(in_dir / "fold_metrics.csv")
+    predictions = pd.read_csv(in_dir / "oof_predictions.csv")
     with (in_dir / "comparisons.json").open("r", encoding="utf-8") as fh:
         comparisons = json.load(fh)
 
@@ -406,6 +485,7 @@ def main() -> None:
     plot_regression_metrics(fold_metrics, out_figures, dpi=args.dpi)
     plot_noninferiority(comparisons, out_figures, dpi=args.dpi)
     plot_fold_metric_distributions(fold_metrics, out_figures, dpi=args.dpi)
+    plot_confusion_matrices(predictions, out_figures, dpi=args.dpi)
 
     print("Generated paper tables and figures.")
     print(f"Tables: {out_tables}")
