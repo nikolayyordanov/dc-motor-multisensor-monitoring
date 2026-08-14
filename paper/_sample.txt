@@ -1,0 +1,169 @@
+[Heading 1] ARTICLE INFORMATION
+[Normal] Article title
+[Normal] Multi-Sensor Acoustic and Vibration Dataset for Permanent Magnet Debonding Diagnosis in a Brushed Permanent Magnet DC Motor
+[Normal] Authors
+[Normal] Marin Zhilevski a,*, Nikolay Yordanov a, Mikho Mikhov a, Merve Ertarğın b, Mihriban Gunay b
+[Normal] Affiliations
+[Normal] a Faculty of Automatics, Technical University of Sofia, 8 Kliment Ohridski Blvd., 1000 Sofia, Bulgaria
+[Normal] b University of Munzur, Department of Electrical and Electronics Engineering, Tunceli, Türkiye
+[Normal] Corresponding author’s email address and Twitter handle
+[Normal] mzhilevski@tu-sofia.bg
+[Normal] Keywords
+[Normal] Condition monitoring; Fault detection; Predictive maintenance; Electromechanical systems; Signal processing; Machine learning; Motor repair
+[Normal] Abstract
+[Normal] This article presents a multi-sensor dataset comprising acoustic and vibration measurements acquired from a brushed permanent magnet DC motor under two motor conditions: permanent magnet debonding and permanent magnet re-bonding. The motor was removed from a metal-cutting machine after the occurrence of permanent magnet debonding and was subsequently repaired by re-bonding the detached permanent magnet to its original position using a structural adhesive. Measurements were acquired before and after the repair using identical operating conditions and measurement procedures.
+[Normal] Acoustic signals were recorded using an Android smartphone positioned approximately 1 m from the motor, while vibration data were acquired using an AV-160B vibration meter. Measurements were performed at five rotational speeds (100, 200, 500, 750, and 1000 rpm) in both forward and reverse directions of rotation under controlled laboratory conditions. The dataset includes raw acoustic recordings, vibration waveform recordings, quantitative vibration measurements, experimental metadata describing each operating condition, and photographic documentation of the investigated motor and the repair procedure.
+[Normal] The dataset can be reused for research on condition monitoring, fault diagnosis, signal processing, feature extraction, machine learning, multimodal sensor fusion, and repair verification of permanent magnet electrical machines. It also enables comparative studies of motor behaviour before and after permanent magnet re-bonding and provides experimental data for the development and validation of data-driven diagnostic methods.
+
+[Normal] SPECIFICATIONS TABLE
+
+=== TABLE START ===
+Subject
+Specific subject area | Condition monitoring and fault diagnosis of brushed permanent magnet DC motors using multimodal acoustic and vibration measurements
+Type of data | Raw acoustic recordings (.wav); Quantitative vibration measurements; Metadata (.csv); Images (.jpg)
+Data collection | The dataset was acquired from a laboratory brushed permanent magnet DC motor (rated parameters: 98 V, 31 A, 17.6 Nm, 1500 rpm) removed from a metal-cutting machine following permanent magnet debonding. The detached permanent magnet was re-bonded using a structural adhesive, and the complete measurement procedure was repeated under identical operating conditions. Acoustic recordings were acquired using an Android smartphone positioned approximately 1 m from the motor, while vibration measurements were obtained using an AV-160B vibration meter. Measurements were performed at five rotational speeds (100, 200, 500, 750, and 1000 rpm) in both forward and reverse directions of rotation.
+Data source location | Laboratory of Technical University of Sofia, Sofia, Bulgaria
+Data accessibility | Repository name: Mendeley Data / Data identification number: (or DOI or persistent identifier)  / Direct URL to data: … / Instructions for accessing these data: The dataset will be publicly available through the Mendeley Data repository using the assigned DOI.
+Related research article | none
+=== TABLE END ===
+
+
+[Heading 1] VALUE OF THE DATA
+[List Paragraph] This dataset provides raw acoustic recordings and quantitative vibration measurements acquired from a brushed permanent magnet DC motor removed from a metal-cutting machine following permanent magnet debonding. The dataset includes measurements obtained from the motor in its as-received condition and after permanent magnet re-bonding, providing experimental data associated with a real-world motor condition and its subsequent repair.
+[List Paragraph] The dataset enables direct comparison of the motor response before and after permanent magnet re-bonding because all measurements were performed using the same motor, sensor configuration, measurement procedure, rotational speeds, and rotation directions under identical experimental conditions.
+[List Paragraph] The dataset can support the development and validation of signal processing, feature extraction, machine learning, and artificial intelligence methods for the detection and diagnosis of permanent magnet debonding in brushed permanent magnet DC motors.
+[List Paragraph] Researchers working in electrical machines, condition monitoring, predictive maintenance, fault diagnosis, and intelligent manufacturing can reuse the dataset as a benchmark for evaluating diagnostic algorithms and comparing different fault detection and classification approaches.
+[List Paragraph] The combination of raw acoustic recordings and quantitative vibration measurements provides complementary information for multimodal condition monitoring and facilitates future research on sensor fusion techniques for rotating electrical machines.
+[Heading 1] BACKGROUND
+[List Paragraph] Condition monitoring and fault diagnosis are essential for improving the reliability and maintenance of electrical machines used in industrial applications. Vibration analysis is widely employed for monitoring rotating electrical machines and is frequently combined with signal processing and machine learning techniques for fault diagnosis [1,2]. More recently, acoustic sensing has emerged as a complementary, non-contact approach, while the combination of acoustic and vibration measurements has enabled multimodal data-driven diagnostic methods [3,4].
+[List Paragraph] Permanent magnet debonding is a failure condition associated with the deterioration of the bonding interface between the permanent magnet and its supporting structure [5]. Although several publicly available datasets support research on electric motor fault diagnosis, datasets specifically addressing permanent magnet debonding using both acoustic and vibration measurements remain limited [6].
+[List Paragraph] To address this need, the present dataset was compiled from a brushed permanent magnet DC motor removed from a metal-cutting machine following permanent magnet debonding. The detached permanent magnet was subsequently re-bonded using a structural adhesive, and measurements were repeated under identical operating conditions. The dataset includes raw acoustic recordings, vibration data, experimental metadata, and photographic documentation of the investigated motor and repair procedure.
+
+
+[Heading 1] DATA DESCRIPTION
+[Normal] The dataset contains multimodal experimental data acquired from a brushed permanent magnet DC motor under two motor conditions: permanent magnet debonding and permanent magnet re-bonding. It combines raw acoustic recordings, vibration measurements, experimental metadata, and photographic documentation of the investigated motor, the permanent magnet repair procedure, and the experimental setup.
+[Normal] The investigated motor was removed from a metal-cutting machine after the occurrence of permanent magnet debonding. Following the initial measurements, the detached permanent magnet was re-bonded to its original position using a structural adhesive, and the complete measurement procedure was repeated under identical experimental conditions. Measurements were performed under steady-state no-load operating conditions at five rotational speeds (100, 200, 500, 750, and 1000 rpm) in both forward and reverse directions of rotation.
+[Normal] Acoustic signals were recorded using an Android smartphone positioned approximately 1 m from the motor, while vibration data were acquired using an AV-160B vibration meter, including vibration waveform recordings and quantitative vibration measurements. Since all experiments were conducted under no-load operating conditions, the dataset contains acoustic and vibration data only and does not include electrical current measurements.
+[Normal] The repository intentionally contains the original raw acoustic recordings rather than pre-computed signal representations. This allows users to apply their own preprocessing procedures and generate application-specific representations, including spectrograms, Mel spectrograms, MFCCs, chromagrams, cochleograms, scalograms, tempograms, and waveform visualizations according to their research objectives.
+[Normal] Table 1 summarizes the organization of the repository and the contents of each folder and file included in the dataset. The repository is divided into two main folders, Debonded_PM and Rebonded_PM, corresponding to the investigated motor conditions, together with the associated metadata and photographic documentation.
+
+[Normal] Table 1.
+[Normal] Organization of the dataset repository.
+=== TABLE START ===
+Folder/File | Description | File format
+Debonded_PM | Measurements acquired from the motor with permanent magnet debonding | Folder
+Rebonded_PM | Measurements acquired after permanent magnet re-bonding | Folder
+Forward | Measurements during forward rotation | Folder
+Reverse | Measurements during reverse rotation | Folder
+Raw acoustic recordings | Smartphone audio recordings (.wav) | WAV
+Vibration data | Vibration waveform recordings and quantitative vibration measurements | CSV
+metadata.csv | Experimental metadata including motor condition, rotational speed, rotation direction, and measurement information | CSV
+Images | Photographs of the motor, detached permanent magnet, repair procedure, and experimental setup | JPG
+README | Instructions for using the dataset | TXT
+=== TABLE END ===
+
+[Normal] Within each motor-condition folder, the measurements are organized according to the direction of rotation and the investigated rotational speed. Table 2 summarizes all experimental operating conditions included in the dataset, indicating the motor condition, rotation direction, rotational speed, and the available acoustic and vibration measurements.
+
+
+[Normal] Table 2.
+[Normal] Summary of the measurement conditions.
+=== TABLE START ===
+Motor condition | Rotation direction | Rotational speed (rpm) | Acoustic data | Vibration data
+Debonded PM | Forward | 100 | ✓ | ✓
+Debonded PM | Forward | 200 | ✓ | ✓
+... | ... | ... | ... | ...
+Rebonded PM | Reverse | 1000 | ✓ | ✓
+=== TABLE END ===
+
+[Normal] Figure 1 illustrates the overall organization of the repository, including the investigated motor conditions, operating parameters, acquired data types, and supporting documentation. Figure 2 presents the investigated brushed permanent magnet DC motor together with the permanent magnet before and after the re-bonding procedure.
+
+
+[Normal] Fig. 1. Organization of the dataset, showing the studied motor conditions, operating parameters, acquired data types, and supporting documentation included in the repository.
+
+[Normal] To provide representative examples of the collected data, Figs. 2 and 3 present representative raw time-domain acoustic waveforms acquired from the investigated brushed permanent magnet DC motor before and after permanent magnet re-bonding, respectively. All recordings were acquired during forward rotation at the five investigated rotational speeds (100, 200, 500, 750, and 1000 rpm) under identical experimental conditions. The figures illustrate the type of raw acoustic data included in the dataset without any additional signal processing.
+[Normal] Fig. 4 presents …..
+
+
+
+
+
+[Normal] Fig. 2. Representative raw time-domain acoustic signals acquired from the brushed permanent magnet DC motor with permanent magnet debonding at different rotational speeds.
+
+
+
+
+
+[Normal] Fig. 3. Representative raw time-domain acoustic signals acquired after permanent magnet re-bonding at rotational speeds.
+
+
+
+[Normal] Fig. 4. Vibration data mean and standard deviation by operating conditions visualizing acceleration, displacement and velocity at different rpm.
+
+[Heading 1] EXPERIMENTAL DESIGN, MATERIALS AND METHODS
+[Normal] The experimental dataset was acquired from a brushed permanent magnet DC motor that had previously been installed in a metal-cutting machine. During industrial operation, increased noise and abnormal operation of the electric drive system were observed, requiring the motor to be removed from service and transferred to the laboratory for fault investigation. Subsequent inspection revealed that one of the permanent magnets had detached from the inner surface of the stator due to degradation of the adhesive bond.
+[Normal] According to the manufacturer's nameplate, the investigated motor has a rated voltage of 98 V, a rated current of 31 A, a rated torque of 17.6 Nm, and a rated speed of 1500 rpm. The motor was first examined in its as-received condition prior to the repair procedure. The permanent magnet repair, experimental measurements, and dataset generation are described in the following sections.
+[Normal] Figure 4 presents the investigated brushed permanent magnet DC motor after disassembly (Fig. 2a), showing the stator housing and rotor assembly used throughout the experimental investigation (Fig. 2b).
+
+
+[Normal]                            a)                                                                                         b)
+[Normal] Fig. 4. Investigated brushed permanent magnet DC motor after disassembly, showing the stator housing and rotor assembly used for the experimental investigation.
+[Normal] Following the initial inspection, the detached permanent magnet was removed from the stator housing to prepare it for re-bonding. Residual adhesive and surface contaminants were mechanically removed from both the permanent magnet and the corresponding bonding surface inside the stator housing using a wire brush until clean bonding surfaces were obtained.
+[Normal] A structural adhesive (Bison) was subsequently applied to both the stator housing and the permanent magnet. The permanent magnet was then repositioned in its original location and mechanically fixed to prevent displacement during adhesive curing. To maintain the correct alignment of the permanent magnets during curing, a steel spacer was placed between the magnets. The adhesive was allowed to cure for 24 h before the motor was reassembled and the second measurement campaign was carried out.
+
+
+[Normal]                                        a)                                                       b)                                                    c)
+
+[Normal]                           d)                                                      e)                                                            f)
+
+[Normal]                       g)                                                    h)                                                            i)
+[Normal] Fig. 5. Permanent magnet repair procedure: (a) detached permanent magnet; (b) permanent magnet before surface preparation; (c) cleaned permanent magnet; (d) bonding surface before cleaning; (e) cleaned bonding surface; (f) structural adhesive applied to the stator housing; (g) structural adhesive applied to the permanent magnet; (h) re-bonded permanent magnet; (i) permanent magnet mechanically fixed during the 24 h adhesive curing period.
+[Normal] Figure 5 illustrates the successive stages of the permanent magnet repair procedure, including the detached permanent magnet, surface preparation, adhesive application, permanent magnet re-bonding, and fixation during the 24 h curing period.
+[Normal] After completion of the repair procedure and adhesive curing, the motor was reassembled and mounted on a laboratory test bench for experimental measurements. The same measurement procedure was applied to both motor conditions (debonded and re-bonded) to ensure direct comparability of the acquired data.
+[Normal] Acoustic signals were recorded using an Android smartphone positioned at a distance of approximately 1 m from the motor. The smartphone remained fixed throughout all experiments, and the measurements were carried out under controlled laboratory conditions with limited background noise.
+[Normal] Vibration measurements were performed using an AV-160B vibration meter. The instrument was used to acquire both vibration waveform recordings and quantitative vibration measurements. The vibration sensor was mounted at the same location for all experiments to maintain consistent measurement conditions.
+[Normal] The motor was operated under steady-state no-load conditions at five rotational speeds: 100, 200, 500, 750, and 1000 rpm. Measurements were carried out in both forward and reverse directions of rotation. For each operating condition, acoustic recordings and vibration measurements were acquired before the permanent magnet repair and repeated after re-bonding using the same sensor configuration and measurement procedure.
+[Normal] Table 3 summarizes the measurement equipment used during the experimental investigation.
+
+[Normal] Table 3.
+[Normal] Measurement equipment.
+=== TABLE START ===
+Equipment | Model | Purpose
+Brushed permanent magnet DC motor | Servo motor 15B | Investigated motor
+Smartphone | Android Smartphone | Acoustic signal acquisition
+Vibration meter | AV-160B | Vibration data recording
+Structural adhesive | Bison | Permanent magnet re-bonding
+=== TABLE END ===
+
+[Normal] Before each measurement, the motor was allowed to reach steady-state operation at the selected rotational speed. Acoustic recordings and vibration measurements were subsequently acquired under identical operating conditions. The measurement sequence was repeated for all investigated rotational speeds in both forward and reverse directions of rotation.
+[Normal] After completion of the measurements for the motor with permanent magnet debonding, the repair procedure described above was performed. Following the 24 h adhesive curing period and motor reassembly, the complete measurement sequence was repeated using the same rotational speeds, sensor positions, operating conditions, and acquisition procedure.
+[Normal] The acquired dataset consists of raw acoustic recordings, vibration waveform recordings, quantitative vibration measurements, photographic documentation of the repair procedure, and a metadata file describing the operating conditions associated with each measurement. All files were organized according to the motor condition, direction of rotation, rotational speed, and data type before being prepared for publication in the Mendeley Data repository.
+[Normal] The complete dataset, including the raw acoustic recordings, vibration measurements, metadata, and photographic documentation described in this article, has been deposited in the Mendeley Data repository [7].
+
+[Heading 1] LIMITATIONS
+[Heading 1] The dataset was acquired from a single brushed permanent magnet DC motor removed from a metal-cutting machine and therefore does not capture manufacturing or design variations between different motors. The dataset represents one naturally occurring permanent magnet debonding condition and the corresponding re-bonded condition of the same motor. It does not include multiple independent permanent magnet debonding cases or different degrees of debonding severity.
+[Heading 1] Measurements were performed under controlled laboratory conditions at five rotational speeds (100, 200, 500, 750, and 1000 rpm) in both forward and reverse directions of rotation. All experiments were conducted under steady-state no-load operating conditions. Consequently, the dataset does not include electrical current measurements or data acquired under load.
+[Heading 1] Acoustic recordings were acquired using a single Android smartphone positioned approximately 1 m from the motor, while vibration measurements were obtained using one AV-160B vibration meter. The acoustic recordings were collected under controlled laboratory conditions with limited environmental noise and therefore do not represent different ambient acoustic environments, recording devices, or sensor locations.
+[Heading 1] These characteristics should be considered when reusing the dataset or comparing it with data acquired from different motors, operating conditions, or experimental configurations.
+
+[Heading 1] ETHICS STATEMENT
+[Normal] The authors confirm that they have read and followed the ethical requirements for publication in Data in Brief. The current work does not involve human participants, animal experiments, or any data collected from social media platforms. The dataset was acquired exclusively from laboratory experiments involving a brushed permanent magnet DC motor.
+
+[Heading 1] CRediT AUTHOR STATEMENT
+[Heading 1] Marin Zhilevski: Conceptualization, Methodology, Investigation, Resources, Data Curation, Writing – Original Draft, Writing – Review & Editing, Supervision.
+Nikolay Yordanov: Investigation, Data Curation, Formal Analysis, Visualization, Writing – Original Draft.
+Mikho Mikhov: Conceptualization, Methodology, Resources, Supervision, Writing – Review & Editing.
+Mihriban Gunay: Investigation, Data Curation, Validation, Writing – Review & Editing.
+Merve Ertarğın: Investigation, Data Curation, Validation, Writing – Review & Editing.
+
+[Heading 1] ACKNOWLEDGEMENTS
+[Normal] The authors would like to thank the Research and Development Sector at the Technical University of Sofia for the financial support.
+[Heading 1] DECLARATION OF COMPETING INTERESTS
+[List Paragraph] The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+[Heading 1] REFERENCES
+[Normal] 1. Li, L.; Liao, S.; Zou, B.; Liu, J. Mechanism-Based Fault Diagnosis Deep Learning Method for Permanent Magnet Synchronous Motor. Sensors 2024, 24, 6349. https://doi.org/10.3390/s24196349.
+[Normal] 2. Ding, L.; Guo, H.; Bian, L. Convolutional Neural Networks Based on Resonance Demodulation of Vibration Signal for Rolling Bearing Fault Diagnosis in Permanent Magnet Synchronous Motors. Energies 2024, 17, 4334. https://doi.org/10.3390/en17174334.
+[Normal] 3. Uzel, H.; Özüpak, Y.; Alpsalaz, F.; Aslan, E.; Zaitsev, I. Acoustic-based fault diagnosis of electric motors using Mel spectrograms and convolutional neural networks. Scientific Reports 2026, 16, 3379. https://doi.org/10.1038/s41598-025-33269-z.
+[Normal] 4. Kilickaya, S.; Eren, L. Padé Approximant Neural Networks for Enhanced Electric Motor Fault Diagnosis Using Vibration and Acoustic Data. Journal of Vibration Engineering & Technologies 2025. https://doi.org/10.1007/s42417-025-02129-5.
+[Normal] 5. Karmakar, N.; Praveen, P.; Goel, A. Virtual Evaluation of PM Rotor Failure Modes and Magnet Adhesive Debonding with Cohesive Interface Approach. SAE Technical Paper 2024-01-2725, 2024. https://doi.org/10.4271/2024-01-2725
+[Normal] 6. Sehri, M.; Dumond, P. University of Ottawa constant and variable speed electric motor vibration and acoustic fault signature dataset. Data in Brief 2024, 53, 110144. https://doi.org/10.1016/j.dib.2024.1101444.
+[Normal] 7. Zhilevski, M.; Yordanov, N.; Mikhov, M.; Gunay, M.; Ertarğın, M., Multi-Sensor Acoustic and Vibration Dataset for Permanent Magnet Debonding Diagnosis in a Brushed Permanent Magnet DC Motor, Mendeley Data, 2026. DOI: to be assigned.
