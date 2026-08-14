@@ -415,7 +415,7 @@ conditions — not simultaneously):**
 
 **Procedure.** For each condition and speed setpoint the motor was brought to steady
 state, then each sensor was recorded in turn. Files are named
-`load{{NNN}}_{{sensor}}` and organised under `data/<condition>/<sensor>/`; see
+`speed{{NNN}}_{{sensor}}` and organised under `data/<condition>/<sensor>/`; see
 `metadata.csv` for the full inventory with sample rates and durations.
 
 ## 6. Folder structure
@@ -423,18 +423,18 @@ state, then each sensor was recorded in turn. Files are named
 ```
 data/
   <condition>/
-    current/            loadNNN_current.bin
-    sound_vibrometer/   loadNNN_sound_vibrometer.wav
-    sound_phone/        loadNNN_sound_phone.m4a
-    vibration/          loadNNN_vibration.xls
+    current/            speedNNN_current.bin
+    sound_vibrometer/   speedNNN_sound_vibrometer.wav
+    sound_phone/        speedNNN_sound_phone.m4a
+    vibration/          speedNNN_vibration.xls
 cad/                    3D model of the rig (.stp)
 metadata.csv            one row per file
 README.md
 ```
 
-`NNN` is the zero-padded speed setpoint (e.g. `load020` = 20 % of rated speed).
-File names keep the legacy `load` prefix for backward compatibility; it encodes
-the commanded speed, not a mechanical load.
+`NNN` is the zero-padded speed setpoint (e.g. `speed020` = 20 % of rated speed).
+The `speed` prefix encodes the commanded speed (% of rated speed); the motor
+runs unloaded, so this is not a mechanical load.
 `metadata.csv` has one row per file with `condition`, `operation`, `reversal`,
 `speed_percent`, `sensor`, `format`, `sample_rate_hz`, `duration_s`, `channels`,
 `bit_depth`, `file_size_bytes`, `new_path`, and the original name/path for
@@ -458,7 +458,7 @@ traceability.
 
 ```python
 import soundfile as sf   # pip install soundfile
-audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/load020_sound_vibrometer.wav")
+audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/speed020_sound_vibrometer.wav")
 # Rigol .bin: 'RG01' header + samples (sample rate in metadata.csv).
 ```
 

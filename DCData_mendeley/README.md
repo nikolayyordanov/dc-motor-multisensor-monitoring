@@ -147,7 +147,7 @@ traceability.
 
 ```python
 import soundfile as sf   # pip install soundfile
-audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/load020_sound_vibrometer.wav")
+audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/speed020_sound_vibrometer.wav")
 # Rigol .bin: 'RG01' header + samples (sample rate in metadata.csv).
 ```
 
