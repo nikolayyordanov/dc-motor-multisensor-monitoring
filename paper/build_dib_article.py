@@ -5,7 +5,7 @@ The script:
   1. Reads DCData_mendeley/metadata.csv to compute exact file inventories.
   2. Generates four data-descriptive figures (organisation schematic,
      armature-current waveform + spectrum, vibrometer waveform + spectrogram,
-     vibration spot readings vs load) into paper/figures/.
+     vibration spot readings vs speed) into paper/figures/.
   3. Builds the manuscript following the Data in Brief template, in the style of
      the completed sample article, and embeds the figures.
 
@@ -165,20 +165,20 @@ def fig1_organisation(path: Path):
     connect((lvl1[0][0], lvl1[0][1]), cond)
 
     sensors = [
-        box(1, 20, 22, 12, "current/\nloadNNN_current.bin\n(Rigol MSO5074,\n1 MSa/s, ~20 s)",
+        box(1, 20, 22, 12, "current/\nspeedNNN_current.bin\n(Rigol MSO5074,\n1 MSa/s, ~20 s)",
             fc="#fbf1e6", ec="#c07a2b", fs=8),
-        box(25, 20, 24, 12, "sound_vibrometer/\nloadNNN_sound_vibrometer.wav\n(AV-160B AC out,\n44.1 kHz/16-bit stereo)",
+        box(25, 20, 24, 12, "sound_vibrometer/\nspeedNNN_sound_vibrometer.wav\n(AV-160B AC out,\n44.1 kHz/16-bit stereo)",
             fc="#fbf1e6", ec="#c07a2b", fs=8),
-        box(51, 20, 22, 12, "sound_phone/\nloadNNN_sound_phone.m4a\n(smartphone mic,\n~1 m, AAC)",
+        box(51, 20, 22, 12, "sound_phone/\nspeedNNN_sound_phone.m4a\n(smartphone mic,\n~1 m, AAC)",
             fc="#fbf1e6", ec="#c07a2b", fs=8),
-        box(75, 20, 23, 12, "vibration/\nloadNNN_vibration.xls\n(AV-160B spot\nreadings, ISO 2954)",
+        box(75, 20, 23, 12, "vibration/\nspeedNNN_vibration.xls\n(AV-160B spot\nreadings, ISO 2954)",
             fc="#fbf1e6", ec="#c07a2b", fs=8),
     ]
     for s in sensors:
         connect((cond[0], cond[1]), s)
 
     ax.text(50, 6,
-            "NNN = zero-padded load percent (001-100). Each sensor recorded separately under the same operating conditions.",
+            "NNN = zero-padded speed setpoint (001-100, % of rated speed). Each sensor recorded separately under the same operating conditions.",
             ha="center", va="center", fontsize=8, style="italic", color="#44546a")
     fig.tight_layout()
     fig.savefig(path, dpi=200, bbox_inches="tight")
@@ -252,7 +252,7 @@ def fig4_vibration(path: Path, vib_dir: Path):
             vals = [p[1] for p in pts]
             ax.plot(loads, vals, "o-", color=colors[qty], markersize=4, linewidth=1.2)
         ax.set_title(qty)
-        ax.set_xlabel("Load (% of rated power)")
+        ax.set_xlabel("Speed setpoint (% of rated speed)")
         ax.set_ylabel(f"Mean {qty.lower()} ({units[qty]})")
         ax.grid(alpha=0.3)
     fig.tight_layout()
@@ -267,7 +267,7 @@ def fig4_vibration(path: Path, vib_dir: Path):
 def compute_stats():
     meta = pd.read_csv(DATASET / "metadata.csv")
     data = meta[meta["sensor"].isin(SENSOR_ORDER)].copy()
-    data["load_percent"] = data["load_percent"].astype(int)
+    data["speed_percent"] = data["speed_percent"].astype(int)
 
     fmt_counts = meta["format"].value_counts().to_dict()
     total_files = len(meta)
@@ -277,7 +277,7 @@ def compute_stats():
     for cond, g in data.groupby("condition"):
         op = g["operation"].iloc[0]
         rev = g["reversal"].iloc[0]
-        loads = sorted(g["load_percent"].unique().tolist())
+        loads = sorted(g["speed_percent"].unique().tolist())
         counts = {s: int((g["sensor"] == s).sum()) for s in SENSOR_ORDER}
         conditions.append({
             "condition": cond, "operation": op, "reversal": rev,
@@ -441,7 +441,7 @@ def build(stats, fig_ok):
 
     field(doc, "Keywords",
           "Armature current; AV-160B vibrometer; Smartphone microphone; "
-          "Thyristor converter; Load estimation; Foundation looseness; "
+          "Thyristor converter; Speed estimation; Foundation looseness; "
           "Fault diagnosis; Machine learning")
 
     field(doc, "Abstract", "")
@@ -450,8 +450,9 @@ def build(stats, fig_ok):
          "recorded from a brushed permanent-magnet DC servo motor (3PI12.12; "
          "625 W, 110 V DC, 12.5 A, 5.4 N\u00b7m, 2000 rpm) driven by a four-quadrant "
          "thyristor (SCR) converter with armature voltage and current control. "
-         "The machine was operated across up to thirteen load levels (1, 2, 5, "
-         "10, 20, 30, 40, 50, 60, 70, 80, 90 and 100 % of rated power) under "
+         "The machine was operated, with no external mechanical load, across up to "
+         "thirteen speed setpoints (1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90 and "
+         "100 % of rated speed) under "
          f"{stats['n_conditions']} operating conditions that combine four "
          "control/mechanical states \u2014 normal operation, a detuned "
          "speed-regulator gain, a detuned speed- and current-regulator gain, and "
@@ -467,7 +468,7 @@ def build(stats, fig_ok):
          f"untransformed recordings and comprises {inv}, together with a per-file "
          "metadata index (sample rate, duration, channels, bit depth and file "
          "size), a 3-D CAD model of the test rig, a README and a CC BY 4.0 "
-         "licence. The dataset supports load estimation, operating-condition "
+         "licence. The dataset supports speed estimation, operating-condition "
          "classification, direction-reversal and converter-ripple analysis, and "
          "benchmarking of low-cost smartphone audio against instrument-grade "
          "current and vibration references.")
@@ -488,7 +489,8 @@ def build(stats, fig_ok):
         ["Data collection",
          "Recorded on a laboratory test rig comprising a brushed PM DC servo "
          "motor (3PI12.12) driven by a four-quadrant thyristor (SCR) converter "
-         "with a coupled load unit. Armature current was captured with a Rigol "
+         "with no external mechanical load (the motor runs unloaded). Armature "
+         "current was captured with a Rigol "
          "MSO5074 oscilloscope; the vibration waveform and spot readings (per "
          "ISO 2954) were taken with an AV-160B vibrometer; airborne sound was "
          "recorded with a budget Android smartphone at ~1 m. Each sensor was "
@@ -511,8 +513,8 @@ def build(stats, fig_ok):
         "The dataset provides raw, matched-condition multi-sensor recordings "
         "(armature current, vibrometer vibration waveform, smartphone audio and "
         "vibrometer spot readings) of a brushed DC servo motor across a wide "
-        "load range, giving ready-made regression (load percent) and "
-        "classification (operating condition) labels.",
+        "speed range, giving ready-made regression (speed setpoint, % of rated "
+        "speed) and classification (operating condition) labels.",
         "Because the smartphone microphone is recorded at ~1 m under the same "
         "operating conditions as the instrument-grade current and vibration "
         "references, the data enable a direct benchmark of whether low-cost "
@@ -549,12 +551,12 @@ def build(stats, fig_ok):
          "four-quadrant thyristor converter \u2014 a drive whose armature current "
          "carries a characteristic 300 Hz (6 \u00d7 50 Hz) six-pulse converter ripple "
          "in addition to commutation signatures. The motor was exercised across a "
-         "broad load range under normal operation, two levels of controller "
+         "broad speed range under normal operation, two levels of controller "
          "detuning and a loosened-foundation condition, each without and with "
          "periodic direction reversal, while four sensors were recorded "
          "separately under matched conditions. The resulting raw recordings allow "
          "researchers to compare models trained on smartphone audio against those "
-         "trained on current and vibration signals, and to study load estimation, "
+         "trained on current and vibration signals, and to study speed estimation, "
          "foundation-looseness detection, direction-reversal transients and "
          "converter/commutation signatures. The data are released raw and "
          "untransformed so that users can apply their own preprocessing "
@@ -566,14 +568,14 @@ def build(stats, fig_ok):
          "The dataset contains raw multi-sensor recordings acquired from a single "
          "brushed permanent-magnet DC servo motor on a laboratory test rig. It is "
          "published as byte-for-byte raw recordings organised by operating "
-         "condition, sensor and load level, together with a per-file metadata "
+         "condition, sensor and speed setpoint, together with a per-file metadata "
          "index, a 3-D CAD model of the rig, a README descriptor and a licence "
          f"file. In total the repository contains {inv}. Table 1 lists the "
          "top-level organisation of the repository.")
 
     para(doc, "Table 1. Organisation of the dataset repository.")
     add_table(doc, ["Folder / File", "Description", "Format"], [
-        ["data/", "Raw recordings organised as <condition>/<sensor>/loadNNN_sensor.ext", "Folder"],
+        ["data/", "Raw recordings organised as <condition>/<sensor>/speedNNN_sensor.ext", "Folder"],
         ["cad/", "3-D CAD model of the test rig (1v_3v0.stp)", "STP"],
         ["metadata.csv", "One row per file with acquisition parameters and traceability fields", "CSV"],
         ["README.md", "Dataset descriptor (machine, conditions, sensors, methods, coverage)", "Markdown"],
@@ -603,13 +605,13 @@ def build(stats, fig_ok):
          f"The recordings span {stats['n_conditions']} operating conditions, each "
          "a folder under data/ formed by combining an operation state with a "
          "reversal mode (without or with periodic direction reversal). Table 3 "
-         "lists the conditions and the load levels (% of rated power) present for "
-         "each. Naming note: the detuned-speed-regulator condition uses a "
+         "lists the conditions and the speed setpoints (% of rated speed) present "
+         "for each. Naming note: the detuned-speed-regulator condition uses a "
          "non-optimal speed-regulator gain, whereas the detuned "
          "speed-and-current-regulator (RT) condition additionally uses a "
          "non-optimal current-regulator gain.")
 
-    para(doc, "Table 3. Operating conditions and available load levels.")
+    para(doc, "Table 3. Operating conditions and available speed setpoints.")
     cond_rows = []
     for c in stats["conditions"]:
         cond_rows.append([
@@ -619,7 +621,7 @@ def build(stats, fig_ok):
             fmt_loads(c["loads"]),
             str(len(c["loads"])),
         ])
-    add_table(doc, ["Folder (data/)", "Operation", "Reversal", "Load levels (%)", "No."],
+    add_table(doc, ["Folder (data/)", "Operation", "Reversal", "Speed setpoints (%)", "No."],
               cond_rows, widths=[1.9, 1.5, 0.7, 1.9, 0.4])
 
     para(doc,
@@ -644,16 +646,18 @@ def build(stats, fig_ok):
     ], widths=[1.2, 1.5, 1.7, 0.6, 1.6])
 
     para(doc,
-         "Files follow the naming scheme loadNNN_sensor.ext, where NNN is the "
-         "zero-padded load percent (e.g. load020 = 20 % load). The metadata.csv "
-         "index has one row per file; its fields are described in Table 5.")
+         "Files follow the naming scheme speedNNN_sensor.ext, where NNN is the "
+         "zero-padded speed setpoint (e.g. speed020 = 20 % of rated speed); the "
+         "speed prefix denotes the commanded speed and the motor runs unloaded. "
+         "The metadata.csv index has one row per file; its fields are described "
+         "in Table 5.")
 
     para(doc, "Table 5. Fields in metadata.csv.")
     add_table(doc, ["Field", "Description"], [
         ["condition", "Canonical condition key (operation + reversal); matches the data/ sub-folder"],
         ["operation", "Mechanical/control state (normal, loose_foundation, suboptimal_control, suboptimal_control_rt)"],
         ["reversal", "Periodic direction reversal (yes/no)"],
-        ["load_percent", "Load level as a percentage of rated power"],
+        ["speed_percent", "Speed setpoint as a percentage of rated speed (2000 rpm)"],
         ["sensor", "Sensor channel (current, sound_vibrometer, sound_phone, vibration)"],
         ["format", "File format (bin, wav, m4a, xls, stp)"],
         ["sample_rate_hz", "Sampling rate (current and WAV only)"],
@@ -668,11 +672,11 @@ def build(stats, fig_ok):
 
     para(doc,
          "Table 6 gives the number of files available per operating condition and "
-         "sensor. Coverage is near-complete on the nominal load grid; the "
-         "detuned-control conditions reach only a ~65 % top load because the "
-         "detuned controller trips above that level, the vibration spot readings "
-         "omit the near-zero-load points where vibration is negligible, and a few "
-         "individual load points may be absent in a branch. The 385 sensor "
+         "sensor. Coverage is near-complete on the nominal speed grid; the "
+         "detuned-control conditions reach only a ~65 % top speed setpoint because "
+         "the detuned controller trips above that speed, the vibration spot "
+         "readings omit the near-zero-speed points where vibration is negligible, "
+         "and a few individual speed points may be absent in a branch. The 385 sensor "
          "recordings listed in Table 6 are complemented by the CAD model, giving "
          "386 files in total.")
 
@@ -694,9 +698,10 @@ def build(stats, fig_ok):
     para(doc,
          "Figure 1 illustrates the overall organisation of the repository. "
          "Figures 2\u20134 present representative raw data from one operating point "
-         "(normal operation, no reversal, 50 % load): the armature current and "
-         "its amplitude spectrum, the vibrometer vibration waveform and its "
-         "spectrogram, and the trend of the AV-160B spot readings with load. The "
+         "(normal operation, no reversal, 50 % speed setpoint): the armature "
+         "current and its amplitude spectrum, the vibrometer vibration waveform "
+         "and its spectrogram, and the trend of the AV-160B spot readings with "
+         "speed. The "
          "figures illustrate the types of raw data included in the dataset "
          "without any additional interpretation.")
 
@@ -711,7 +716,7 @@ def build(stats, fig_ok):
         add_figure(doc, FIGDIR / "fig2_current.png", width_in=6.4)
     caption(doc,
             "Fig. 2. Representative armature-current recording (normal operation, "
-            "no reversal, 50 % load): (a) a 60 ms window of the AC-coupled "
+            "no reversal, 50 % speed setpoint): (a) a 60 ms window of the AC-coupled "
             "waveform and (b) its single-sided amplitude spectrum, showing the "
             "300 Hz six-pulse converter ripple and its harmonics.", center=True)
 
@@ -719,27 +724,28 @@ def build(stats, fig_ok):
         add_figure(doc, FIGDIR / "fig3_vibrometer.png", width_in=6.4)
     caption(doc,
             "Fig. 3. Representative vibrometer vibration recording (normal "
-            "operation, no reversal, 50 % load): (a) a 1 s window of the waveform "
+            "operation, no reversal, 50 % speed setpoint): (a) a 1 s window of the waveform "
             "and (b) its spectrogram up to 10 kHz.", center=True)
 
     if fig_ok.get("fig4"):
         add_figure(doc, FIGDIR / "fig4_vibration.png", width_in=6.4)
     caption(doc,
             "Fig. 4. AV-160B vibration spot readings (mean velocity, acceleration "
-            "and displacement) as a function of load for the normal, no-reversal "
-            "condition.", center=True)
+            "and displacement) as a function of speed setpoint (% of rated speed) "
+            "for the normal, no-reversal condition.", center=True)
 
     # ---- EXPERIMENTAL DESIGN, MATERIALS AND METHODS ---- #
     h1(doc, "EXPERIMENTAL DESIGN, MATERIALS AND METHODS")
     para(doc,
          "Test rig. The brushed PM DC servo motor described in Table 2 was driven "
          "by a four-quadrant thyristor (SCR) converter providing armature voltage "
-         "and current control. Mechanical load was applied with a coupled load "
-         "unit and set to 1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90 and 100 % "
-         "of rated power (a reduced top load applies to the detuned-control "
-         "conditions, as noted below).")
+         "and current control. No external mechanical load was applied — the motor "
+         "ran unloaded — and the drive was commanded to a speed setpoint of 1, 2, "
+         "5, 10, 20, 30, 40, 50, 60, 70, 80, 90 and 100 % of rated speed (2000 rpm; "
+         "a reduced top speed applies to the detuned-control conditions, as noted "
+         "below).")
     para(doc,
-         "Operating conditions. The load sweep was repeated for each operating "
+         "Operating conditions. The speed sweep was repeated for each operating "
          "condition. Normal operation uses the nominal controller tuning. The two "
          "detuned-control conditions use a non-optimal speed-regulator gain "
          "(suboptimal_control) and, additionally, a non-optimal current-regulator "
@@ -759,7 +765,7 @@ def build(stats, fig_ok):
          "budget Android smartphone microphone placed approximately 1 m from the "
          "machine and saved as M4A (AAC).")
     para(doc,
-         "Procedure. For each condition and load level the motor was brought to "
+         "Procedure. For each condition and speed setpoint the motor was brought to "
          "steady state, and then each sensor was recorded in turn. The equipment "
          "used is summarised in Table 7.")
 
@@ -775,7 +781,7 @@ def build(stats, fig_ok):
     para(doc,
          "Curation. Raw files were copied byte-for-byte from the acquisition "
          "folders into a publishable tree with English names and the sortable "
-         "loadNNN_sensor.ext scheme, and indexed in metadata.csv (including "
+         "speedNNN_sensor.ext scheme, and indexed in metadata.csv (including "
          "sample rate, duration, channels, bit depth, file size and the original "
          "name/path for traceability). No signal transformation was applied. The "
          "complete dataset described in this article has been deposited in the "
@@ -786,15 +792,15 @@ def build(stats, fig_ok):
     para(doc,
          "The four sensors were recorded separately under the same operating "
          "conditions rather than simultaneously; recordings are therefore aligned "
-         "by operating condition and load level, not sample-synchronously. The "
-         "detuned-control conditions reach only a ~65 % top load because the "
-         "detuned controller and DC-link protection trip above that level. The "
+         "by operating condition and speed setpoint, not sample-synchronously. The "
+         "detuned-control conditions reach only a ~65 % top speed setpoint because "
+         "the detuned controller and DC-link protection trip above that speed. The "
          "vibration XLS files are spot readings rather than waveforms, and the "
-         "near-zero-load points are absent where vibration is negligible. The "
+         "near-zero-speed points are absent where vibration is negligible. The "
          "smartphone audio is lossy AAC and is intended for qualitative use; the "
          "vibrometer WAV is recommended for spectral work. The armature current "
          "is captured with the oscilloscope\u2019s 8-bit ADC, and a few individual "
-         "load points may be missing in a branch. All data come from a single "
+         "speed points may be missing in a branch. All data come from a single "
          "machine and rig, so the dataset does not capture unit-to-unit or design "
          "variation, and the loose-foundation condition represents one induced "
          "severity. These characteristics should be considered when reusing the "
@@ -867,8 +873,8 @@ def main():
 
     fig_ok = {}
     # Representative operating point
-    cur_bin = DATASET / "data/normal_no_reversal/current/load050_current.bin"
-    wav_file = DATASET / "data/normal_no_reversal/sound_vibrometer/load050_sound_vibrometer.wav"
+    cur_bin = DATASET / "data/normal_no_reversal/current/speed050_current.bin"
+    wav_file = DATASET / "data/normal_no_reversal/sound_vibrometer/speed050_sound_vibrometer.wav"
     vib_dir = DATASET / "data/normal_no_reversal/vibration"
 
     try:

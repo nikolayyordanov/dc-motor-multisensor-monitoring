@@ -109,20 +109,20 @@ SENSOR_MAP = {
 
 SENSOR_ORDER = ["current", "sound_vibrometer", "sound_phone", "vibration"]
 
-# Discrete load levels (% of rated power) targeted for every branch.
+# Discrete speed setpoints (% of rated speed) targeted for every branch.
 EXPECTED_LOADS = [1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
-# The plain "suboptimal_control" branch cannot be loaded past ~65 %: the
-# controller / DC-link protection trips, so the sweep stops at a 65 % top level
-# instead of 70-100 % (intentional, not a gap). The "coeff. РТ" variant is a
-# milder detuning and is recorded across the full 1-100 % range.
+# The plain "suboptimal_control" branch cannot run above ~65 % of rated speed:
+# the detuned controller / DC-link protection trips, so the sweep stops at a
+# 65 % top setpoint instead of 70-100 % (intentional, not a gap). The "coeff.
+# РТ" variant is a milder detuning and is recorded across the full 1-100 % range.
 SUBOPTIMAL_CAPPED_KEYS = {"suboptimal_control"}
 SUBOPTIMAL_TOP_LOAD = 65
 
-# All load levels that may appear anywhere (for table columns).
+# All speed setpoints that may appear anywhere (for table columns).
 ALL_LOADS = [1, 2, 5, 10, 20, 30, 40, 50, 60, 65, 70, 80, 90, 100]
 
-# Vibration is a spot RMS reading and is negligible at near-zero load, so the
+# Vibration is a spot RMS reading and is negligible at near-zero speed, so the
 # 1 % / 2 % points are intentionally absent for the vibration sensor.
 VIBRATION_SKIP_LOADS = {1, 2}
 
@@ -141,7 +141,7 @@ def expected_loads_for(operation_key: str, sensor: str) -> list[int]:
 
 
 def parse_load(filename: str):
-    """Return the integer load percent encoded in a raw file name (or None)."""
+    """Return the integer speed-setpoint percent encoded in a raw file name (or None)."""
     m = re.match(r"\s*(\d+)", Path(filename).stem)
     return int(m.group(1)) if m else None
 
@@ -225,7 +225,7 @@ def build(src_root: Path, out_root: Path):
                     if load is None:
                         print(f"  [!] cannot parse load from {f.name}; skipped")
                         continue
-                    new_name = f"load{load:03d}_{sensor}{ext}"
+                    new_name = f"speed{load:03d}_{sensor}{ext}"
                     dest = data_dir / cond["key"] / sensor / new_name
                     dest.parent.mkdir(parents=True, exist_ok=True)
                     shutil.copy2(f, dest)
@@ -240,7 +240,7 @@ def build(src_root: Path, out_root: Path):
                         "condition": cond["key"],
                         "operation": cond["operation"],
                         "reversal": cond["reversal"],
-                        "load_percent": load,
+                        "speed_percent": load,
                         "sensor": sensor,
                         "format": ext.lstrip("."),
                         "sample_rate_hz": info.get("sample_rate_hz", ""),
@@ -261,7 +261,7 @@ def build(src_root: Path, out_root: Path):
         shutil.copy2(stp, dest)
         rows.append({
             "condition": "", "operation": "", "reversal": "",
-            "load_percent": "", "sensor": "cad", "format": "stp",
+            "speed_percent": "", "sensor": "cad", "format": "stp",
             "sample_rate_hz": "", "duration_s": "", "channels": "",
             "bit_depth": "", "file_size_bytes": stp.stat().st_size,
             "new_path": str(dest.relative_to(out_root)).replace("\\", "/"),
@@ -273,7 +273,7 @@ def build(src_root: Path, out_root: Path):
 
 
 def write_metadata(rows: list[dict], out_root: Path) -> None:
-    cols = ["condition", "operation", "reversal", "load_percent", "sensor",
+    cols = ["condition", "operation", "reversal", "speed_percent", "sensor",
             "format", "sample_rate_hz", "duration_s", "channels", "bit_depth",
             "file_size_bytes", "new_path", "original_name", "original_path"]
     path = out_root / "metadata.csv"
@@ -283,7 +283,7 @@ def write_metadata(rows: list[dict], out_root: Path) -> None:
         w.writerows(sorted(
             rows,
             key=lambda r: (str(r["condition"]), str(r["sensor"]),
-                           r["load_percent"] if isinstance(r["load_percent"], int) else 0),
+                           r["speed_percent"] if isinstance(r["speed_percent"], int) else 0),
         ))
     print(f"\nWrote {path.relative_to(out_root.parent)}  ({len(rows)} rows)")
 
@@ -296,7 +296,7 @@ def coverage_table(rows: list[dict], conds: list[str]) -> str:
              "|---|---|" + "|".join(["---"] * (len(loads) + 1)) + "|"]
     for c in conds:
         for s in sensors:
-            present = {r["load_percent"] for r in rows
+            present = {r["speed_percent"] for r in rows
                        if r["condition"] == c and r["sensor"] == s}
             marks = ["x" if l in present else "·" for l in loads]
             lines.append(f"| {c} | {s} | " + " | ".join(marks) +
@@ -324,7 +324,7 @@ def write_readme(rows: list[dict], cond_labels: dict, out_root: Path) -> None:
 
 Raw multi-sensor recordings from a **brushed permanent-magnet DC servo motor**
 (3PI12.12) driven by a 4-quadrant **thyristor (SCR) converter**. Each sensor data was
-recorded separately under the **same operating conditions** — matched load level
+recorded separately under the **same operating conditions** — matched speed setpoint
 and mechanical condition — using four sensors: armature current, an AV-160B
 vibrometer probe, a budget Android phone microphone, and vibrometer spot
 readings.
@@ -334,10 +334,10 @@ audio** can replace invasive or specialised diagnostic equipment (current
 probes, contact vibrometers) for motor condition monitoring. With the phone
 recorded at ~1 m under the same conditions as the instrument-grade references,
 researchers can compare models trained on phone audio against those trained on
-current and vibrometer signals — i.e. whether a phone alone can estimate load
+current and vibrometer signals — i.e. whether a phone alone can estimate speed
 and tell apart normal operation, direction reversal, and a loose foundation.
 
-Published **as recorded** (raw, untransformed). It also suits load estimation,
+Published **as recorded** (raw, untransformed). It also suits speed estimation,
 foundation-looseness detection, direction-reversal analysis, and
 converter/commutation signature studies. Section 6 gives ML suggestions only as
 guidance.
@@ -360,8 +360,10 @@ The armature current is **unipolar DC + ripple**. The prominent **300 Hz** line
 
 ## 3. Conditions
 
-Each condition is a folder under `data/`, recorded at up to **13 load levels**
-(1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 % of rated power):
+Each condition is a folder under `data/`, recorded at up to **13 speed setpoints**
+(1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 % of rated speed = 2000 RPM).
+The motor runs **unloaded** — no external mechanical load is applied, so each
+percentage is a commanded speed, not a load level:
 
 | Folder (`data/`) | Description |
 |---|---|
@@ -378,7 +380,7 @@ gain coefficient**, while `suboptimal_control_rt_*` means non-optimal
 | `sound_vibrometer` | WAV (44.1 kHz, 16-bit stereo, ~20.5 s) | True vibration waveform from the AV-160B probe's AC output jack (flat to 10 kHz in acceleration mode). Lossless and complete — **recommended primary source.** |
 | `current` | BIN (Rigol MSO5074) | Armature-current waveform, 8-bit ADC; sample rate and scaling are in each file header. |
 | `sound_phone` | M4A (AAC, lossy) | Budget Android phone microphone ~1 m away. Qualitative use only. |
-| `vibration` | XLS | AV-160B **spot readings** (velocity mm/s, acceleration m/s², displacement mm), per ISO 2954. Not a waveform — use for trending vs load. |
+| `vibration` | XLS | AV-160B **spot readings** (velocity mm/s, acceleration m/s², displacement mm), per ISO 2954. Not a waveform — use for trending vs speed. |
 
 The `sound_vibrometer` and `vibration` data both come from one **AV-160B
 portable vibrometer** (Amittari) with an external piezoelectric accelerometer
@@ -389,11 +391,12 @@ as the WAV).
 ## 5. Methods (steps to reproduce)
 
 **Test rig.** The 3PI12.12 motor (see Section 2) was driven by a 4-quadrant
-thyristor (SCR) converter with armature voltage/current control. Mechanical load
-was applied with a coupled load unit and set to 1, 2, 5, 10, 20, 30, 40, 50, 60,
-70, 80, 90 and 100 % of rated power.
+thyristor (SCR) converter with armature voltage/current control. No external
+mechanical load was applied — the motor ran **unloaded** — while the drive was
+commanded to a speed setpoint of 1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90 and
+100 % of rated speed (2000 RPM).
 
-**Conditions.** The full load sweep was repeated for each condition in
+**Conditions.** The full speed sweep was repeated for each condition in
 Section 3 (normal without reversal, normal with periodic direction reversal, and
 a deliberately loosened foundation without reversal).
 
@@ -410,7 +413,7 @@ conditions — not simultaneously):**
 - *Acoustic* — a budget Android smartphone microphone ~1 m from the machine,
   saved as M4A (AAC).
 
-**Procedure.** For each condition and load level the motor was brought to steady
+**Procedure.** For each condition and speed setpoint the motor was brought to steady
 state, then each sensor was recorded in turn. Files are named
 `load{{NNN}}_{{sensor}}` and organised under `data/<condition>/<sensor>/`; see
 `metadata.csv` for the full inventory with sample rates and durations.
@@ -429,9 +432,11 @@ metadata.csv            one row per file
 README.md
 ```
 
-`NNN` is the zero-padded load percent (e.g. `load020` = 20 % load).
+`NNN` is the zero-padded speed setpoint (e.g. `load020` = 20 % of rated speed).
+File names keep the legacy `load` prefix for backward compatibility; it encodes
+the commanded speed, not a mechanical load.
 `metadata.csv` has one row per file with `condition`, `operation`, `reversal`,
-`load_percent`, `sensor`, `format`, `sample_rate_hz`, `duration_s`, `channels`,
+`speed_percent`, `sensor`, `format`, `sample_rate_hz`, `duration_s`, `channels`,
 `bit_depth`, `file_size_bytes`, `new_path`, and the original name/path for
 traceability.
 
@@ -446,8 +451,8 @@ traceability.
   scalograms — e.g. resized to 224×224 for a CNN.
 - **Current signature analysis:** FFT/envelope of the armature current; mind the
   300/600/900 Hz converter ripple and the speed-tracking commutation band.
-- **Targets:** load percent and the condition folders give ready-made regression
-  and classification labels.
+- **Targets:** speed setpoint (% of rated speed) and the condition folders give
+  ready-made regression and classification labels.
 - **Fusion:** combine current + vibrometer + vibration spot readings recorded
   under the same operating conditions.
 
@@ -462,20 +467,20 @@ audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/load020_sound_vibr
 - Not every condition is crossed with reversal — see the table below for the
   exact combinations.
 - **Suboptimal control (`suboptimal_control_*`)** is recorded only up to a
-  **65 % top load level**: above it the controller / DC-link protection trips,
-  so 70–100 % cannot be captured. This is a physical limit of that detuned
-  setting, not a missing recording.
+  **65 % top speed setpoint**: above it the detuned controller / DC-link
+  protection trips, so 70–100 % of rated speed cannot be captured. This is a
+  physical limit of that detuned setting, not a missing recording.
 - **Current-regulator-coefficient variant (`suboptimal_control_rt_*`)** is a
   milder detuning that does reach 100 %; its `current` and `vibration`
   recordings are **scheduled to be added** — those folders may be empty in the
   current release and will be filled in a later version.
 - **Vibration (XLS)** are spot readings, not waveforms; the 1 % / 2 % points are
-  absent because vibration is negligible at near-zero load (expected).
-- **Current (BIN)** coverage is near-complete (8-bit Rigol ADC); a few load
+  absent because vibration is negligible at near-zero speed (expected).
+- **Current (BIN)** coverage is near-complete (8-bit Rigol ADC); a few speed
   points may be missing in a branch.
 - **Phone audio (M4A)** is lossy — prefer the vibrometer WAV for spectral work.
 
-### Per-file coverage (x = present, · = missing)
+### Per-file coverage (x = present, · = missing; columns = speed setpoint, % of rated speed)
 
 {coverage_table(rows, conds)}
 

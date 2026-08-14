@@ -100,14 +100,14 @@ def build_dataset_table(manifest: pd.DataFrame) -> pd.DataFrame:
     by_condition = (
         manifest.groupby(["condition", "operation", "reversal"]).agg(
             n_groups=("group_id", "count"),
-            load_min=("load_percent", "min"),
-            load_max=("load_percent", "max"),
+            speed_min=("speed_percent", "min"),
+            speed_max=("speed_percent", "max"),
         )
     ).reset_index()
-    by_condition["load_range_percent"] = by_condition.apply(
-        lambda r: f"{int(r['load_min'])}-{int(r['load_max'])}", axis=1
+    by_condition["speed_range_percent"] = by_condition.apply(
+        lambda r: f"{int(r['speed_min'])}-{int(r['speed_max'])}", axis=1
     )
-    by_condition = by_condition.drop(columns=["load_min", "load_max"])
+    by_condition = by_condition.drop(columns=["speed_min", "speed_max"])
     by_condition = by_condition.sort_values("condition").reset_index(drop=True)
     by_condition = by_condition.rename(
         columns={
@@ -115,7 +115,7 @@ def build_dataset_table(manifest: pd.DataFrame) -> pd.DataFrame:
             "operation": "Operation family",
             "reversal": "Direction reversal",
             "n_groups": "Paired groups (n)",
-            "load_range_percent": "Load range (% rated)",
+            "speed_range_percent": "Speed range (% rated)",
         }
     )
     return by_condition

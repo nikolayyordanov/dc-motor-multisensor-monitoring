@@ -90,7 +90,7 @@ def build_paired_manifest(dataset_root: Path) -> pd.DataFrame:
 
     pivot = (
         meta.pivot_table(
-            index=["condition", "operation", "reversal", "load_percent"],
+            index=["condition", "operation", "reversal", "speed_percent"],
             columns="sensor",
             values="new_path",
             aggfunc="first",
@@ -100,18 +100,18 @@ def build_paired_manifest(dataset_root: Path) -> pd.DataFrame:
     )
 
     pivot["group_id"] = (
-        pivot["condition"].astype(str) + "__" + pivot["load_percent"].astype(int).astype(str)
+        pivot["condition"].astype(str) + "__" + pivot["speed_percent"].astype(int).astype(str)
     )
 
     for sensor in MODALITIES:
         pivot[f"path_{sensor}"] = pivot[sensor].apply(lambda p: str((dataset_root / p).resolve()))
 
         sensor_meta = meta[meta["sensor"].eq(sensor)].set_index(
-            ["condition", "operation", "reversal", "load_percent"]
+            ["condition", "operation", "reversal", "speed_percent"]
         )["duration_s"]
         pivot[f"duration_{sensor}"] = [
             sensor_meta.get(
-                (row.condition, row.operation, row.reversal, row.load_percent),
+                (row.condition, row.operation, row.reversal, row.speed_percent),
                 np.nan,
             )
             for row in pivot.itertuples()
@@ -149,7 +149,7 @@ def build_paired_manifest(dataset_root: Path) -> pd.DataFrame:
         "condition",
         "operation",
         "reversal",
-        "load_percent",
+        "speed_percent",
         "path_sound_phone",
         "path_sound_vibrometer",
         "path_current",
@@ -158,7 +158,7 @@ def build_paired_manifest(dataset_root: Path) -> pd.DataFrame:
         "duration_current",
         "common_duration_s",
     ]
-    return pivot[keep_cols].sort_values(["condition", "load_percent"]).reset_index(drop=True)
+    return pivot[keep_cols].sort_values(["condition", "speed_percent"]).reset_index(drop=True)
 
 
 def _safe_float(x: float) -> float:
@@ -430,7 +430,7 @@ def extract_features_for_modality(
                 "condition": rec["condition"],
                 "operation": rec["operation"],
                 "reversal": rec["reversal"],
-                "load_percent": rec["load_percent"],
+                "speed_percent": rec["speed_percent"],
                 "modality": modality,
                 "path": str(p),
             }
@@ -488,7 +488,7 @@ def evaluate_modality(
             "condition",
             "operation",
             "reversal",
-            "load_percent",
+            "speed_percent",
             "modality",
             "path",
         }
@@ -496,7 +496,7 @@ def evaluate_modality(
 
     X = feat_df[use_cols].fillna(0.0).to_numpy()
     y_cls = feat_df["condition"].to_numpy()
-    y_reg = feat_df["load_percent"].to_numpy()
+    y_reg = feat_df["speed_percent"].to_numpy()
 
     rows = []
     pred_rows = []
@@ -527,7 +527,7 @@ def evaluate_modality(
         segment_prob = clf.predict_proba(X[te])
         segment_load = reg.predict(X[te])
         test_frame = feat_df.loc[
-            te, ["group_id", "condition", "load_percent"]
+            te, ["group_id", "condition", "speed_percent"]
         ].copy()
         test_frame["segment_load_pred"] = segment_load
         probability_cols = [f"prob_{label}" for label in clf.classes_]
@@ -542,7 +542,7 @@ def evaluate_modality(
             condition_pred = clf.classes_[int(np.argmax(mean_prob))]
             load_pred = float(group["segment_load_pred"].median())
             condition_true = str(group["condition"].iloc[0])
-            load_true = float(group["load_percent"].iloc[0])
+            load_true = float(group["speed_percent"].iloc[0])
 
             fold_true_cls.append(condition_true)
             fold_pred_cls.append(condition_pred)

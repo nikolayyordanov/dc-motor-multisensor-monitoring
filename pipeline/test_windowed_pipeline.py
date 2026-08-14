@@ -106,7 +106,7 @@ class WindowingTests(unittest.TestCase):
                     "condition": label,
                     "operation": label,
                     "reversal": "no",
-                    "load_percent": float(group_index * 10),
+                    "speed_percent": float(group_index * 10),
                     "modality": "test",
                     "path": "synthetic",
                     "feature": float(label == "fault") + segment_index * 0.01,

@@ -19,7 +19,7 @@ from sklearn.model_selection import StratifiedGroupKFold
 MODALITIES = ["sound_phone", "sound_vibrometer", "current"]
 AUDIT_TREES = 10
 NON_FEATURES = {
-    "group_id", "condition", "operation", "reversal", "load_percent",
+    "group_id", "condition", "operation", "reversal", "speed_percent",
     "modality", "path", "segment_id", "segment_index", "segment_start_s",
     "segment_end_s",
 }
@@ -132,8 +132,8 @@ def evaluate_target(
 
     load_true = []
     load_predictions = []
-    for load in sorted(data["load_percent"].unique()):
-        test = data["load_percent"].eq(load).to_numpy()
+    for load in sorted(data["speed_percent"].unique()):
+        test = data["speed_percent"].eq(load).to_numpy()
         train = ~test
         true_values, predicted_values = fit_predict(train, test)
         load_true.extend(true_values)

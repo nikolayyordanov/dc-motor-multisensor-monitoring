@@ -46,7 +46,7 @@ total training influence.
 - Use only condition-load points with all 3 modalities present.
 - Unit of independence is one condition-load recording group.
 - Build a shared `group_id` for all modalities:
-  - `group_id = condition + "__" + load_percent`
+  - `group_id = condition + "__" + speed_percent`
 - Never split windows from the same recording group across train/test.
 - Use identical grouped folds for all modalities.
 
@@ -58,7 +58,7 @@ total training influence.
   - Mechanical condition: normal vs loose foundation
   - Direction reversal: no vs yes
   - Operation family: normal, loose foundation, suboptimal control, suboptimal control RT
-- Regression target: `load_percent` (numeric)
+- Regression target: `speed_percent` (numeric)
 
 ## Preprocessing
 
