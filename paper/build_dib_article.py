@@ -146,11 +146,11 @@ def fig1_organisation(path: Path):
         ax.add_patch(FancyArrowPatch((p_bottom[0], p_bottom[1]), (p_top[2], p_top[3]),
                                      arrowstyle="-", color="#7a8aa0", linewidth=1.0))
 
-    root = box(35, 86, 30, 9, "DCData_mendeley/", fc="#d7e6f7", weight="bold", fs=11)
+    root = box(35, 86, 30, 9, "Mendeley Data repository", fc="#d7e6f7", weight="bold", fs=11)
 
     lvl1 = [
         box(2, 66, 18, 8, "data/", weight="bold"),
-        box(22, 66, 16, 8, "cad/\n1v_3v0.stp"),
+        box(22, 66, 16, 8, "cad/\n1v_3v0.stp\n(3-D CAD model)"),
         box(40, 66, 18, 8, "metadata.csv"),
         box(60, 66, 17, 8, "README.md"),
         box(79, 66, 18, 8, "LICENSE.txt"),
@@ -158,10 +158,10 @@ def fig1_organisation(path: Path):
     for c in lvl1:
         connect((root[0], root[1]), c)
 
-    cond = box(1, 44, 40, 12,
+    cond = box(1, 42, 40, 16,
                "8 operating-condition folders\n<operation>_<reversal>/\n"
-               "(normal · loose_foundation ·\ndetuned control · detuned control-RT)",
-               fc="#eef7ee", ec="#3c8a45", fs=8.5)
+               "(normal · loose foundation ·\nsuboptimal speed control ·\nsuboptimal speed + current control)",
+               fc="#eef7ee", ec="#3c8a45", fs=8)
     connect((lvl1[0][0], lvl1[0][1]), cond)
 
     sensors = [
@@ -178,7 +178,7 @@ def fig1_organisation(path: Path):
         connect((cond[0], cond[1]), s)
 
     ax.text(50, 6,
-            "NNN = zero-padded speed setpoint (001-100, % of rated speed). Each sensor recorded separately under the same operating conditions.",
+            "NNN = zero-padded speed setpoint (1–100% of rated speed). Each sensor was recorded separately under the same operating conditions.",
             ha="center", va="center", fontsize=8, style="italic", color="#44546a")
     fig.tight_layout()
     fig.savefig(path, dpi=200, bbox_inches="tight")
@@ -708,7 +708,7 @@ def build(stats, fig_ok):
     if fig_ok.get("fig1"):
         add_figure(doc, FIGDIR / "fig1_organisation.png", width_in=6.4)
     caption(doc,
-            "Fig. 1. Organisation of the dataset, showing the top-level files, "
+            "Fig. 1. Organisation of the multi-sensor dataset repository, showing the top-level files, "
             "the eight operating-condition folders and the four sensor "
             "sub-folders with their file formats.", center=True)
 
