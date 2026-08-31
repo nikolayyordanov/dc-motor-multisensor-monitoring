@@ -1,6 +1,6 @@
 # Dataset Short Description
 
-This dataset contains raw multi-sensor recordings from a brushed PM DC servo motor (3PI12.12) operated under multiple conditions and speed setpoints (percentages of rated speed; the motor runs unloaded, with no external mechanical load).
+This dataset contains raw multi-sensor recordings from a brushed PM DC servo motor (3PI12.06) operated under multiple conditions and speed setpoints (percentages of rated speed; the motor runs unloaded, with no external mechanical load).
 
 It includes four sensor modalities:
 - armature current waveforms (BIN)

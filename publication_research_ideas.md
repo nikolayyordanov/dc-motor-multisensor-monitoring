@@ -57,7 +57,7 @@ The paper can review each modality as a practical engineering choice rather than
 
 ### 4.1 Dataset Role in the Paper
 
-The dataset can serve as the experimental case study for the review. It contains recordings from a **brushed permanent-magnet DC servo motor 3PI12.12**, rated at 625 W, 110 V DC, 12.5 A, and 2000 RPM. The motor is driven by a **4-quadrant thyristor converter** and tested under multiple speed setpoints and operating conditions.
+The dataset can serve as the experimental case study for the review. It contains recordings from a **brushed permanent-magnet DC servo motor 3PI12.06**, rated at 350 W, 55 V, 12.5 A continuous (100 A peak), 2.7 N·m and 2000 rpm. The motor is driven by a **4-quadrant thyristor converter** and tested under multiple speed setpoints and operating conditions.
 
 Available modalities:
 

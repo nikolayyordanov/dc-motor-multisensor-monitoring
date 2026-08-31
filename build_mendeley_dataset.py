@@ -323,7 +323,7 @@ def write_readme(rows: list[dict], cond_labels: dict, out_root: Path) -> None:
 ## 1. Overview
 
 Raw multi-sensor recordings from a **brushed permanent-magnet DC servo motor**
-(3PI12.12) driven by a 4-quadrant **thyristor (SCR) converter**. Each sensor data was
+(3PI12.06) driven by a 4-quadrant **thyristor (SCR) converter**. Each sensor data was
 recorded separately under the **same operating conditions** — matched speed setpoint
 and mechanical condition — using four sensors: armature current, an AV-160B
 vibrometer probe, a budget Android phone microphone, and vibrometer spot
@@ -347,12 +347,16 @@ guidance.
 | Parameter | Value |
 |---|---|
 | Type | Brushed PM DC servo (commutator + graphite brushes) |
-| Designation | 3PI12.12 |
-| Rated power | 625 W |
-| Rated voltage | 110 V DC |
-| Rated current | 12.5 A |
-| Rated torque | 5.4 N·m |
-| Rated speed | 2000 RPM |
+| Designation | 3PI12.06 |
+| Rated electrical power output (P_el) | 350 W |
+| Nominal input voltage (U) | 55 V |
+| Continuous nominal current | 12.5 A |
+| Maximum peak / starting current | 100 A |
+| Nominal torque (M_nom) | 2.7 N·m (at S1 duty) |
+| Torque constant (K_t) | 0.24 N·m/A |
+| Electrical constant (K_e) | 25 V / 1000 rpm |
+| Max. rotation speed (N_max) | 2000 rpm |
+| Physical enclosure depth | 50 mm (shorter motor stack) |
 | Drive | 4-quadrant thyristor (SCR) converter, armature voltage/current control |
 
 The armature current is **unipolar DC + ripple**. The prominent **300 Hz** line
@@ -390,7 +394,7 @@ as the WAV).
 
 ## 5. Methods (steps to reproduce)
 
-**Test rig.** The 3PI12.12 motor (see Section 2) was driven by a 4-quadrant
+**Test rig.** The 3PI12.06 motor (see Section 2) was driven by a 4-quadrant
 thyristor (SCR) converter with armature voltage/current control. No external
 mechanical load was applied — the motor ran **unloaded** — while the drive was
 commanded to a speed setpoint of 1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90 and

@@ -398,16 +398,21 @@ clipped record corrupts the spectrum with spurious harmonics that mimic faults.
 ### 7.2b DC-motor specifics (this is a *brushed* DC servo machine)
 
 The machine under test is a **brushed permanent-magnet DC servo motor**,
-type **3PI12.12**, with the following nameplate data:
+type **3PI12.06**, with the following nameplate data:
 
 | Parameter | Value |
 |---|---|
 | Type | Brushed PM DC servo (commutator + graphite brushes) |
-| Rated power | 625 W (0.625 kW) |
-| Rated voltage | 110 V DC |
-| Rated current | 12.5 A |
-| Rated torque | 5.4 N·m |
-| Rated speed | 2000 RPM (at 100 % load); ~200 RPM at the ~20 % operating point of these captures |
+| Rated electrical power output (P_el) | 350 W (0.35 kW) |
+| Nominal input voltage (U) | 55 V |
+| Continuous nominal current | 12.5 A |
+| Maximum peak / starting current | 100 A (≈ 8 × continuous) |
+| Nominal torque (M_nom) | 2.7 N·m (at S1 duty) |
+| Torque constant (K_t) | 0.24 N·m/A |
+| Electrical constant (K_e) | 25 V / 1000 rpm |
+| Max. rotation speed (N_max) | 2000 rpm |
+| Physical enclosure depth | 50 mm (shorter motor stack) |
+| Rated speed | 2000 RPM (at 100 % setpoint); ~200 RPM at the ~20 % operating point of these captures |
 | Poles | 4 (stator PM excitation) |
 | Commutator segments | ~24–36 |
 | Drive | External **thyristor (SCR) converter, 14XXX series** — 4-quadrant, smooth regulation of armature **voltage and current**; tacho/encoder feedback — **no built-in driver** |
@@ -462,8 +467,9 @@ the AC-induction "MCSA" framing of §6 does **not** map one-to-one. Account for:
   / regenerative current, you would instead need a bipolar, zero-centred scale
   — but that is **not** the case here, confirmed by measurement.)
 - **Inrush / stall current.** With a 4Q servo drive the start/stall current is
-  limited by the drive's torque (current) limit, but it can still reach several
-  times the 12.5 A rating for short bursts. Scale the shunt/probe so this peak
+  limited by the drive's torque (current) limit, but the nameplate allows a
+  **peak/starting current of 100 A** — about **8 × the 12.5 A continuous
+  rating**. Scale the shunt/probe so this peak
   does **not** clip, then trade range back to the working level once you confirm
   the running current envelope.
 - **Faults of interest** on a brushed DC machine: **brush/commutator wear and
@@ -1459,7 +1465,7 @@ sweep the full range but emphasise the informative points:
 
 > **Цел:** едновременно, синхронно измерване на **ток** (осцилоскоп), **вибрации
 > при контакт** (виброметър/пиезо) и **звук от 1 m** (телефон) за откриване на
-> дефекти при четков DC мотор 3PI12.12, по натоварвания и преходни режими.
+> дефекти при четков DC мотор 3PI12.06, по натоварвания и преходни режими.
 
 **Оборудване и свързване**
 1. **Ток:** шунт/токова клеща → CH1 на MSO5074, **1 V/div** (валидиран за

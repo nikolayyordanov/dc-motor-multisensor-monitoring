@@ -4,33 +4,33 @@
 [Normal] Affiliations: a Faculty of Automatics, Technical University of Sofia, 8 Kliment Ohridski Blvd., 1000 Sofia, Bulgaria
 [Normal] b University of Munzur, Department of Electrical and Electronics Engineering, Tunceli, Türkiye
 [Normal] Corresponding author’s email address: mzhilevski@tu-sofia.bg
-[Normal] Keywords: Armature current; AV-160B vibrometer; Smartphone microphone; Thyristor converter; Load estimation; Foundation looseness; Fault diagnosis; Machine learning
+[Normal] Keywords: Armature current; AV-160B vibrometer; Smartphone microphone; Thyristor converter; Speed estimation; Foundation looseness; Fault diagnosis; Machine learning
 [Normal] Abstract: 
-[Normal] This article presents a multi-sensor condition-monitoring dataset recorded from a brushed permanent-magnet DC servo motor (3PI12.12; 625 W, 110 V DC, 12.5 A, 5.4 N·m, 2000 rpm) driven by a four-quadrant thyristor (SCR) converter with armature voltage and current control. The machine was operated across up to thirteen load levels (1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90 and 100 % of rated power) under 8 operating conditions that combine four control/mechanical states — normal operation, a detuned speed-regulator gain, a detuned speed- and current-regulator gain, and a deliberately loosened foundation — each recorded without and with periodic direction reversal. For every operating point, four sensors were recorded separately under the same operating conditions: the armature current with a Rigol MSO5074 oscilloscope (native binary waveforms), the true vibration waveform from the AC output of an AV-160B piezoelectric vibrometer (44.1 kHz, 16-bit stereo WAV), the airborne sound from a budget Android smartphone microphone placed about 1 m away (AAC/M4A), and AV-160B spot readings of velocity, acceleration and displacement (XLS). The repository is published as raw, untransformed recordings and comprises 386 files (98 BIN, 98 WAV, 98 M4A, 91 XLS, 1 STP), together with a per-file metadata index (sample rate, duration, channels, bit depth and file size), a 3-D CAD model of the test rig, a README and a CC BY 4.0 licence. The dataset supports load estimation, operating-condition classification, direction-reversal and converter-ripple analysis, and benchmarking of low-cost smartphone audio against instrument-grade current and vibration references.
+[Normal] This article presents a multi-sensor condition-monitoring dataset recorded from a brushed permanent-magnet DC servo motor (3PI12.06; 350 W, 55 V, 12.5 A continuous, 2.7 N·m at S1 duty, 2000 rpm maximum) driven by a four-quadrant thyristor (SCR) converter with armature voltage and current control. The machine was operated, with no external mechanical load, across up to thirteen speed setpoints (1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90 and 100 % of rated speed) under 8 operating conditions that combine four control/mechanical states — normal operation, a detuned speed-regulator gain, a detuned speed- and current-regulator gain, and a deliberately loosened foundation — each recorded without and with periodic direction reversal. For every operating point, four sensors were recorded separately under the same operating conditions: the armature current with a Rigol MSO5074 oscilloscope (native binary waveforms), the true vibration waveform from the AC output of an AV-160B piezoelectric vibrometer (44.1 kHz, 16-bit stereo WAV), the airborne sound from a budget Android smartphone microphone placed about 1 m away (AAC/M4A), and AV-160B spot readings of velocity, acceleration and displacement (XLS). The repository is published as raw, untransformed recordings and comprises 386 files (98 BIN, 98 WAV, 98 M4A, 91 XLS, 1 STP), together with a per-file metadata index (sample rate, duration, channels, bit depth and file size), a 3-D CAD model of the test rig, a README and a CC BY 4.0 licence. The dataset supports speed estimation, operating-condition classification, direction-reversal and converter-ripple analysis, and benchmarking of low-cost smartphone audio against instrument-grade current and vibration references.
 [Heading 1] SPECIFICATIONS TABLE
 === TABLE ===
 Subject | Electrical and Electronic Engineering
 Specific subject area | Condition monitoring and fault diagnosis of brushed DC servo motors from armature-current, vibration and acoustic signals, including a smartphone-versus-instrument sensing comparison.
 Type of data | Raw armature-current waveforms (.bin); raw vibration waveforms (.wav); raw acoustic recordings (.m4a); vibration spot readings (.xls); metadata index (.csv); 3-D CAD model (.stp); tables and figures. Data are Raw (untransformed).
-Data collection | Recorded on a laboratory test rig comprising a brushed PM DC servo motor (3PI12.12) driven by a four-quadrant thyristor (SCR) converter with a coupled load unit. Armature current was captured with a Rigol MSO5074 oscilloscope; the vibration waveform and spot readings (per ISO 2954) were taken with an AV-160B vibrometer; airborne sound was recorded with a budget Android smartphone at ~1 m. Each sensor was recorded separately under the same operating conditions.
+Data collection | Recorded on a laboratory test rig comprising a brushed PM DC servo motor (3PI12.06) driven by a four-quadrant thyristor (SCR) converter with no external mechanical load (the motor runs unloaded). Armature current was captured with a Rigol MSO5074 oscilloscope; the vibration waveform and spot readings (per ISO 2954) were taken with an AV-160B vibrometer; airborne sound was recorded with a budget Android smartphone at ~1 m. Each sensor was recorded separately under the same operating conditions.
 Data source location | Technical University of Sofia, Sofia, Bulgaria.
 Data accessibility | Repository name: Mendeley Data. Data identification number: DOI to be assigned. Direct URL to data: to be provided upon publication. Instructions: the dataset will be publicly available through the Mendeley Data repository under a CC BY 4.0 licence, organised as described in this article.
 Related research article | None.
 === END TABLE ===
 [Heading 1] VALUE OF THE DATA
-[List Bullet] The dataset provides raw, matched-condition multi-sensor recordings (armature current, vibrometer vibration waveform, smartphone audio and vibrometer spot readings) of a brushed DC servo motor across a wide load range, giving ready-made regression (load percent) and classification (operating condition) labels.
+[List Bullet] The dataset provides raw, matched-condition multi-sensor recordings (armature current, vibrometer vibration waveform, smartphone audio and vibrometer spot readings) of a brushed DC servo motor across a wide speed range, giving ready-made regression (speed setpoint, % of rated speed) and classification (operating condition) labels.
 [List Bullet] Because the smartphone microphone is recorded at ~1 m under the same operating conditions as the instrument-grade current and vibration references, the data enable a direct benchmark of whether low-cost smartphone audio can substitute for invasive or specialised diagnostic equipment.
 [List Bullet] The data can be reused by researchers in electrical machines, condition monitoring, predictive maintenance and signal processing to develop and validate feature-extraction, machine-learning and sensor-fusion methods, and as a benchmark for comparing diagnostic algorithms.
 [List Bullet] Four operating states (normal, two levels of controller detuning, and a loose foundation) combined with two reversal modes support studies of control-tuning effects, foundation-looseness detection and direction-reversal transients that are rarely available together in public datasets.
 [List Bullet] Publishing the recordings raw and untransformed, with an exact per-file metadata index and a CAD model of the rig, lets users apply their own preprocessing and generate application-specific representations (spectrograms, Mel-spectrograms, scalograms, and current-signature or envelope spectra) and reproduce the acquisition geometry.
 [Heading 1] BACKGROUND
-[Normal] Condition monitoring of electrical drives traditionally relies on invasive or specialised instrumentation such as current probes and contact vibrometers, which can be costly or impractical to deploy widely [1,2]. Airborne sound captured by ubiquitous smartphones is an attractive low-cost, non-contact alternative, but its diagnostic value must be assessed against instrument-grade references acquired under the same operating conditions [3]. This dataset was compiled to enable that comparison for a brushed permanent-magnet DC servo motor driven by a four-quadrant thyristor converter — a drive whose armature current carries a characteristic 300 Hz (6 × 50 Hz) six-pulse converter ripple in addition to commutation signatures. The motor was exercised across a broad load range under normal operation, two levels of controller detuning and a loosened-foundation condition, each without and with periodic direction reversal, while four sensors were recorded separately under matched conditions. The resulting raw recordings allow researchers to compare models trained on smartphone audio against those trained on current and vibration signals, and to study load estimation, foundation-looseness detection, direction-reversal transients and converter/commutation signatures. The data are released raw and untransformed so that users can apply their own preprocessing pipelines [4].
+[Normal] Condition monitoring of electrical drives traditionally relies on invasive or specialised instrumentation such as current probes and contact vibrometers, which can be costly or impractical to deploy widely [1,2]. Airborne sound captured by ubiquitous smartphones is an attractive low-cost, non-contact alternative, but its diagnostic value must be assessed against instrument-grade references acquired under the same operating conditions [3]. This dataset was compiled to enable that comparison for a brushed permanent-magnet DC servo motor driven by a four-quadrant thyristor converter — a drive whose armature current carries a characteristic 300 Hz (6 × 50 Hz) six-pulse converter ripple in addition to commutation signatures. The motor was exercised across a broad speed range under normal operation, two levels of controller detuning and a loosened-foundation condition, each without and with periodic direction reversal, while four sensors were recorded separately under matched conditions. The resulting raw recordings allow researchers to compare models trained on smartphone audio against those trained on current and vibration signals, and to study speed estimation, foundation-looseness detection, direction-reversal transients and converter/commutation signatures. The data are released raw and untransformed so that users can apply their own preprocessing pipelines [4].
 [Heading 1] DATA DESCRIPTION
-[Normal] The dataset contains raw multi-sensor recordings acquired from a single brushed permanent-magnet DC servo motor on a laboratory test rig. It is published as byte-for-byte raw recordings organised by operating condition, sensor and load level, together with a per-file metadata index, a 3-D CAD model of the rig, a README descriptor and a licence file. In total the repository contains 386 files (98 BIN, 98 WAV, 98 M4A, 91 XLS, 1 STP). Table 1 lists the top-level organisation of the repository.
+[Normal] The dataset contains raw multi-sensor recordings acquired from a single brushed permanent-magnet DC servo motor on a laboratory test rig. It is published as byte-for-byte raw recordings organised by operating condition, sensor and speed setpoint, together with a per-file metadata index, a 3-D CAD model of the rig, a README descriptor and a licence file. In total the repository contains 386 files (98 BIN, 98 WAV, 98 M4A, 91 XLS, 1 STP). Table 1 lists the top-level organisation of the repository.
 [Normal] Table 1. Organisation of the dataset repository.
 === TABLE ===
 Folder / File | Description | Format
-data/ | Raw recordings organised as <condition>/<sensor>/loadNNN_sensor.ext | Folder
+data/ | Raw recordings organised as <condition>/<sensor>/speedNNN_sensor.ext | Folder
 cad/ | 3-D CAD model of the test rig (1v_3v0.stp) | STP
 metadata.csv | One row per file with acquisition parameters and traceability fields | CSV
 README.md | Dataset descriptor (machine, conditions, sensors, methods, coverage) | Markdown
@@ -41,18 +41,22 @@ LICENSE.txt | Creative Commons Attribution 4.0 (CC BY 4.0) licence | TXT
 === TABLE ===
 Parameter | Value
 Type | Brushed PM DC servo (commutator + graphite brushes)
-Designation | 3PI12.12
-Rated power | 625 W
-Rated voltage | 110 V DC
-Rated current | 12.5 A
-Rated torque | 5.4 N·m
-Rated speed | 2000 rpm
+Designation | 3PI12.06
+Rated electrical power output (P_el) | 350 W
+Nominal input voltage (U) | 55 V
+Continuous nominal current | 12.5 A
+Maximum peak / starting current | 100 A
+Nominal torque (M_nom) | 2.7 N·m (at S1 duty)
+Torque constant (K_t) | 0.24 N·m/A
+Electrical constant (K_e) | 25 V / 1000 rpm
+Max. rotation speed (N_max) | 2000 rpm
+Physical enclosure depth | 50 mm (shorter motor stack)
 Drive | Four-quadrant thyristor (SCR) converter, armature voltage/current control
 === END TABLE ===
-[Normal] The recordings span 8 operating conditions, each a folder under data/ formed by combining an operation state with a reversal mode (without or with periodic direction reversal). Table 3 lists the conditions and the load levels (% of rated power) present for each. Naming note: the detuned-speed-regulator condition uses a non-optimal speed-regulator gain, whereas the detuned speed-and-current-regulator (RT) condition additionally uses a non-optimal current-regulator gain.
-[Normal] Table 3. Operating conditions and available load levels.
+[Normal] The recordings span 8 operating conditions, each a folder under data/ formed by combining an operation state with a reversal mode (without or with periodic direction reversal). Table 3 lists the conditions and the speed setpoints (% of rated speed) present for each. Naming note: the detuned-speed-regulator condition uses a non-optimal speed-regulator gain, whereas the detuned speed-and-current-regulator (RT) condition additionally uses a non-optimal current-regulator gain.
+[Normal] Table 3. Operating conditions and available speed setpoints.
 === TABLE ===
-Folder (data/) | Operation | Reversal | Load levels (%) | No.
+Folder (data/) | Operation | Reversal | Speed setpoints (%) | No.
 normal_no_reversal | Normal operation | No | 1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 | 13
 normal_with_reversal | Normal operation | Yes | 1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 | 13
 suboptimal_control_no_reversal | Detuned speed regulator | No | 1, 2, 5, 10, 20, 30, 40, 50, 60, 65 | 10
@@ -71,14 +75,14 @@ sound_vibrometer/ | Vibration waveform | AV-160B vibrometer (AC output) | .wav |
 sound_phone/ | Airborne sound | Android smartphone microphone (~1 m) | .m4a | AAC (lossy)
 vibration/ | Velocity, acceleration, displacement (spot) | AV-160B vibrometer (display mode) | .xls | BIFF spreadsheet, ISO 2954 spot readings
 === END TABLE ===
-[Normal] Files follow the naming scheme loadNNN_sensor.ext, where NNN is the zero-padded load percent (e.g. load020 = 20 % load). The metadata.csv index has one row per file; its fields are described in Table 5.
+[Normal] Files follow the naming scheme speedNNN_sensor.ext, where NNN is the zero-padded speed setpoint (e.g. speed020 = 20 % of rated speed); the speed prefix denotes the commanded speed and the motor runs unloaded. The metadata.csv index has one row per file; its fields are described in Table 5.
 [Normal] Table 5. Fields in metadata.csv.
 === TABLE ===
 Field | Description
 condition | Canonical condition key (operation + reversal); matches the data/ sub-folder
 operation | Mechanical/control state (normal, loose_foundation, suboptimal_control, suboptimal_control_rt)
 reversal | Periodic direction reversal (yes/no)
-load_percent | Load level as a percentage of rated power
+speed_percent | Speed setpoint as a percentage of rated speed (2000 rpm)
 sensor | Sensor channel (current, sound_vibrometer, sound_phone, vibration)
 format | File format (bin, wav, m4a, xls, stp)
 sample_rate_hz | Sampling rate (current and WAV only)
@@ -90,7 +94,7 @@ new_path | Path of the file within the repository
 original_name | Original raw file name (traceability)
 original_path | Original raw folder path (traceability)
 === END TABLE ===
-[Normal] Table 6 gives the number of files available per operating condition and sensor. Coverage is near-complete on the nominal load grid; the detuned-control conditions reach only a ~65 % top load because the detuned controller trips above that level, the vibration spot readings omit the near-zero-load points where vibration is negligible, and a few individual load points may be absent in a branch. The 385 sensor recordings listed in Table 6 are complemented by the CAD model, giving 386 files in total.
+[Normal] Table 6 gives the number of files available per operating condition and sensor. Coverage is near-complete on the nominal speed grid; the detuned-control conditions reach only a ~65 % top speed setpoint because the detuned controller trips above that speed, the vibration spot readings omit the near-zero-speed points where vibration is negligible, and a few individual speed points may be absent in a branch. The 385 sensor recordings listed in Table 6 are complemented by the CAD model, giving 386 files in total.
 [Normal] Table 6. File counts per operating condition and sensor.
 === TABLE ===
 Condition | current | sound_vibrometer | sound_phone | vibration | Total
@@ -104,32 +108,32 @@ loose_foundation_no_reversal | 13 | 13 | 13 | 11 | 50
 loose_foundation_with_reversal | 13 | 13 | 13 | 13 | 52
 Total | 98 | 98 | 98 | 91 | 385
 === END TABLE ===
-[Normal] Figure 1 illustrates the overall organisation of the repository. Figures 2–4 present representative raw data from one operating point (normal operation, no reversal, 50 % load): the armature current and its amplitude spectrum, the vibrometer vibration waveform and its spectrogram, and the trend of the AV-160B spot readings with load. The figures illustrate the types of raw data included in the dataset without any additional interpretation.
+[Normal] Figure 1 illustrates the overall organisation of the repository. Figures 2–4 present representative raw data from one operating point (normal operation, no reversal, 50 % speed setpoint): the armature current and its amplitude spectrum, the vibrometer vibration waveform and its spectrogram, and the trend of the AV-160B spot readings with speed. The figures illustrate the types of raw data included in the dataset without any additional interpretation.
 <<IMAGE>>
-[Normal] Fig. 1. Organisation of the dataset, showing the top-level files, the eight operating-condition folders and the four sensor sub-folders with their file formats.
+[Normal] Fig. 1. Organisation of the multi-sensor dataset repository, showing the top-level files, the eight operating-condition folders and the four sensor sub-folders with their file formats.
 <<IMAGE>>
-[Normal] Fig. 2. Representative armature-current recording (normal operation, no reversal, 50 % load): (a) a 60 ms window of the AC-coupled waveform and (b) its single-sided amplitude spectrum, showing the 300 Hz six-pulse converter ripple and its harmonics.
+[Normal] Fig. 2. Representative armature-current recording (normal operation, no reversal, 50 % speed setpoint): (a) a 60 ms window of the AC-coupled waveform and (b) its single-sided amplitude spectrum, showing the 300 Hz six-pulse converter ripple and its harmonics.
 <<IMAGE>>
-[Normal] Fig. 3. Representative vibrometer vibration recording (normal operation, no reversal, 50 % load): (a) a 1 s window of the waveform and (b) its spectrogram up to 10 kHz.
+[Normal] Fig. 3. Representative vibrometer vibration recording (normal operation, no reversal, 50 % speed setpoint): (a) a 1 s window of the waveform and (b) its spectrogram up to 10 kHz.
 <<IMAGE>>
-[Normal] Fig. 4. AV-160B vibration spot readings (mean velocity, acceleration and displacement) as a function of load for the normal, no-reversal condition.
+[Normal] Fig. 4. AV-160B vibration spot readings (mean velocity, acceleration and displacement) as a function of speed setpoint (% of rated speed) for the normal, no-reversal condition.
 [Heading 1] EXPERIMENTAL DESIGN, MATERIALS AND METHODS
-[Normal] Test rig. The brushed PM DC servo motor described in Table 2 was driven by a four-quadrant thyristor (SCR) converter providing armature voltage and current control. Mechanical load was applied with a coupled load unit and set to 1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90 and 100 % of rated power (a reduced top load applies to the detuned-control conditions, as noted below).
-[Normal] Operating conditions. The load sweep was repeated for each operating condition. Normal operation uses the nominal controller tuning. The two detuned-control conditions use a non-optimal speed-regulator gain (suboptimal_control) and, additionally, a non-optimal current-regulator gain (suboptimal_control_rt). The loose-foundation condition uses a deliberately loosened mechanical foundation. Each condition was recorded both without and with periodic direction reversal.
+[Normal] Test rig. The brushed PM DC servo motor described in Table 2 was driven by a four-quadrant thyristor (SCR) converter providing armature voltage and current control. No external mechanical load was applied — the motor ran unloaded — and the drive was commanded to a speed setpoint of 1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90 and 100 % of rated speed (2000 rpm; a reduced top speed applies to the detuned-control conditions, as noted below).
+[Normal] Operating conditions. The speed sweep was repeated for each operating condition. Normal operation uses the nominal controller tuning. The two detuned-control conditions use a non-optimal speed-regulator gain (suboptimal_control) and, additionally, a non-optimal current-regulator gain (suboptimal_control_rt). The loose-foundation condition uses a deliberately loosened mechanical foundation. Each condition was recorded both without and with periodic direction reversal.
 [Normal] Acquisition (each sensor recorded separately, under the same operating conditions, not simultaneously). Armature current was captured with a Rigol MSO5074 oscilloscope and saved as native binary waveforms (.bin); the sample rate and scaling are stored in each file header. The vibration waveform was obtained from the 2.0 V AC analog output of an AV-160B vibrometer external piezoelectric probe and recorded as 44.1 kHz / 16-bit stereo WAV. Vibration spot readings (velocity, acceleration and displacement per ISO 2954) were logged from the same AV-160B in display mode to XLS. Airborne sound was recorded with a budget Android smartphone microphone placed approximately 1 m from the machine and saved as M4A (AAC).
-[Normal] Procedure. For each condition and load level the motor was brought to steady state, and then each sensor was recorded in turn. The equipment used is summarised in Table 7.
+[Normal] Procedure. For each condition and speed setpoint the motor was brought to steady state, and then each sensor was recorded in turn. The equipment used is summarised in Table 7.
 [Normal] Table 7. Measurement equipment.
 === TABLE ===
 Equipment | Model | Purpose
-Brushed PM DC servo motor | 3PI12.12 (625 W, 110 V, 12.5 A, 2000 rpm) | Machine under test
+Brushed PM DC servo motor | 3PI12.06 (350 W, 55 V, 12.5 A, 2.7 N·m, 2000 rpm) | Machine under test
 Power converter | Four-quadrant thyristor (SCR) converter | Armature voltage/current control drive
 Oscilloscope | Rigol MSO5074 | Armature-current waveform acquisition
 Vibrometer | AV-160B (Amittari) with piezoelectric probe | Vibration waveform (AC out) and spot readings
 Smartphone | Budget Android phone | Airborne acoustic acquisition (~1 m)
 === END TABLE ===
-[Normal] Curation. Raw files were copied byte-for-byte from the acquisition folders into a publishable tree with English names and the sortable loadNNN_sensor.ext scheme, and indexed in metadata.csv (including sample rate, duration, channels, bit depth, file size and the original name/path for traceability). No signal transformation was applied. The complete dataset described in this article has been deposited in the Mendeley Data repository [4].
+[Normal] Curation. Raw files were copied byte-for-byte from the acquisition folders into a publishable tree with English names and the sortable speedNNN_sensor.ext scheme, and indexed in metadata.csv (including sample rate, duration, channels, bit depth, file size and the original name/path for traceability). No signal transformation was applied. The complete dataset described in this article has been deposited in the Mendeley Data repository [4].
 [Heading 1] LIMITATIONS
-[Normal] The four sensors were recorded separately under the same operating conditions rather than simultaneously; recordings are therefore aligned by operating condition and load level, not sample-synchronously. The detuned-control conditions reach only a ~65 % top load because the detuned controller and DC-link protection trip above that level. The vibration XLS files are spot readings rather than waveforms, and the near-zero-load points are absent where vibration is negligible. The smartphone audio is lossy AAC and is intended for qualitative use; the vibrometer WAV is recommended for spectral work. The armature current is captured with the oscilloscope’s 8-bit ADC, and a few individual load points may be missing in a branch. All data come from a single machine and rig, so the dataset does not capture unit-to-unit or design variation, and the loose-foundation condition represents one induced severity. These characteristics should be considered when reusing the dataset or comparing it with data from other machines or setups.
+[Normal] The four sensors were recorded separately under the same operating conditions rather than simultaneously; recordings are therefore aligned by operating condition and speed setpoint, not sample-synchronously. The detuned-control conditions reach only a ~65 % top speed setpoint because the detuned controller and DC-link protection trip above that speed. The vibration XLS files are spot readings rather than waveforms, and the near-zero-speed points are absent where vibration is negligible. The smartphone audio is lossy AAC and is intended for qualitative use; the vibrometer WAV is recommended for spectral work. The armature current is captured with the oscilloscope’s 8-bit ADC, and a few individual speed points may be missing in a branch. All data come from a single machine and rig, so the dataset does not capture unit-to-unit or design variation, and the loose-foundation condition represents one induced severity. These characteristics should be considered when reusing the dataset or comparing it with data from other machines or setups.
 [Heading 1] ETHICS STATEMENT
 [Normal] The authors confirm that they have read and followed the ethical requirements for publication in Data in Brief. The current work does not involve human participants, animal experiments, or any data collected from social media platforms. The dataset was acquired exclusively from laboratory experiments on a brushed permanent-magnet DC servo motor.
 [Heading 1] CRediT AUTHOR STATEMENT

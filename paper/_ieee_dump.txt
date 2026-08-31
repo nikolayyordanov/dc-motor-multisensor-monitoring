@@ -1,0 +1,199 @@
+page=8.5x11.0 margins L/R=0.625/0.625 sections=6 images=6 tables=9
+[CENTER (1)|[20.0]] Attention-Fused Multi-Sensor Learning for Joint Condition Diagnosis and Speed-Setpoint Estimation in a Brushed DC Servo Drive
+[CENTER (1)|[10.5]] Draft — v0.1
+[CENTER (1)|[10.5]] Authors: TODO
+[CENTER (1)|[10.5]] Affiliation: Technical University TODO
+[CENTER (1)|[10.5]] Corresponding author: TODO
+<<SECTION BREAK: cols=1>>
+[JUSTIFY (3)|[9.0]] Abstract—Condition monitoring of brushed DC servo drives traditionally relies on invasive or specialised instrumentation — current probes clamped inside the drive cabinet, or contact accelerometers bolted to the machine frame. We investigate whether a consumer smartphone microphone can carry comparable diagnostic information, and whether heterogeneous sensors can be combined into a single model that solves two tasks at once. We present a modular multi-modal neural pipeline that ingests four sensing modalities recorded on a 350 W brushed permanent-magnet DC servo motor (3PI12.06) driven by a four-quadrant thyristor converter: the AC output of an AV-160B vibrometer probe (44.1 kHz WAV), a budget Android phone microphone at ≈1 m (lossy AAC), the armature current captured by a Rigol MSO5074 oscilloscope (8-bit native binary), and ISO 2954 vibrometer spot readings (tabular). Modality-specific encoders (2-D CNNs on log-Mel spectrograms, a 1-D CNN on the log Welch spectrum of the current, and an MLP on the tabular readings) are combined by a masked gated-attention fusion layer that excludes absent sensors from the attention softmax, so incomplete sensor sets are handled natively rather than by zero-padding. Two heads predict the operating condition (8 classes) and the commanded speed setpoint (1–100 % of rated speed). On a strictly recording-disjoint test split (25 recordings, 200 one-second windows) the model reaches 83.0 % accuracy, 0.821 macro-F1 and 0.986 macro one-vs-rest AUC for condition classification, and MAE = 4.48 %, RMSE = 5.80 %, R² = 0.972 for speed regression. Every single classification error lies within a condition family: the mechanical/control state (normal, loose foundation, suboptimal speed-regulator gain, suboptimal speed + current-regulator gain) is identified with 100 % accuracy, and only the direction-reversal flag is confused. The learned attention weights rank the phone microphone (0.32) on par with the instrument-grade vibrometer (0.27) and the tabular spot readings (0.31), and well above the armature current (0.13), supporting the hypothesis that ordinary smartphone audio is a viable low-cost surrogate for invasive diagnostic hardware.
+[JUSTIFY (3)|[9.0]] Index Terms—condition monitoring, DC servo drive, multi-modal fusion, attention, smartphone acoustics, motor current signature analysis, multi-task learning.
+[CENTER (1)|[10.0]] I.  Introduction
+[JUSTIFY (3)|[10.0]] Brushed DC servo drives remain widespread in machine tools, laboratory rigs and legacy industrial automation, where commutator wear, mounting looseness and detuned regulator gains all degrade performance long before an outright failure occurs. Detecting these states normally requires either intrusive electrical access (current probes on the armature circuit) or specialised mechanical instrumentation (contact accelerometers, portable vibrometers). Both raise cost and commissioning effort, which limits deployment to critical assets only.
+[JUSTIFY (3)|[10.0]] Two trends motivate this work. First, virtually every maintenance technician now carries a smartphone whose microphone, although lossy and uncalibrated, samples the same acoustic field that a vibration analyst listens to. Second, modern multi-modal learning makes it practical to fuse sensors of radically different sampling rate, dimensionality and availability inside one model. This paper combines the two questions:
+[JUSTIFY (3)|[10.0]] 1) Can a heterogeneous sensor set be fused into a single model that simultaneously classifies the operating condition and regresses the speed setpoint?
+[JUSTIFY (3)|[10.0]] 2) How much does a consumer smartphone microphone contribute relative to instrument-grade sensors, when the model itself is allowed to weight the modalities?
+[JUSTIFY (3)|[10.0]] Our contributions are:
+[JUSTIFY (3)|[10.0]] • A reproducible, end-to-end pipeline (data loading → feature extraction → fusion model → scientific evaluation) for a publicly released multi-sensor DC servo-drive dataset, including a from-scratch parser for the Rigol native binary waveform format.
+[JUSTIFY (3)|[10.0]] • A masked gated-attention fusion architecture that handles missing modalities without imputation and yields directly interpretable per-modality importance weights.
+[JUSTIFY (3)|[10.0]] • A dual-task evaluation under a recording-disjoint protocol, together with an error analysis showing that residual confusion is confined to the direction-reversal flag.
+[JUSTIFY (3)|[9.0]] TODO (draft): expand Section 1 with a literature review of motor current signature analysis (MCSA), acoustic condition monitoring and multi-modal fusion for PHM; add 20–30 references and position the contribution against them.
+[CENTER (1)|[10.0]] II.  Experimental data
+[JUSTIFY (3)|[10.0]] We use the multi-sensor condition-monitoring dataset of a brushed permanent-magnet DC servo motor described in [1]. The machine under test is a 3PI12.06 servo motor (350 W, 55 V, 12.5 A continuous and 100 A peak, 2.7 N·m at S1 duty, 2000 rpm maximum, Kₜ = 0.24 N·m/A, Kₑ = 25 V/1000 rpm) driven by a four-quadrant thyristor (SCR) converter with armature voltage/current control. The motor runs unloaded, so each speed setpoint is a commanded speed, not a load level. The armature current is unipolar DC plus ripple; the prominent 300 Hz component is the six-pulse converter ripple (6 × 50 Hz) — a drive signature, not a fault.
+[None|[10.0]] A. Operating conditions and setpoints
+[JUSTIFY (3)|[10.0]] Eight condition folders are formed by crossing four mechanical/control states with the direction-reversal regime:
+[CENTER (1)|[8.0]] TABLE I
+[CENTER (1)|[8.0]] OPERATING CONDITIONS: FOUR MECHANICAL/CONTROL FAMILIES CROSSED WITH THE DIRECTION-REVERSAL REGIME.
+=== TABLE ===
+Condition family | No reversal | With reversal
+Normal operation | ✓ | ✓
+Loose foundation | ✓ | ✓
+Suboptimal control (detuned speed-regulator gain) | ✓ | ✓
+Suboptimal control RT (detuned speed and current-regulator gains) | ✓ | ✓
+=== END TABLE ===
+[JUSTIFY (3)|[9.5, 10.0]] Each condition was recorded at up to 13 setpoints (1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 % of rated speed). The suboptimal_control_* conditions stop at ≈65 %, because above that the detuned controller trips the DC-link protection — an inherent coverage limitation of the dataset, and a source of class imbalance in our experiments.
+[None|[10.0]] B. Sensor modalities
+[CENTER (1)|[8.0]] TABLE II
+[CENTER (1)|[8.0]] SENSOR MODALITIES, NATIVE FORMATS AND THE FRONT END APPLIED IN THIS WORK.
+=== TABLE ===
+Modality | Format | Front end used here | Notes
+sound_vibrometer | WAV, 44.1 kHz, 16-bit stereo, ≈20.5 s | log-Mel spectrogram | AC output of the AV-160B piezoelectric probe; lossless, treated as the reference vibration waveform
+sound_phone | M4A (AAC, lossy) | log-Mel spectrogram | Budget Android microphone at ≈1 m
+current | Rigol MSO5074 native binary, 1 MS/s, 8-bit | log Welch PSD | Armature current; sample rate and scaling read from the file header
+vibration | XLS | tabular descriptor vector | AV-160B spot readings (velocity mm/s, acceleration m/s², displacement mm) per ISO 2954
+=== END TABLE ===
+[JUSTIFY (3)|[9.5, 10.0]] Sensors were recorded sequentially, not simultaneously, under nominally identical operating states. Alignment is therefore state-level, on the key (condition, speed_percent) — not sample-level. This is a deliberate property of the dataset and constrains the fusion model to exploit stationary spectral signatures rather than cross-modal phase relationships.
+[CENTER (1)|[10.0]] III.  Method
+[JUSTIFY (3)|[9.5, 10.0]] The pipeline is implemented in a single reproducible module, pipeline/multimodal_pipeline.py (PyTorch, scikit-learn, librosa, soundfile, PyAV, Matplotlib, seaborn), with four stages: cache construction, training, inference and scientific evaluation.
+[None|[10.0]] A. Sample construction and windowing
+[JUSTIFY (3)|[9.5, 10.0]] metadata.csv is grouped by (condition, speed_percent); each group defines one recording state and yields one aligned four-modality sample. To obtain a usable number of training examples from 98 recording states, each waveform capture is decoded once over a 17 s usable span (the first 1 s is discarded as a start-up transient) and sliced into N_w = 8 non-overlapping 1 s windows. The tabular spot readings are per-recording and are replicated across the windows of that recording. This gives 784 four-modality samples over 98 recordings.
+[JUSTIFY (3)|[10.0]] A binary availability mask m ∈ {0,1}⁴ accompanies every sample. Observed coverage:
+[CENTER (1)|[8.0]] TABLE III
+[CENTER (1)|[8.0]] MODALITY AVAILABILITY ACROSS THE 784 CACHED SAMPLES.
+=== TABLE ===
+Modality | Coverage
+sound_vibrometer | 100.0 %
+sound_phone | 100.0 %
+current | 99.6 %
+vibration | 92.9 %
+=== END TABLE ===
+[JUSTIFY (3)|[10.0]] Missing modalities arise from genuine gaps in the dataset (e.g. spot readings are not recorded at the lowest setpoints) and are propagated to the model through the mask.
+[None|[10.0]] B. Modality-specific front ends
+[JUSTIFY (3)|[9.5, 10.0]] • Audio (both microphones). Decoded to mono at 16 kHz; the phone AAC stream is decoded with PyAV because current libsndfile/librosa builds have no AAC decoder. A log-Mel spectrogram is computed with n_FFT=1024, hop 256 and 64 Mel bands, converted to dB relative to the window maximum, and standardised per sample to a 64 × 64 image.
+[JUSTIFY (3)|[10.0]] • Armature current. The Rigol binary is parsed directly: file header → waveform header (x-increment, i.e. 1/fₛ) → buffer header (bytes-per-point, buffer size) → raw ADC payload. Only the requested byte range is read, so 80 MB captures never enter memory in full. The 8-bit unipolar codes are DC-removed, decimated to 50 kHz, and reduced to a 512-bin log Welch power spectral density over 0–5 kHz (standardised with training-split statistics).
+[JUSTIFY (3)|[10.0]] • Vibration spot readings. For each ISO 2954 metric (velocity, acceleration, displacement) the mean, standard deviation, minimum and maximum are taken, giving a 12-dimensional standardised vector.
+[None|[10.0]] C. Encoders, fusion and heads
+[JUSTIFY (3)|[10.0]] Each modality i is embedded into a common d = 128 space:
+[CENTER (1)|[8.0]] TABLE IV
+[CENTER (1)|[8.0]] ENCODER TOPOLOGIES AND PARAMETER COUNTS.
+=== TABLE ===
+Encoder | Architecture | Parameters
+Vibrometer Mel CNN | 4 × (Conv2d 3×3 → BN → GELU → MaxPool2d) → GAP → FC | 257 120
+Phone Mel CNN | identical topology, separate weights | 257 120
+Current spectrum CNN | 3 × (Conv1d k=7 → BN → GELU → MaxPool1d) → GAP → FC | 88 864
+Vibration MLP | FC-64 → BN → GELU → Dropout → FC-128 | 9 280
+Gated-attention fusion | w^ᵀ(tanh(Vh) ⊙ σ(Uh)) | 16 577
+Shared trunk + two heads | LayerNorm → FC → GELU → Dropout → {FC-8, FC-1} | 17 929
+Total |  | 647 402
+=== END TABLE ===
+[JUSTIFY (3)|[10.0]] A learned modality embedding is added to each token before fusion. Absent modalities are zeroed and receive -∞ attention logits, so the softmax normalises only over the sensors that are actually present:
+[CENTER (1)|[10.0]] αᵢ = (exp(sᵢ) mᵢ)/(Σⱼ exp(sⱼ) mⱼ), z = Σᵢ αᵢ hᵢ .     (1)
+[JUSTIFY (3)|[10.0]] This gated-attention pooling follows the attention-based multiple-instance learning formulation of Ilse et al. [2], applied here across sensors rather than instances. The weights αᵢ are read out at inference time as a per-sample modality-importance score.
+[JUSTIFY (3)|[10.0]] The fused embedding feeds a shared trunk and two heads: a linear classifier over the 8 conditions, and a sigmoid regressor on the normalised setpoint ỹ = (y - 1)/99.
+[None|[10.0]] D. Training objective and protocol
+[CENTER (1)|[10.0]] L = CE_ls=0.05(p̂, y_cls) + λ Huber_β=0.05(ỹ̂, ỹ), λ = 5 .     (2)
+[JUSTIFY (3)|[10.0]] Training uses AdamW (lr 10⁻³, weight decay 10⁻⁴), OneCycle scheduling, batch size 32, 60 epochs, gradient-norm clipping at 5, dropout 0.3, and modality dropout (p = 0.15, never dropping all modalities) so the fusion layer cannot collapse onto a single sensor. The checkpoint with the lowest validation loss is retained.
+[JUSTIFY (3)|[9.5, 10.0]] Splitting. Because windows cut from the same 20 s capture are strongly correlated, splits are made with GroupShuffleSplit over the (condition, speed_percent) recording key, so no recording contributes to more than one split:
+[CENTER (1)|[8.0]] TABLE V
+[CENTER (1)|[8.0]] RECORDING-DISJOINT DATA SPLIT.
+=== TABLE ===
+Split | Windows | Recordings
+Train | 496 | 62
+Validation | 88 | 11
+Test | 200 | 25
+=== END TABLE ===
+[JUSTIFY (3)|[10.0]] This is a deliberately strict protocol: at test time the model sees setpoints of a condition it never observed during training, so the reported speed regression is genuine interpolation across unseen operating points rather than window-level memorisation. The held-out split covers the setpoints {1, 2, 5, 10, 20, 30, 40, 80, 90, 100} %; the 50–70 % range falls entirely in train/validation, which explains the gap in Fig. 3.
+[CENTER (1)|[10.0]] IV.  Results
+[JUSTIFY (3)|[9.5, 10.0]] All figures are generated automatically by the evaluation stage at 300 dpi (pipeline_outputs/multimodal/figures/), and all numbers below are read from pipeline_outputs/multimodal/metrics.json.
+[None|[10.0]] A. Condition classification
+[CENTER (1)|[8.0]] TABLE VI
+[CENTER (1)|[8.0]] CONDITION-CLASSIFICATION PERFORMANCE ON THE HELD-OUT RECORDINGS.
+=== TABLE ===
+Metric | Value
+Accuracy | 0.830
+Balanced accuracy | 0.827
+Macro-F1 | 0.821
+Weighted F1 | 0.831
+ROC-AUC (OvR, macro) | 0.986
+ROC-AUC (micro) | 0.989
+=== END TABLE ===
+<<IMAGE>>
+[JUSTIFY (3)|[8.0]] Fig. 1. Row-normalised confusion matrix over the 200 held-out windows; annotations are raw counts.
+[JUSTIFY (3)|[10.0]] Per-class performance:
+[CENTER (1)|[8.0]] TABLE VII
+[CENTER (1)|[8.0]] PER-CLASS PRECISION, RECALL AND F1 ON THE TEST SPLIT.
+=== TABLE ===
+Class | Precision | Recall | F1 | Support
+loose_foundation_no_reversal | 0.83 | 0.75 | 0.79 | 32
+loose_foundation_with_reversal | 0.70 | 0.79 | 0.75 | 24
+normal_no_reversal | 1.00 | 0.78 | 0.88 | 32
+normal_with_reversal | 0.77 | 1.00 | 0.87 | 24
+suboptimal_control_no_reversal | 1.00 | 1.00 | 1.00 | 32
+suboptimal_control_rt_no_reversal | 0.56 | 0.63 | 0.59 | 16
+suboptimal_control_rt_with_reversal | 0.73 | 0.67 | 0.70 | 24
+suboptimal_control_with_reversal | 1.00 | 1.00 | 1.00 | 16
+=== END TABLE ===
+[JUSTIFY (3)|[9.5, 10.0]] The error structure is highly informative. All 34 misclassifications are within-family: loose ↔ loose, normal ↔ normal, suboptimal_rt ↔ suboptimal_rt. Collapsing the labels to the four mechanical/control families gives 100.0 % accuracy, while the binary reversal flag is recovered at 83.0 %. In other words, the pipeline diagnoses what is wrong with the machine perfectly on this test split, and only fails to decide whether the drive was periodically reversing — an operating regime, not a fault.
+<<IMAGE>>
+[JUSTIFY (3)|[8.0]] Fig. 2. One-vs-rest ROC curves with micro- and macro-averaging. The high AUC (0.986 macro) relative to accuracy indicates well-ranked posteriors: the correct class is almost always among the top scores even when the arg-max is wrong.
+[None|[10.0]] B. Speed-setpoint regression
+[CENTER (1)|[8.0]] TABLE VIII
+[CENTER (1)|[8.0]] SPEED-SETPOINT REGRESSION PERFORMANCE.
+=== TABLE ===
+Metric | Value
+MAE | 4.48 % of rated speed
+Median absolute error | 3.38 %
+RMSE | 5.80 %
+R² | 0.972
+=== END TABLE ===
+<<IMAGE>>
+[JUSTIFY (3)|[8.0]] Fig. 3. True versus predicted speed setpoint with the ideal y = x reference and a ±10 % band, coloured by true condition.
+<<IMAGE>>
+[CENTER (1)|[8.0]] Fig. 4. Residuals versus setpoint.
+[JUSTIFY (3)|[10.0]] Error is strongly setpoint-dependent: MAE is 2.25 % for setpoints ≤ 10 % and 5.53 % above 10 %. In absolute terms the low-speed regime is therefore the more accurate one, which is consistent with the acoustic and current signatures changing rapidly (and hence being more discriminative) at low commanded speed, while the high-speed captures are spectrally more similar to one another.
+[None|[10.0]] C. Modality importance
+<<SECTION BREAK: cols=2>>
+<<IMAGE>>
+[JUSTIFY (3)|[8.0]] Fig. 5. Left: mean fusion attention weight per modality (± s.d., computed only over samples where the modality is present). Right: mean attention per true condition.
+<<SECTION BREAK: cols=1>>
+[CENTER (1)|[8.0]] TABLE IX
+[CENTER (1)|[8.0]] MEAN FUSION ATTENTION WEIGHT PER MODALITY.
+=== TABLE ===
+Modality | Mean attention | s.d. | Availability
+sound_phone | 0.319 | 0.067 | 100 %
+vibration (spot readings) | 0.307 | 0.039 | 92 %
+sound_vibrometer | 0.269 | 0.050 | 100 %
+current | 0.130 | 0.042 | 100 %
+=== END TABLE ===
+[JUSTIFY (3)|[10.0]] The smartphone microphone receives the largest average attention weight — slightly above the instrument-grade vibrometer waveform — while the armature current receives less than half as much. This is the central practical result: under this fusion model, a ≈1 m consumer microphone is not a degraded afterthought but a first-class information source for both tasks. We caution that attention weights are a model-internal saliency measure, not a causal ablation (see Section 5.2).
+[None|[10.0]] D. Optimisation behaviour
+<<SECTION BREAK: cols=2>>
+<<IMAGE>>
+[JUSTIFY (3)|[8.0]] Fig. 6. Training and validation loss and accuracy. Training accuracy saturates near 0.99 while validation accuracy oscillates between 0.68 and 0.89, indicating that with only 62 training recordings the model is capacity-limited by data, not by parameters.
+<<SECTION BREAK: cols=1>>
+[CENTER (1)|[10.0]] V.  Discussion
+[None|[10.0]] A. Interpretation
+[JUSTIFY (3)|[10.0]] Three findings stand out. (i) The four condition families are perfectly separable on held-out recordings, so the acoustic/vibration signature of a loosened foundation and of a detuned regulator is unambiguous even at one-second granularity. (ii) The residual confusion is entirely about direction reversal — plausible, since a periodically reversing drive spends most of its time in steady rotation, and a randomly positioned 1 s window may contain no reversal event at all. Window length is therefore a natural lever: longer windows (or explicit reversal-event detection) should recover this factor. (iii) Speed can be regressed to ≈4.5 % of rated speed from sensors that were never synchronised with one another, confirming that state-level alignment is sufficient for stationary signatures.
+[None|[10.0]] B. Limitations
+[JUSTIFY (3)|[10.0]] • Scale. 98 recordings and 784 windows is small; the validation curve is noisy and the single train/val/test split gives wide effective confidence intervals. Repeated group-stratified cross-validation is required before the numbers can be quoted as point estimates.
+[JUSTIFY (3)|[10.0]] • Attention ≠ causal importance. Section 4.3 reports internal weights. A leave-one- modality-out ablation (and a phone-only model) is needed to substantiate the "phone can replace the probe" claim quantitatively.
+[JUSTIFY (3)|[10.0]] • Sequential recording. Modalities are aligned by operating state, not in time; any drift between recordings of the same state is unmodelled noise.
+[JUSTIFY (3)|[9.5, 10.0]] • Coverage imbalance. suboptimal_control_* is capped at ≈65 % of rated speed, so condition and speed are not fully crossed; part of the classification signal may be a speed-range prior rather than a condition signature.
+[JUSTIFY (3)|[10.0]] • Single machine. All data come from one motor and one rig; cross-machine generalisation is untested.
+[None|[10.0]] C. Planned extensions
+[JUSTIFY (3)|[9.0]] TODO (draft): the following experiments are required for a submittable version.
+[JUSTIFY (3)|[10.0]] 1) Unimodal baselines (phone-only, vibrometer-only, current-only, vibration-only) and leave-one-modality-out ablations, with the identical protocol.
+[JUSTIFY (3)|[9.5, 10.0]] 2) Repeated GroupKFold cross-validation with mean ± s.d. for every metric.
+[JUSTIFY (3)|[10.0]] 3) Comparison against classical baselines: hand-crafted spectral features + gradient boosting; MCSA band-power features.
+[JUSTIFY (3)|[10.0]] 4) Window-length sweep (1 s / 2 s / 5 s) targeting the reversal-flag confusion.
+[JUSTIFY (3)|[10.0]] 5) Alternative fusion strategies (late logit averaging, cross-modal transformer) as an architecture ablation.
+[JUSTIFY (3)|[10.0]] 6) Robustness study: additive background noise and microphone-distance variation for the phone modality.
+[CENTER (1)|[10.0]] VI.  Reproducibility
+[None|[7.5]] python pipeline/multimodal_pipeline.py --stage all --epochs 60
+[JUSTIFY (3)|[9.5, 10.0]] Stages can be run separately (--stage cache|train|eval). The run produces:
+[None|[7.5]] pipeline_outputs/multimodal/
+[None|[7.5]]   feature_cache.npz          # 784 aligned four-modality samples + masks + labels
+[None|[7.5]]   model.pt                   # weights, normalisation statistics, split indices
+[None|[7.5]]   metrics.json               # all reported metrics
+[None|[7.5]]   training_history.csv
+[None|[7.5]]   figures/                   # Figures 1-6, PNG (300 dpi) + PDF
+[None|[7.5]]   tables/classification_report.csv, test_predictions.csv
+[JUSTIFY (3)|[10.0]] Environment: Python 3.13, PyTorch 2.13 (CPU), librosa 1.0, soundfile, PyAV 18.1, scikit-learn, seaborn 0.13. Seed 1337 for splits and initialisation; results in Section 4 were obtained on CPU in a single run.
+[CENTER (1)|[10.0]] VII.  Conclusion
+[JUSTIFY (3)|[10.0]] We presented an attention-fused multi-modal pipeline that jointly diagnoses the operating condition and estimates the speed setpoint of a brushed DC servo drive from four heterogeneous sensors. Under a strict recording-disjoint protocol the model attains 0.830 accuracy / 0.986 macro AUC on eight classes and R² = 0.972 on speed, with every classification error confined to the direction-reversal flag — the four mechanical and control condition families are separated without error. The fusion layer assigns the highest attention weight to a budget smartphone microphone, ahead of an instrument-grade vibrometer waveform and far ahead of the armature current, providing model-internal evidence that low-cost acoustic sensing is a credible substitute for invasive instrumentation in this class of machine. Confirming that evidence with explicit modality ablations, cross-validated estimates and cross-machine data is the subject of ongoing work.
+[CENTER (1)|[10.0]] VIII.  References
+[JUSTIFY (3)|[9.0]] TODO (draft): complete and format for the target venue; items below are placeholders except where noted.
+[JUSTIFY (3)|[10.0]] [1] Multi-Sensor Condition-Monitoring Dataset of a Brushed DC Servo Motor, Mendeley Data, CC BY 4.0. TODO: authors, DOI, year.
+[JUSTIFY (3)|[10.0]] [2] M. Ilse, J. M. Tomczak, M. Welling, "Attention-based Deep Multiple Instance Learning", ICML, 2018.
+[JUSTIFY (3)|[10.0]] [3] TODO — survey of motor current signature analysis for fault diagnosis.
+[JUSTIFY (3)|[10.0]] [4] TODO — acoustic-based machine condition monitoring with deep learning.
+[JUSTIFY (3)|[10.0]] [5] TODO — multi-modal fusion for prognostics and health management.

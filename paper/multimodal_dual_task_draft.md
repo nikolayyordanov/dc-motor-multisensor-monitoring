@@ -1,8 +1,11 @@
 # Attention-Fused Multi-Sensor Learning for Joint Condition Diagnosis and Speed-Setpoint Estimation in a Brushed DC Servo Drive
 
 **Draft — v0.1**
+
 *Authors: TODO*
+
 *Affiliation: Technical University TODO*
+
 *Corresponding author: TODO*
 
 ---
@@ -15,8 +18,8 @@ contact accelerometers bolted to the machine frame. We investigate whether a
 consumer smartphone microphone can carry comparable diagnostic information, and
 whether heterogeneous sensors can be combined into a single model that solves two
 tasks at once. We present a modular multi-modal neural pipeline that ingests four
-sensing modalities recorded on a 625 W brushed permanent-magnet DC servo motor
-(3PI12.12) driven by a four-quadrant thyristor converter: the AC output of an
+sensing modalities recorded on a 350 W brushed permanent-magnet DC servo motor
+(3PI12.06) driven by a four-quadrant thyristor converter: the AC output of an
 AV-160B vibrometer probe (44.1 kHz WAV), a budget Android phone microphone at
 ≈1 m (lossy AAC), the armature current captured by a Rigol MSO5074 oscilloscope
 (8-bit native binary), and ISO 2954 vibrometer spot readings (tabular). Modality-specific
@@ -82,8 +85,9 @@ Our contributions are:
 ## 2. Experimental data
 
 We use the multi-sensor condition-monitoring dataset of a brushed permanent-magnet DC
-servo motor described in [1]. The machine under test is a 3PI12.12 servo motor
-(625 W, 110 V DC, 12.5 A, 5.4 N·m, 2000 rpm rated) driven by a four-quadrant thyristor
+servo motor described in [1]. The machine under test is a 3PI12.06 servo motor
+(350 W, 55 V, 12.5 A continuous and 100 A peak, 2.7 N·m at S1 duty, 2000 rpm maximum,
+$K_t$ = 0.24 N·m/A, $K_e$ = 25 V/1000 rpm) driven by a four-quadrant thyristor
 (SCR) converter with armature voltage/current control. The motor runs **unloaded**, so
 each speed setpoint is a commanded speed, not a load level. The armature current is
 unipolar DC plus ripple; the prominent 300 Hz component is the six-pulse converter ripple
@@ -93,6 +97,8 @@ unipolar DC plus ripple; the prominent 300 Hz component is the six-pulse convert
 
 Eight condition folders are formed by crossing four mechanical/control states with the
 direction-reversal regime:
+
+**Table 1.** Operating conditions: four mechanical/control families crossed with the direction-reversal regime.
 
 | Condition family | No reversal | With reversal |
 |---|---|---|
@@ -107,6 +113,8 @@ because above that the detuned controller trips the DC-link protection — an in
 coverage limitation of the dataset, and a source of class imbalance in our experiments.
 
 ### 2.2 Sensor modalities
+
+**Table 2.** Sensor modalities, native formats and the front end applied in this work.
 
 | Modality | Format | Front end used here | Notes |
 |---|---|---|---|
@@ -142,6 +150,8 @@ over **98 recordings**.
 
 A binary availability mask $m \in \{0,1\}^4$ accompanies every sample. Observed coverage:
 
+**Table 3.** Modality availability across the 784 cached samples.
+
 | Modality | Coverage |
 |---|---|
 | `sound_vibrometer` | 100.0 % |
@@ -171,6 +181,8 @@ recorded at the lowest setpoints) and are propagated to the model through the ma
 ### 3.3 Encoders, fusion and heads
 
 Each modality $i$ is embedded into a common $d = 128$ space:
+
+**Table 4.** Encoder topologies and parameter counts.
 
 | Encoder | Architecture | Parameters |
 |---|---|---|
@@ -216,6 +228,8 @@ single sensor. The checkpoint with the lowest validation loss is retained.
 splits are made with `GroupShuffleSplit` over the `(condition, speed_percent)` recording
 key, so no recording contributes to more than one split:
 
+**Table 5.** Recording-disjoint data split.
+
 | Split | Windows | Recordings |
 |---|---|---|
 | Train | 496 | 62 |
@@ -238,6 +252,8 @@ All figures are generated automatically by the evaluation stage at 300 dpi
 
 ### 4.1 Condition classification
 
+**Table 6.** Condition-classification performance on the held-out recordings.
+
 | Metric | Value |
 |---|---|
 | Accuracy | 0.830 |
@@ -253,6 +269,8 @@ All figures are generated automatically by the evaluation stage at 300 dpi
 are raw counts.
 
 Per-class performance:
+
+**Table 7.** Per-class precision, recall and F1 on the test split.
 
 | Class | Precision | Recall | F1 | Support |
 |---|---|---|---|---|
@@ -279,6 +297,8 @@ decide whether the drive was periodically reversing — an operating regime, not
 almost always among the top scores even when the arg-max is wrong.
 
 ### 4.2 Speed-setpoint regression
+
+**Table 8.** Speed-setpoint regression performance.
 
 | Metric | Value |
 |---|---|
@@ -308,6 +328,8 @@ high-speed captures are spectrally more similar to one another.
 
 **Figure 5.** Left: mean fusion attention weight per modality (± s.d., computed only over
 samples where the modality is present). Right: mean attention per true condition.
+
+**Table 9.** Mean fusion attention weight per modality.
 
 | Modality | Mean attention | s.d. | Availability |
 |---|---|---|---|

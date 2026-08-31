@@ -447,8 +447,9 @@ def build(stats, fig_ok):
     field(doc, "Abstract", "")
     para(doc,
          "This article presents a multi-sensor condition-monitoring dataset "
-         "recorded from a brushed permanent-magnet DC servo motor (3PI12.12; "
-         "625 W, 110 V DC, 12.5 A, 5.4 N\u00b7m, 2000 rpm) driven by a four-quadrant "
+         "recorded from a brushed permanent-magnet DC servo motor (3PI12.06; "
+         "350 W, 55 V, 12.5 A continuous, 2.7 N\u00b7m at S1 duty, 2000 rpm maximum) "
+         "driven by a four-quadrant "
          "thyristor (SCR) converter with armature voltage and current control. "
          "The machine was operated, with no external mechanical load, across up to "
          "thirteen speed setpoints (1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90 and "
@@ -488,7 +489,7 @@ def build(stats, fig_ok):
          "Data are Raw (untransformed)."],
         ["Data collection",
          "Recorded on a laboratory test rig comprising a brushed PM DC servo "
-         "motor (3PI12.12) driven by a four-quadrant thyristor (SCR) converter "
+         "motor (3PI12.06) driven by a four-quadrant thyristor (SCR) converter "
          "with no external mechanical load (the motor runs unloaded). Armature "
          "current was captured with a Rigol "
          "MSO5074 oscilloscope; the vibration waveform and spot readings (per "
@@ -592,12 +593,16 @@ def build(stats, fig_ok):
     para(doc, "Table 2. Rated parameters of the machine under test.")
     add_table(doc, ["Parameter", "Value"], [
         ["Type", "Brushed PM DC servo (commutator + graphite brushes)"],
-        ["Designation", "3PI12.12"],
-        ["Rated power", "625 W"],
-        ["Rated voltage", "110 V DC"],
-        ["Rated current", "12.5 A"],
-        ["Rated torque", "5.4 N\u00b7m"],
-        ["Rated speed", "2000 rpm"],
+        ["Designation", "3PI12.06"],
+        ["Rated electrical power output (P_el)", "350 W"],
+        ["Nominal input voltage (U)", "55 V"],
+        ["Continuous nominal current", "12.5 A"],
+        ["Maximum peak / starting current", "100 A"],
+        ["Nominal torque (M_nom)", "2.7 N\u00b7m (at S1 duty)"],
+        ["Torque constant (K_t)", "0.24 N\u00b7m/A"],
+        ["Electrical constant (K_e)", "25 V / 1000 rpm"],
+        ["Max. rotation speed (N_max)", "2000 rpm"],
+        ["Physical enclosure depth", "50 mm (shorter motor stack)"],
         ["Drive", "Four-quadrant thyristor (SCR) converter, armature voltage/current control"],
     ], widths=[1.8, 4.5])
 
@@ -771,7 +776,7 @@ def build(stats, fig_ok):
 
     para(doc, "Table 7. Measurement equipment.")
     add_table(doc, ["Equipment", "Model", "Purpose"], [
-        ["Brushed PM DC servo motor", "3PI12.12 (625 W, 110 V, 12.5 A, 2000 rpm)", "Machine under test"],
+        ["Brushed PM DC servo motor", "3PI12.06 (350 W, 55 V, 12.5 A, 2.7 N\u00b7m, 2000 rpm)", "Machine under test"],
         ["Power converter", "Four-quadrant thyristor (SCR) converter", "Armature voltage/current control drive"],
         ["Oscilloscope", "Rigol MSO5074", "Armature-current waveform acquisition"],
         ["Vibrometer", "AV-160B (Amittari) with piezoelectric probe", "Vibration waveform (AC out) and spot readings"],
