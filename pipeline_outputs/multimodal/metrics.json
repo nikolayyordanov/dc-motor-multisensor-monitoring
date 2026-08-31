@@ -1,0 +1,46 @@
+{
+  "n_test_samples": 200,
+  "n_test_recordings": 25,
+  "classification": {
+    "accuracy": 0.83,
+    "balanced_accuracy": 0.8268229166666666,
+    "macro_f1": 0.8207238760414286,
+    "weighted_f1": 0.8309286383693768,
+    "roc_auc_ovr_macro": 0.9860816408455675,
+    "roc_auc_ovr_weighted": 0.9884447934312064,
+    "roc_auc_micro": 0.9893857142857143,
+    "roc_auc_macro_curve": 0.9873430417333271
+  },
+  "regression": {
+    "mae_percent": 4.4823408126831055,
+    "rmse_percent": 5.795637713306988,
+    "r2": 0.9715892672538757,
+    "median_abs_err_percent": 3.376997709274292
+  },
+  "modality_attention": [
+    {
+      "modality": "sound_vibrometer",
+      "mean_attention": 0.2687918543815613,
+      "std_attention": 0.04966401681303978,
+      "availability": 1.0
+    },
+    {
+      "modality": "sound_phone",
+      "mean_attention": 0.31910601258277893,
+      "std_attention": 0.06653565913438797,
+      "availability": 1.0
+    },
+    {
+      "modality": "current",
+      "mean_attention": 0.12963129580020905,
+      "std_attention": 0.041757408529520035,
+      "availability": 1.0
+    },
+    {
+      "modality": "vibration",
+      "mean_attention": 0.307033509016037,
+      "std_attention": 0.0389847531914711,
+      "availability": 0.92
+    }
+  ]
+}

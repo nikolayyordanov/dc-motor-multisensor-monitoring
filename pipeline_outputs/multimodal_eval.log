@@ -1,0 +1,29 @@
+device: cpu  |  dataset: C:\Users\wb568126.WB\Downloads\DataFromTU\DCData_mendeley
+
+[3/3] Evaluating and rendering figures
+  figure -> pipeline_outputs\multimodal\figures\fig_confusion_matrix.png
+  figure -> pipeline_outputs\multimodal\figures\fig_speed_parity.png
+  figure -> pipeline_outputs\multimodal\figures\fig_speed_residuals.png
+  figure -> pipeline_outputs\multimodal\figures\fig_roc_multiclass.png
+  figure -> pipeline_outputs\multimodal\figures\fig_modality_attention.png
+  figure -> pipeline_outputs\multimodal\figures\fig_training_curves.png
+
+=== Test-set metrics ===
+{
+  "accuracy": 0.83,
+  "balanced_accuracy": 0.8268229166666666,
+  "macro_f1": 0.8207238760414286,
+  "weighted_f1": 0.8309286383693768,
+  "roc_auc_ovr_macro": 0.9860816408455675,
+  "roc_auc_ovr_weighted": 0.9884447934312064,
+  "roc_auc_micro": 0.9893857142857143,
+  "roc_auc_macro_curve": 0.9873430417333271
+}
+{
+  "mae_percent": 4.4823408126831055,
+  "rmse_percent": 5.795637713306988,
+  "r2": 0.9715892672538757,
+  "median_abs_err_percent": 3.376997709274292
+}
+
+Artefacts written to C:\Users\wb568126.WB\Downloads\DataFromTU\pipeline_outputs\multimodal

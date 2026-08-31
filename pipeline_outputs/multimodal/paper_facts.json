@@ -1,0 +1,39 @@
+{
+  "params": {
+    "sound_vibrometer": 257120,
+    "sound_phone": 257120,
+    "current": 88864,
+    "vibration": 9280,
+    "fusion": 16577,
+    "trunk+heads": 17929,
+    "total": 647402
+  },
+  "family_accuracy": 1.0,
+  "reversal_accuracy": 0.83,
+  "errors_within_family": 34,
+  "errors_total": 34,
+  "mae_low_speed_le10": 2.25178788125,
+  "mae_high_speed_gt10": 5.5320122573529416,
+  "split_sizes": {
+    "train": 496,
+    "val": 88,
+    "test": 200
+  },
+  "split_recordings": {
+    "train": 62,
+    "val": 11,
+    "test": 25
+  },
+  "n_test_speeds": [
+    1.0,
+    2.0,
+    5.0,
+    10.0,
+    20.0,
+    30.0,
+    40.0,
+    80.0,
+    90.0,
+    100.0
+  ]
+}
