@@ -150,7 +150,7 @@ def fig1_organisation(path: Path):
 
     lvl1 = [
         box(2, 66, 18, 8, "data/", weight="bold"),
-        box(22, 66, 16, 8, "cad/\n1v_3v0.stp\n(3-D CAD model)"),
+        box(22, 66, 16, 8, "scope_setup/\n1v_3v0.stp\n(oscilloscope\nsetup file)"),
         box(40, 66, 18, 8, "metadata.csv"),
         box(60, 66, 17, 8, "README.md"),
         box(79, 66, 18, 8, "LICENSE.txt"),
@@ -468,7 +468,8 @@ def build(stats, fig_ok):
          "and displacement (XLS). The repository is published as raw, "
          f"untransformed recordings and comprises {inv}, together with a per-file "
          "metadata index (sample rate, duration, channels, bit depth and file "
-         "size), a 3-D CAD model of the test rig, a README and a CC BY 4.0 "
+         "size), the Rigol oscilloscope setup file used for the current "
+         "acquisitions, a README and a CC BY 4.0 "
          "licence. The dataset supports speed estimation, operating-condition "
          "classification, direction-reversal and converter-ripple analysis, and "
          "benchmarking of low-cost smartphone audio against instrument-grade "
@@ -485,8 +486,8 @@ def build(stats, fig_ok):
         ["Type of data",
          "Raw armature-current waveforms (.bin); raw vibration waveforms (.wav); "
          "raw acoustic recordings (.m4a); vibration spot readings (.xls); "
-         "metadata index (.csv); 3-D CAD model (.stp); tables and figures. "
-         "Data are Raw (untransformed)."],
+         "metadata index (.csv); oscilloscope setup file (.stp); tables and "
+         "figures. Data are Raw (untransformed)."],
         ["Data collection",
          "Recorded on a laboratory test rig comprising a brushed PM DC servo "
          "motor (3PI12.06) driven by a four-quadrant thyristor (SCR) converter "
@@ -531,10 +532,11 @@ def build(stats, fig_ok):
         "direction-reversal transients that are rarely available together in "
         "public datasets.",
         "Publishing the recordings raw and untransformed, with an exact per-file "
-        "metadata index and a CAD model of the rig, lets users apply their own "
-        "preprocessing and generate application-specific representations "
+        "metadata index and the oscilloscope setup file used for acquisition, "
+        "lets users apply their own preprocessing "
+        "and generate application-specific representations "
         "(spectrograms, Mel-spectrograms, scalograms, and current-signature or "
-        "envelope spectra) and reproduce the acquisition geometry.",
+        "envelope spectra) and reproduce the acquisition settings.",
     ]:
         bullet(doc, b)
 
@@ -570,14 +572,15 @@ def build(stats, fig_ok):
          "brushed permanent-magnet DC servo motor on a laboratory test rig. It is "
          "published as byte-for-byte raw recordings organised by operating "
          "condition, sensor and speed setpoint, together with a per-file metadata "
-         "index, a 3-D CAD model of the rig, a README descriptor and a licence "
+         "index, the Rigol oscilloscope setup file used for the armature-current "
+         "acquisitions, a README descriptor and a licence "
          f"file. In total the repository contains {inv}. Table 1 lists the "
          "top-level organisation of the repository.")
 
     para(doc, "Table 1. Organisation of the dataset repository.")
     add_table(doc, ["Folder / File", "Description", "Format"], [
         ["data/", "Raw recordings organised as <condition>/<sensor>/speedNNN_sensor.ext", "Folder"],
-        ["cad/", "3-D CAD model of the test rig (1v_3v0.stp)", "STP"],
+        ["scope_setup/", "Rigol MSO5074 oscilloscope setup (settings) file used for the armature-current acquisitions (1v_3v0.stp)", "STP"],
         ["metadata.csv", "One row per file with acquisition parameters and traceability fields", "CSV"],
         ["README.md", "Dataset descriptor (machine, conditions, sensors, methods, coverage)", "Markdown"],
         ["LICENSE.txt", "Creative Commons Attribution 4.0 (CC BY 4.0) licence", "TXT"],
@@ -682,8 +685,8 @@ def build(stats, fig_ok):
          "the detuned controller trips above that speed, the vibration spot "
          "readings omit the near-zero-speed points where vibration is negligible, "
          "and a few individual speed points may be absent in a branch. The 385 sensor "
-         "recordings listed in Table 6 are complemented by the CAD model, giving "
-         "386 files in total.")
+         "recordings listed in Table 6 are complemented by the oscilloscope setup "
+         "file, giving 386 files in total.")
 
     para(doc, "Table 6. File counts per operating condition and sensor.")
     cnt_rows = []
@@ -845,6 +848,19 @@ def build(stats, fig_ok):
          "The authors declare that they have no known competing financial "
          "interests or personal relationships that could have appeared to "
          "influence the work reported in this paper.")
+
+    # ---- GENERATIVE AI DECLARATION ---- #
+    h1(doc, "DECLARATION OF GENERATIVE AI AND AI-ASSISTED TECHNOLOGIES IN THE "
+            "MANUSCRIPT PREPARATION PROCESS")
+    para(doc,
+         "During the preparation of this work, the authors used GitHub Copilot "
+         "(Anthropic Claude) to assist with drafting and language editing of the "
+         "manuscript text, and to help implement the Python scripts used for "
+         "dataset organisation, metadata generation, and figure production. All "
+         "experimental design, data acquisition, and interpretation of the "
+         "results were performed by the authors. The authors reviewed and edited "
+         "the output as needed and take full responsibility for the content of "
+         "the published article.")
 
     # ---- REFERENCES ---- #
     h1(doc, "REFERENCES")

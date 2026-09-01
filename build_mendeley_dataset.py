@@ -254,14 +254,14 @@ def build(src_root: Path, out_root: Path):
                     })
                     print(f"  + {dest.relative_to(out_root)}")
 
-    # CAD model, if present.
+    # Rigol oscilloscope setup (settings) file, if present.
     for stp in src_root.glob("*.stp"):
-        dest = out_root / "cad" / stp.name
+        dest = out_root / "scope_setup" / stp.name
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(stp, dest)
         rows.append({
             "condition": "", "operation": "", "reversal": "",
-            "speed_percent": "", "sensor": "cad", "format": "stp",
+            "speed_percent": "", "sensor": "scope_setup", "format": "stp",
             "sample_rate_hz": "", "duration_s": "", "channels": "",
             "bit_depth": "", "file_size_bytes": stp.stat().st_size,
             "new_path": str(dest.relative_to(out_root)).replace("\\", "/"),
@@ -431,7 +431,7 @@ data/
     sound_vibrometer/   speedNNN_sound_vibrometer.wav
     sound_phone/        speedNNN_sound_phone.m4a
     vibration/          speedNNN_vibration.xls
-cad/                    3D model of the rig (.stp)
+scope_setup/            Rigol MSO5074 oscilloscope setup file (.stp)
 metadata.csv            one row per file
 README.md
 ```

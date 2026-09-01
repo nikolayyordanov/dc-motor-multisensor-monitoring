@@ -120,7 +120,7 @@ data/
     sound_vibrometer/   speedNNN_sound_vibrometer.wav
     sound_phone/        speedNNN_sound_phone.m4a
     vibration/          speedNNN_vibration.xls
-cad/                    3D model of the rig (.stp)
+scope_setup/            Rigol MSO5074 oscilloscope setup file (.stp)
 metadata.csv            one row per file
 README.md
 ```
