@@ -228,18 +228,39 @@ audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/speed020_sound_vib
 
 ### Data quality checks
 
-All 385 measurement files were checked automatically. Values in square
-brackets are to be filled in from the check results before publication.
+All 385 measurement files were checked automatically (see `quality/qc_per_file.csv` and `quality/checksums_sha256.txt`).
 
 | Check | Current (BIN) | Vibrometer (WAV) | Phone (M4A) | Spot readings (XLS) |
 |---|---|---|---|---|
-| Opens / decodes completely | [98/98] | [98/98] | [98/98] | [91/91] |
-| Matches `metadata.csv` (sample rate, duration, channels) | [ ] | [ ] | [ ] | n/a |
-| Duplicate files (identical SHA-256) | [none] | [none] | [none] | [none] |
-| Clipping (files affected; max % of samples) | [ ] | [ ] | [ ] | n/a |
-| Flat / silent segments | [ ] | [initial X–Y s in N files – reason] | [ ] | n/a |
-| Within-recording RMS variation, 1-s windows (median / max) | [ ] | [ ] | [ ] | [variation across readings] |
-| Missing files | 0 | 0 | 0 | 7 (1–2 % speed, below detection threshold; see table above) |
+| Opens / decodes completely | 97/98 | 98/98 | 98/98 | 91/91 |
+| Matches `metadata.csv` (sample rate, duration, channels) | 194/194 populated fields agree; absent: channels; 1 failed files not verifiable | 294/294 populated fields agree | n/a (not recorded in metadata.csv) | n/a (not recorded in metadata.csv) |
+| Duplicate files (identical SHA-256) | none | none | none | none |
+| Clipping (files affected; max % of samples) | unverifiable (ADC rails absent from scaled-volts export) | 94 file(s); max 0.9347% | not detected at digital limits | n/a |
+| Flat / silent segments | 0 files with flat/silent runs >=0.1 s; no leading run >=0.1 s | initial 0.27-0.27 s in 98 files; 98 files with runs >=0.1 s; cause requires confirmation | initial 0.40-0.41 s in 98 files; 98 files with runs >=0.1 s; cause requires confirmation | n/a |
+| Within-recording RMS variation, 1-s windows (median / max) | median 13.3%, max 430.6% | median 25.1%, max 176.2% | median 50.5%, max 234.3% | reading CV: median 168.0%, max 282.8% (not time windows) |
+| Missing files | 0 | 0 | 0 | 7 (1%, 2% speed; paths listed below) |
+
+Coverage: 98 expected operating points x 4 sensors = 392 expected measurements; 7 missing.
+
+Methods: full-recording native samples, channels assessed separately (no mono mixing or resampling). RMS variation = 100 x (maximum - minimum) / median RMS over complete non-overlapping 1-s windows, including the start; the file statistic is the worst channel. Flat = constant samples within 10-ms blocks; silent = block RMS <= 1% of median block RMS (floor: 0.0001% of peak); report runs >=0.1 s. Leading durations have 10-ms resolution. Clipping counts every sample at either PCM limit or beyond +/-1 for decoded AAC; AAC overshoot is a digital-limit flag, not proof of analogue saturation. Observed BIN extrema are not ADC rails and cannot establish clipping. Rate tolerance: 1 Hz; duration tolerance: 0.000051 s (metadata rounded to 4 decimals). Missing metadata fields are not treated as agreement. Spot variation is the worst per-quantity coefficient of variation, never mixed across units.
+
+DC offset is recorded per channel in the CSV. Maximum absolute mean / RMS: Current (BIN) 73.0%; Vibrometer (WAV) 0.2%; Phone (M4A) 5.6%. Current DC is physically expected and is not automatically an error.
+
+**Interpretation of quiet starts.** Leading quiet segments (Phone (M4A): 98 recordings, 0.40-0.41 s; Vibrometer (WAV): 98 recordings, 0.27-0.27 s) may reflect recording-chain startup behavior, such as software/hardware muting, buffer initialization or gain-control settling, rather than motor behavior; this explanation is not confirmed. Similar onset durations across operating points, at the QC's 10-ms resolution, are consistent with a repeatable acquisition artifact but do not identify its cause. The phone model, recording app, processing settings and recorder used for the vibrometer AC output are not documented. Phone hardware/software could explain the WAV starts only if that signal was recorded through a phone; this is unknown. AAC encoder priming or container timing may affect M4A onset, but cannot explain the uncompressed WAV onset and have not been shown to account for the measured 0.40-0.41 s. Confirmation requires recording an already-active source with the same device/app and checking startup muting, gain processing and codec timing. For steady-state analysis, exclude the measured quiet start and verify the subsequent onset has settled before selecting windows; preserve the raw files and report any exclusion. Full-recording QC RMS statistics include these starts.
+
+Human review: confirm the cause of quiet/flat starts and whether amplitude changes are expected during reversals. The documented low-speed detection-threshold explanation cannot be established from missing files alone.
+
+Missing expected measurements:
+- data/loose_foundation_no_reversal/vibration/speed001_vibration.xls
+- data/loose_foundation_no_reversal/vibration/speed002_vibration.xls
+- data/normal_no_reversal/vibration/speed001_vibration.xls
+- data/normal_no_reversal/vibration/speed002_vibration.xls
+- data/normal_with_reversal/vibration/speed001_vibration.xls
+- data/suboptimal_control_no_reversal/vibration/speed001_vibration.xls
+- data/suboptimal_control_no_reversal/vibration/speed002_vibration.xls
+
+Opening / metadata exceptions:
+- data/normal_with_reversal/current/speed100_current.bin: open/decode failed: truncated BIN payload: 11264000 of 20000000 samples (11.264000 of 20.000000 s); file 45056164 bytes, header declares 80000164
 
 ## 9. License & citation
 
