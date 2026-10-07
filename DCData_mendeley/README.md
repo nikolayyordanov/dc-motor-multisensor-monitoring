@@ -1,6 +1,6 @@
 # Multi-Sensor Condition-Monitoring Dataset of a Brushed DC Servo Motor
 
-**Built:** 2026-10-07  ·  **Files:** 386 (98 BIN, 98 M4A, 1 STP, 98 WAV, 91 XLS)  ·  **License:** CC BY 4.0
+**Built:** 2026-06-26  ·  **Files:** 386 (98 BIN, 98 M4A, 1 STP, 98 WAV, 91 XLS)  ·  **License:** CC BY 4.0
 
 ## 1. Overview
 
@@ -225,6 +225,21 @@ audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/speed020_sound_vib
 | loose_foundation_with_reversal | sound_vibrometer | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
 | loose_foundation_with_reversal | sound_phone | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
 | loose_foundation_with_reversal | vibration | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
+
+### Data quality checks
+
+All 385 measurement files were checked automatically. Values in square
+brackets are to be filled in from the check results before publication.
+
+| Check | Current (BIN) | Vibrometer (WAV) | Phone (M4A) | Spot readings (XLS) |
+|---|---|---|---|---|
+| Opens / decodes completely | [98/98] | [98/98] | [98/98] | [91/91] |
+| Matches `metadata.csv` (sample rate, duration, channels) | [ ] | [ ] | [ ] | n/a |
+| Duplicate files (identical SHA-256) | [none] | [none] | [none] | [none] |
+| Clipping (files affected; max % of samples) | [ ] | [ ] | [ ] | n/a |
+| Flat / silent segments | [ ] | [initial X–Y s in N files – reason] | [ ] | n/a |
+| Within-recording RMS variation, 1-s windows (median / max) | [ ] | [ ] | [ ] | [variation across readings] |
+| Missing files | 0 | 0 | 0 | 7 (1–2 % speed, below detection threshold; see table above) |
 
 ## 9. License & citation
 
