@@ -1,6 +1,6 @@
 # Multi-Sensor Condition-Monitoring Dataset of a Brushed DC Servo Motor
 
-**Built:** 2026-06-26  ·  **Files:** 386 (98 BIN, 98 M4A, 1 STP, 98 WAV, 91 XLS)  ·  **License:** CC BY 4.0
+**Built:** 2026-10-07  ·  **Files:** 386 (98 BIN, 98 M4A, 1 STP, 98 WAV, 91 XLS)  ·  **License:** CC BY 4.0
 
 ## 1. Overview
 
@@ -9,11 +9,13 @@ Raw multi-sensor recordings from a **brushed permanent-magnet DC servo motor**
 recorded separately under the **same operating conditions** — matched speed setpoint
 and mechanical condition — using four sensors: armature current, an AV-160B
 vibrometer probe, a budget Android phone microphone, and vibrometer spot
-readings.
+readings. Recordings are condition-matched, not synchronized (see Section 5,
+*Data structure and independence of recordings*).
 
-**Hypothesis.** The dataset is built to test whether **ordinary smartphone
-audio** can replace invasive or specialised diagnostic equipment (current
-probes, contact vibrometers) for motor condition monitoring. With the phone
+**Motivation.** The dataset is built to support research on whether **ordinary
+smartphone audio** can complement invasive or specialised diagnostic equipment
+(current probes, contact vibrometers) for motor condition monitoring under
+laboratory, no-load conditions. With the phone
 recorded at ~1 m under the same conditions as the instrument-grade references,
 researchers can compare models trained on phone audio against those trained on
 current and vibrometer signals — i.e. whether a phone alone can estimate speed
@@ -21,7 +23,7 @@ and tell apart normal operation, direction reversal, and a loose foundation.
 
 Published **as recorded** (raw, untransformed). It also suits speed estimation,
 foundation-looseness detection, direction-reversal analysis, and
-converter/commutation signature studies. Section 6 gives ML suggestions only as
+converter/commutation signature studies. Section 7 gives ML suggestions only as
 guidance.
 
 ## 2. Machine under test
@@ -53,14 +55,14 @@ percentage is a commanded speed, not a load level:
 
 | Folder (`data/`) | Description |
 |---|---|
-| `suboptimal_control_no_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient), без реверсиране |
-| `suboptimal_control_with_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient), с реверсиране |
-| `suboptimal_control_rt_no_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient + non-optimal current-regulator gain coefficient), без реверсиране |
-| `suboptimal_control_rt_with_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient + non-optimal current-regulator gain coefficient), с реверсиране |
-| `normal_no_reversal` | Normal operation, без реверсиране |
-| `normal_with_reversal` | Normal operation, с реверсиране |
-| `loose_foundation_no_reversal` | Loose foundation, без реверсиране |
-| `loose_foundation_with_reversal` | Loose foundation, с реверсиране |
+| `suboptimal_control_no_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient), without reversal |
+| `suboptimal_control_with_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient), with reversal |
+| `suboptimal_control_rt_no_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient + non-optimal current-regulator gain coefficient), without reversal |
+| `suboptimal_control_rt_with_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient + non-optimal current-regulator gain coefficient), with reversal |
+| `normal_no_reversal` | Normal operation, without reversal |
+| `normal_with_reversal` | Normal operation, with reversal |
+| `loose_foundation_no_reversal` | Loose foundation, without reversal |
+| `loose_foundation_with_reversal` | Loose foundation, with reversal |
 
 Naming note: `suboptimal_control_*` means a non-optimal **speed-regulator
 gain coefficient**, while `suboptimal_control_rt_*` means non-optimal
@@ -89,9 +91,9 @@ mechanical load was applied — the motor ran **unloaded** — while the drive w
 commanded to a speed setpoint of 1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90 and
 100 % of rated speed (2000 RPM).
 
-**Conditions.** The full speed sweep was repeated for each condition in
-Section 3 (normal without reversal, normal with periodic direction reversal, and
-a deliberately loosened foundation without reversal).
+**Conditions.** The speed sweep was repeated for each of the eight conditions in
+Section 3 (four operating states, each without and with periodic direction
+reversal); the `suboptimal_control_*` conditions stop at 65 % (see Section 8).
 
 **Acquisition (each sensor recorded separately, under the same operating
 conditions — not simultaneously):**
@@ -110,6 +112,15 @@ conditions — not simultaneously):**
 state, then each sensor was recorded in turn. Files are named
 `speed{NNN}_{sensor}` and organised under `data/<condition>/<sensor>/`; see
 `metadata.csv` for the full inventory with sample rates and durations.
+
+**Data structure and independence of recordings.** Each combination of
+`condition` and `speed_percent` in `metadata.csv` is one *operating point*
+(98 in total). At each operating point, each sensor was recorded **once**,
+one after another, after the motor reached steady state; no operating point
+was repeated. Recordings of one operating point are therefore
+**condition-matched but not time-synchronized**, and they are not independent
+repetitions. For machine learning, keep all recordings of an operating point
+(and all segments cut from them) in the same training/validation/test split.
 
 ## 6. Folder structure
 
@@ -131,7 +142,8 @@ runs unloaded, so this is not a mechanical load.
 `metadata.csv` has one row per file with `condition`, `operation`, `reversal`,
 `speed_percent`, `sensor`, `format`, `sample_rate_hz`, `duration_s`, `channels`,
 `bit_depth`, `file_size_bytes`, `new_path`, and the original name/path for
-traceability.
+traceability. Together, `condition` and `speed_percent` identify the operating
+point.
 
 ## 7. Suggested use (guidance)
 
@@ -145,9 +157,14 @@ traceability.
 - **Current signature analysis:** FFT/envelope of the armature current; mind the
   300/600/900 Hz converter ripple and the speed-tracking commutation band.
 - **Targets:** speed setpoint (% of rated speed) and the condition folders give
-  ready-made regression and classification labels.
-- **Fusion:** combine current + vibrometer + vibration spot readings recorded
-  under the same operating conditions.
+  regression and classification labels. Use grouped splits by operating point
+  (e.g. leave one speed setpoint out); random file-level splits overestimate
+  performance.
+- **Multimodal comparison:** compare current, vibrometer and vibration spot
+  readings at matched operating points (recorded sequentially, not
+  synchronized; not suitable for sample-level fusion).
+- Results obtained on this single-motor, no-load laboratory dataset do not
+  establish diagnostic performance on other machines or in industrial settings.
 
 ```python
 import soundfile as sf   # pip install soundfile
@@ -157,20 +174,19 @@ audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/speed020_sound_vib
 
 ## 8. Coverage & limitations
 
-- Not every condition is crossed with reversal — see the table below for the
-  exact combinations.
+- Single motor and test rig, no external load, one recording per sensor and
+  operating point (no repetitions); sensors recorded sequentially, not
+  synchronized. See the table below for the exact per-file coverage.
 - **Suboptimal control (`suboptimal_control_*`)** is recorded only up to a
   **65 % top speed setpoint**: above it the detuned controller / DC-link
   protection trips, so 70–100 % of rated speed cannot be captured. This is a
   physical limit of that detuned setting, not a missing recording.
 - **Current-regulator-coefficient variant (`suboptimal_control_rt_*`)** is a
-  milder detuning that does reach 100 %; its `current` and `vibration`
-  recordings are **scheduled to be added** — those folders may be empty in the
-  current release and will be filled in a later version.
-- **Vibration (XLS)** are spot readings, not waveforms; the 1 % / 2 % points are
+  milder detuning that does reach 100 %; all four sensors are complete
+  (13 setpoints each).
+- **Vibration (XLS)** are spot readings, not waveforms; 7 files at 1 % / 2 % are
   absent because vibration is negligible at near-zero speed (expected).
-- **Current (BIN)** coverage is near-complete (8-bit Rigol ADC); a few speed
-  points may be missing in a branch.
+- **Current (BIN)** coverage is complete (98 files; 8-bit Rigol ADC).
 - **Phone audio (M4A)** is lossy — prefer the vibrometer WAV for spectral work.
 
 ### Per-file coverage (x = present, · = missing; columns = speed setpoint, % of rated speed)
@@ -214,5 +230,5 @@ audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/speed020_sound_vib
 
 Released under **Creative Commons Attribution 4.0 (CC BY 4.0)**:
 
-> <Authors> (2026). *Multi-Sensor Condition-Monitoring Dataset
-> of a Brushed DC Servo Motor*. Mendeley Data. DOI: <to be assigned>.
+> Zhilevski, M., Slavov, D., Yordanov, N. (2026). *Multi-Sensor Condition-Monitoring Dataset
+> of a Brushed DC Servo Motor*. Mendeley Data. DOI: 10.17632/g28trvywnx.[version].
