@@ -26,20 +26,20 @@ guidance.
 
 ## 2. Machine under test
 
-| Parameter | Value |
-|---|---|
-| Type | Brushed PM DC servo (commutator + graphite brushes) |
-| Designation | 3PI12.06 |
-| Rated electrical power output (P_el) | 350 W |
-| Nominal input voltage (U) | 55 V |
-| Continuous nominal current | 12.5 A |
-| Maximum peak / starting current | 100 A |
-| Nominal torque (M_nom) | 2.7 N·m (at S1 duty) |
-| Torque constant (K_t) | 0.24 N·m/A |
-| Electrical constant (K_e) | 25 V / 1000 rpm |
-| Max. rotation speed (N_max) | 2000 rpm |
-| Physical enclosure depth | 50 mm (shorter motor stack) |
-| Drive | 4-quadrant thyristor (SCR) converter, armature voltage/current control |
+| Parameter                            | Value                                                                  |
+| ------------------------------------ | ---------------------------------------------------------------------- |
+| Type                                 | Brushed PM DC servo (commutator + graphite brushes)                    |
+| Designation                          | 3PI12.06                                                               |
+| Rated electrical power output (P_el) | 350 W                                                                  |
+| Nominal input voltage (U)            | 55 V                                                                   |
+| Continuous nominal current           | 12.5 A                                                                 |
+| Maximum peak / starting current      | 100 A                                                                  |
+| Nominal torque (M_nom)               | 2.7 N·m (at S1 duty)                                                  |
+| Torque constant (K_t)                | 0.24 N·m/A                                                            |
+| Electrical constant (K_e)            | 25 V / 1000 rpm                                                        |
+| Max. rotation speed (N_max)          | 2000 rpm                                                               |
+| Physical enclosure depth             | 50 mm (shorter motor stack)                                            |
+| Drive                                | 4-quadrant thyristor (SCR) converter, armature voltage/current control |
 
 The armature current is **unipolar DC + ripple**. The prominent **300 Hz** line
 (6 × 50 Hz) is the 6-pulse converter ripple — a drive signature, not a fault.
@@ -51,16 +51,16 @@ Each condition is a folder under `data/`, recorded at up to **13 speed setpoints
 The motor runs **unloaded** — no external mechanical load is applied, so each
 percentage is a commanded speed, not a load level:
 
-| Folder (`data/`) | Description |
-|---|---|
-| `suboptimal_control_no_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient), без реверсиране |
-| `suboptimal_control_with_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient), с реверсиране |
-| `suboptimal_control_rt_no_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient + non-optimal current-regulator gain coefficient), без реверсиране |
-| `suboptimal_control_rt_with_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient + non-optimal current-regulator gain coefficient), с реверсиране |
-| `normal_no_reversal` | Normal operation, без реверсиране |
-| `normal_with_reversal` | Normal operation, с реверсиране |
-| `loose_foundation_no_reversal` | Loose foundation, без реверсиране |
-| `loose_foundation_with_reversal` | Loose foundation, с реверсиране |
+| Folder (`data/`)                      | Description                                                                                                                                       |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `suboptimal_control_no_reversal`      | Suboptimal control (non-optimal speed-regulator gain coefficient), без реверсиране                                                  |
+| `suboptimal_control_with_reversal`    | Suboptimal control (non-optimal speed-regulator gain coefficient), с реверсиране                                                      |
+| `suboptimal_control_rt_no_reversal`   | Suboptimal control (non-optimal speed-regulator gain coefficient + non-optimal current-regulator gain coefficient), без реверсиране |
+| `suboptimal_control_rt_with_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient + non-optimal current-regulator gain coefficient), с реверсиране     |
+| `normal_no_reversal`                  | Normal operation, без реверсиране                                                                                                   |
+| `normal_with_reversal`                | Normal operation, с реверсиране                                                                                                       |
+| `loose_foundation_no_reversal`        | Loose foundation, без реверсиране                                                                                                   |
+| `loose_foundation_with_reversal`      | Loose foundation, с реверсиране                                                                                                       |
 
 Naming note: `suboptimal_control_*` means a non-optimal **speed-regulator
 gain coefficient**, while `suboptimal_control_rt_*` means non-optimal
@@ -68,12 +68,12 @@ gain coefficient**, while `suboptimal_control_rt_*` means non-optimal
 
 ## 4. Sensors
 
-| Folder | Format | Notes |
-|---|---|---|
-| `sound_vibrometer` | WAV (44.1 kHz, 16-bit stereo, ~20.5 s) | True vibration waveform from the AV-160B probe's AC output jack (flat to 10 kHz in acceleration mode). Lossless and complete — **recommended primary source.** |
-| `current` | BIN (Rigol MSO5074) | Armature-current waveform, 8-bit ADC; sample rate and scaling are in each file header. |
-| `sound_phone` | M4A (AAC, lossy) | Budget Android phone microphone ~1 m away. Qualitative use only. |
-| `vibration` | XLS | AV-160B **spot readings** (velocity mm/s, acceleration m/s², displacement mm), per ISO 2954. Not a waveform — use for trending vs speed. |
+| Folder               | Format                                 | Notes                                                                                                                                                                |
+| -------------------- | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sound_vibrometer` | WAV (44.1 kHz, 16-bit stereo, ~20.5 s) | True vibration waveform from the AV-160B probe's AC output jack (flat to 10 kHz in acceleration mode). Lossless and complete —**recommended primary source.** |
+| `current`          | BIN (Rigol MSO5074)                    | Armature-current waveform, 8-bit ADC; sample rate and scaling are in each file header.                                                                               |
+| `sound_phone`      | M4A (AAC, lossy)                       | Budget Android phone microphone ~1 m away. Qualitative use only.                                                                                                     |
+| `vibration`        | XLS                                    | AV-160B**spot readings** (velocity mm/s, acceleration m/s², displacement mm), per ISO 2954. Not a waveform — use for trending vs speed.                      |
 
 The `sound_vibrometer` and `vibration` data both come from one **AV-160B
 portable vibrometer** (Amittari) with an external piezoelectric accelerometer
@@ -168,51 +168,51 @@ audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/speed020_sound_vib
   recordings are **scheduled to be added** — those folders may be empty in the
   current release and will be filled in a later version.
 - **Vibration (XLS)** are spot readings, not waveforms; the 1 % / 2 % points are
-  absent because vibration is negligible at near-zero speed (expected).
+  absent because vibration is below the detection threshold of the instrument.
 - **Current (BIN)** coverage is near-complete (8-bit Rigol ADC); a few speed
   points may be missing in a branch.
 - **Phone audio (M4A)** is lossy — prefer the vibrometer WAV for spectral work.
 
 ### Per-file coverage (x = present, · = missing; columns = speed setpoint, % of rated speed)
 
-| Condition | Sensor | 1 | 2 | 5 | 10 | 20 | 30 | 40 | 50 | 60 | 65 | 70 | 80 | 90 | 100 | Count |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| suboptimal_control_no_reversal | current | x | x | x | x | x | x | x | x | x | x | · | · | · | · | 10 |
-| suboptimal_control_no_reversal | sound_vibrometer | x | x | x | x | x | x | x | x | x | x | · | · | · | · | 10 |
-| suboptimal_control_no_reversal | sound_phone | x | x | x | x | x | x | x | x | x | x | · | · | · | · | 10 |
-| suboptimal_control_no_reversal | vibration | · | · | x | x | x | x | x | x | x | x | · | · | · | · | 8 |
-| suboptimal_control_with_reversal | current | x | x | x | x | x | x | x | x | x | x | · | · | · | · | 10 |
-| suboptimal_control_with_reversal | sound_vibrometer | x | x | x | x | x | x | x | x | x | x | · | · | · | · | 10 |
-| suboptimal_control_with_reversal | sound_phone | x | x | x | x | x | x | x | x | x | x | · | · | · | · | 10 |
-| suboptimal_control_with_reversal | vibration | x | x | x | x | x | x | x | x | x | x | · | · | · | · | 10 |
-| suboptimal_control_rt_no_reversal | current | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| suboptimal_control_rt_no_reversal | sound_vibrometer | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| suboptimal_control_rt_no_reversal | sound_phone | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| suboptimal_control_rt_no_reversal | vibration | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| suboptimal_control_rt_with_reversal | current | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| suboptimal_control_rt_with_reversal | sound_vibrometer | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| suboptimal_control_rt_with_reversal | sound_phone | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| suboptimal_control_rt_with_reversal | vibration | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| normal_no_reversal | current | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| normal_no_reversal | sound_vibrometer | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| normal_no_reversal | sound_phone | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| normal_no_reversal | vibration | · | · | x | x | x | x | x | x | x | · | x | x | x | x | 11 |
-| normal_with_reversal | current | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| normal_with_reversal | sound_vibrometer | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| normal_with_reversal | sound_phone | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| normal_with_reversal | vibration | · | x | x | x | x | x | x | x | x | · | x | x | x | x | 12 |
-| loose_foundation_no_reversal | current | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| loose_foundation_no_reversal | sound_vibrometer | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| loose_foundation_no_reversal | sound_phone | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| loose_foundation_no_reversal | vibration | · | · | x | x | x | x | x | x | x | · | x | x | x | x | 11 |
-| loose_foundation_with_reversal | current | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| loose_foundation_with_reversal | sound_vibrometer | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| loose_foundation_with_reversal | sound_phone | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
-| loose_foundation_with_reversal | vibration | x | x | x | x | x | x | x | x | x | · | x | x | x | x | 13 |
+| Condition                           | Sensor           | 1  | 2  | 5 | 10 | 20 | 30 | 40 | 50 | 60 | 65 | 70 | 80 | 90 | 100 | Count |
+| ----------------------------------- | ---------------- | -- | -- | - | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | --- | ----- |
+| suboptimal_control_no_reversal      | current          | x  | x  | x | x  | x  | x  | x  | x  | x  | x  | · | · | · | ·  | 10    |
+| suboptimal_control_no_reversal      | sound_vibrometer | x  | x  | x | x  | x  | x  | x  | x  | x  | x  | · | · | · | ·  | 10    |
+| suboptimal_control_no_reversal      | sound_phone      | x  | x  | x | x  | x  | x  | x  | x  | x  | x  | · | · | · | ·  | 10    |
+| suboptimal_control_no_reversal      | vibration        | · | · | x | x  | x  | x  | x  | x  | x  | x  | · | · | · | ·  | 8     |
+| suboptimal_control_with_reversal    | current          | x  | x  | x | x  | x  | x  | x  | x  | x  | x  | · | · | · | ·  | 10    |
+| suboptimal_control_with_reversal    | sound_vibrometer | x  | x  | x | x  | x  | x  | x  | x  | x  | x  | · | · | · | ·  | 10    |
+| suboptimal_control_with_reversal    | sound_phone      | x  | x  | x | x  | x  | x  | x  | x  | x  | x  | · | · | · | ·  | 10    |
+| suboptimal_control_with_reversal    | vibration        | x  | x  | x | x  | x  | x  | x  | x  | x  | x  | · | · | · | ·  | 10    |
+| suboptimal_control_rt_no_reversal   | current          | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| suboptimal_control_rt_no_reversal   | sound_vibrometer | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| suboptimal_control_rt_no_reversal   | sound_phone      | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| suboptimal_control_rt_no_reversal   | vibration        | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| suboptimal_control_rt_with_reversal | current          | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| suboptimal_control_rt_with_reversal | sound_vibrometer | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| suboptimal_control_rt_with_reversal | sound_phone      | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| suboptimal_control_rt_with_reversal | vibration        | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| normal_no_reversal                  | current          | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| normal_no_reversal                  | sound_vibrometer | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| normal_no_reversal                  | sound_phone      | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| normal_no_reversal                  | vibration        | · | · | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 11    |
+| normal_with_reversal                | current          | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| normal_with_reversal                | sound_vibrometer | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| normal_with_reversal                | sound_phone      | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| normal_with_reversal                | vibration        | · | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 12    |
+| loose_foundation_no_reversal        | current          | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| loose_foundation_no_reversal        | sound_vibrometer | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| loose_foundation_no_reversal        | sound_phone      | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| loose_foundation_no_reversal        | vibration        | · | · | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 11    |
+| loose_foundation_with_reversal      | current          | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| loose_foundation_with_reversal      | sound_vibrometer | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| loose_foundation_with_reversal      | sound_phone      | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
+| loose_foundation_with_reversal      | vibration        | x  | x  | x | x  | x  | x  | x  | x  | x  | · | x  | x  | x  | x   | 13    |
 
 ## 9. License & citation
 
 Released under **Creative Commons Attribution 4.0 (CC BY 4.0)**:
 
-> <Authors> (2026). *Multi-Sensor Condition-Monitoring Dataset
-> of a Brushed DC Servo Motor*. Mendeley Data. DOI: <to be assigned>.
+> <Authors></authors> (2026). *Multi-Sensor Condition-Monitoring Dataset
+> of a Brushed DC Servo Motor*. Mendeley Data. DOI: <to be assigned></to>.

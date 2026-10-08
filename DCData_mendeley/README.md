@@ -145,6 +145,28 @@ runs unloaded, so this is not a mechanical load.
 traceability. Together, `condition` and `speed_percent` identify the operating
 point.
 
+### Example: first five current-channel samples
+
+The following readings were decoded from
+[data/normal_no_reversal/current/speed050_current.bin](data/normal_no_reversal/current/speed050_current.bin):
+normal operation without reversal, at a **50 % commanded speed setpoint**
+(1000 RPM nominal, not a measured speed). The channel is **CH1(V)** and its
+header time origin is **0 s**. The header sample interval is
+**9.99999997475 × 10⁻⁷ s**, corresponding to **1,000,000.00252 Hz**
+(nominally **1 MHz**); the small discrepancy reflects header numeric precision.
+
+| Sample index (zero-based) | Time (s) | Channel value (V) |
+|---|---:|---:|
+| 0 | 0 | 0.283589452505 |
+| 1 | 9.99999997475 × 10⁻⁷ | 0.354486823082 |
+| 2 | 1.99999999495 × 10⁻⁶ | 0.354486823082 |
+| 3 | 2.99999999243 × 10⁻⁶ | 0.354486823082 |
+| 4 | 3.9999999899 × 10⁻⁶ | 0.354486823082 |
+
+These are the exported oscilloscope channel values in **volts**, not amperes.
+Conversion to armature current requires the documented current-probe transfer
+factor and any applicable offset correction; do not assume 1 V = 1 A.
+
 ## 7. Suggested use (guidance)
 
 - **Phone-vs-instrument benchmark (main hypothesis):** train a model on
@@ -262,9 +284,107 @@ Missing expected measurements:
 Opening / metadata exceptions:
 - data/normal_with_reversal/current/speed100_current.bin: open/decode failed: truncated BIN payload: 11264000 of 20000000 samples (11.264000 of 20.000000 s); file 45056164 bytes, header declares 80000164
 
+#### Reproducing the quality checks
+
+The `quality/` folder includes the standalone `qc_report.py` and a small
+`requirements.txt` dependency list. All required readers and coverage utilities
+are embedded in this script, adapted from the original repository utilities.
+No companion Python files or copy of the development repository is needed.
+The dependency list is convenient but optional: install the same five packages
+with `python -m pip install numpy pandas soundfile av xlrd` if sharing only the
+script. Python and these external packages are still required.
+
+**Quick start (if Python is already installed).** Open a terminal in the
+downloaded dataset root, alongside `metadata.csv` and `README.md`, and run:
+
+```text
+python -m pip install -r quality/requirements.txt
+python quality/qc_report.py .
+```
+
+The final `.` means the current dataset folder. If you are instead inside
+`quality/`, use `python qc_report.py ..`. Upload the standalone script and
+dependency list together with the existing reports in `quality/`; no other
+Python scripts are needed. To avoid changing an existing Python environment,
+use the isolated-environment setup below. Preserve the published checksum file
+before rerunning if you intend to verify download integrity against it.
+
+**Setup.** Install 64-bit Python 3.11–3.13 (the report was tested with Python
+3.13 on Windows). Download and extract the complete dataset, preserving its
+folder structure, and open a terminal in the dataset root (the folder containing
+`metadata.csv`, `README.md`, `data/`, and `quality/`). Create an isolated environment:
+
+```text
+python -m venv .qc-venv
+```
+
+On Windows PowerShell (activation is not required):
+
+```text
+.\.qc-venv\Scripts\python.exe -m pip install --upgrade pip
+.\.qc-venv\Scripts\python.exe -m pip install -r quality/requirements.txt
+.\.qc-venv\Scripts\python.exe quality/qc_report.py .
+```
+
+On Linux/macOS:
+
+```text
+.qc-venv/bin/python -m pip install --upgrade pip
+.qc-venv/bin/python -m pip install -r quality/requirements.txt
+.qc-venv/bin/python quality/qc_report.py .
+```
+
+Use `python3` instead of `python` to create the environment if required by your
+system. Dependencies are NumPy, pandas, SoundFile, PyAV and xlrd. Standard wheels
+for common platforms include the audio libraries; a separate FFmpeg executable,
+Excel, MATLAB, and the ML/training dependencies are not required. If pip attempts
+to compile an audio dependency, use a supported 64-bit Python/platform with
+available wheels; nonstandard platforms may require native library installation.
+The version ranges are compatibility constraints, not an exact environment lock.
+
+**Usage.** The argument is the dataset root, not its `data/` or `quality/` folder.
+From inside `quality/`, the equivalent command is `python qc_report.py ..` using
+an interpreter with the dependencies installed. Paths containing spaces must be
+quoted. The script reads every measurement completely and hashes the files;
+allow several minutes and roughly 1–2 GB of free RAM for the large BIN captures.
+Actual time depends on disk speed. Run only one QC process at a time.
+
+**Outputs and interpretation.** The script writes `qc_per_file.csv`,
+`checksums_sha256.txt`, and `qc_summary.txt` directly inside `quality/`.
+**Existing reports with these names are overwritten on each run.** Preserve a
+copy of the published reports, especially the checksum file, before running the
+script if you need them for comparison or download-integrity verification.
+There is no separate rerun folder or special rerun mode.
+The dataset README is maintained manually: the script neither generates nor
+updates it, including its quality table and example sample readings. Measurement
+files, metadata, scripts and the dependency list are also never modified.
+`qc_summary.txt` is a standalone report containing the current QC table and
+qualifications; it does not include README setup instructions. The console summary identifies
+failures, warnings, and issues needing human explanation. A successful execution
+does not mean all measurements passed: inspect the summary and CSV.
+
+- Open `qc_per_file.csv` in a spreadsheet or pandas. Filter `exists=False` for
+    missing files, `opened_ok=False`/nonempty `error` for decoding or inventory
+    problems, and explicit `False` match fields for metadata disagreements. Blank
+    match fields mean unavailable/unverifiable, not a pass. `clip_fraction` is a
+    fraction (multiply by 100 for percent); `leading_flat_s` is the threshold-based
+    leading flat **or silent** duration. Per-channel metrics and segment locations
+    are stored as JSON in the corresponding columns. These are QC flags, not fault
+    labels; the thresholds and limitations are described above.
+- `checksums_sha256.txt` stores SHA-256 and dataset-relative paths for inventoried
+    files (including the scope setup), not for the QC scripts or reports. Save the
+    published checksum file before rerunning: the regenerated file describes the
+    current download and does not by itself verify it against the published copy.
+    Verify download integrity before running QC (which replaces the checksum file),
+    or use your separately preserved published copy. On Linux, from the dataset root, use
+    `sha256sum -c quality/checksums_sha256.txt`; on macOS use
+    `shasum -a 256 -c quality/checksums_sha256.txt`. Windows users can compare
+    individual digests using PowerShell `Get-FileHash -Algorithm SHA256`.
+
+
 ## 9. License & citation
 
 Released under **Creative Commons Attribution 4.0 (CC BY 4.0)**:
 
 > Zhilevski, M., Slavov, D., Yordanov, N. (2026). *Multi-Sensor Condition-Monitoring Dataset
-> of a Brushed DC Servo Motor*. Mendeley Data. DOI: 10.17632/g28trvywnx.[version].
+> of a Brushed DC Servo Motor*. Mendeley Data. DOI: 10.17632/g28trvywnx].
