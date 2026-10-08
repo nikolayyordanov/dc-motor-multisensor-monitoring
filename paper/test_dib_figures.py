@@ -79,6 +79,47 @@ class FigureTests(unittest.TestCase):
                         self.assertGreater(image.width, 100)
                         self.assertGreater(image.height, 100)
 
+    def test_displacement_lower_bars_stop_at_zero(self):
+        data = {qty: [(5, 0.001, 0.004, 8), (10, 0.002, 0.0005, 8)]
+                for qty in ("Velocity", "Acceleration", "Displacement")}
+        with patch.object(figures, "read_vibration_xls_dir", return_value=data), \
+                patch.object(figures, "export_figure_panels") as exporter:
+            figures.fig4_vibration(Path("fig4_vibration.png"), Path("unused"))
+            fig, axes, _ = exporter.call_args.args
+            bars = axes[2].containers[0].lines[2][0].get_segments()
+            np.testing.assert_allclose([bar[0, 1] for bar in bars], [0, 0.0015])
+            np.testing.assert_allclose([bar[1, 1] for bar in bars], [0.005, 0.0025])
+            self.assertEqual(axes[2].get_ylim()[0], 0)
+            self.assertLess(axes[0].containers[0].lines[2][0].get_segments()[0][0, 1], 0)
+            figures.plt.close(fig)
+
+    def test_word_preserves_png_bytes_and_disables_compression(self):
+        import zipfile
+        with tempfile.TemporaryDirectory() as tmp:
+            png = Path(tmp) / "image.png"
+            Image.new("RGB", (1200, 600), "white").save(png, dpi=(600, 600))
+            doc = figures.setup_document()
+            self.assertEqual(doc.settings.element.find(figures.qn("w:doNotAutoCompressPictures"))
+                             .get(figures.qn("w:val")), "true")
+            figures.add_figure(doc, png)
+            path = Path(tmp) / "test.docx"
+            doc.save(path)
+            with zipfile.ZipFile(path) as archive:
+                media = [name for name in archive.namelist() if name.startswith("word/media/")]
+                self.assertEqual(len(media), 1)
+                self.assertEqual(archive.read(media[0]), png.read_bytes())
+
+    def test_generated_article_exports(self):
+        if not (figures.FIGDIR / "fig4_vibration_c.tif").exists():
+            self.skipTest("Generate Figs. 2–4 with --figures-only before checking article exports")
+        for stem, letters in (("fig2_current", "ab"), ("fig3_vibrometer", "ab"),
+                              ("fig4_vibration", "abc")):
+            for name in [stem] + [f"{stem}_{letter}" for letter in letters]:
+                for suffix in (".png", ".tif"):
+                    with Image.open(figures.FIGDIR / (name + suffix)) as image:
+                        self.assertTrue(all(abs(dpi - 600) < 0.1 for dpi in image.info["dpi"]))
+                        image.verify()
+
 
 if __name__ == "__main__":
     unittest.main()

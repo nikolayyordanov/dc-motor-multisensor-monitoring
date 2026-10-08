@@ -208,9 +208,9 @@ header time origin is **0 s**. The header sample interval is
 | 3 | 2.99999999243 × 10⁻⁶ | 0.354486823082 |
 | 4 | 3.9999999899 × 10⁻⁶ | 0.354486823082 |
 
-These are the exported oscilloscope channel values in **volts**, not amperes.
-Conversion to armature current requires the documented current-probe transfer
-factor and any applicable offset correction; do not assume 1 V = 1 A.
+These are the recorded channel values in **volts**, not amperes. The values are
+proportional to the armature current; the conversion factor to amperes was not
+recorded, so use them as relative values (do not assume 1 V = 1 A).
 
 ## 8. Coverage & limitations
 

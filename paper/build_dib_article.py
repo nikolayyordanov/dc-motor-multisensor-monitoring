@@ -34,6 +34,8 @@ from docx import Document
 from docx.shared import Pt, Inches, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
 
 ROOT = Path(__file__).resolve().parent.parent
 DATASET = ROOT / "DCData_mendeley"
@@ -306,14 +308,20 @@ def fig4_vibration(path: Path, vib_dir: Path):
         if pts:
             loads = [p[0] for p in pts]
             vals = [p[1] for p in pts]
-            sds = [p[2] for p in pts]
-            ax.errorbar(loads, vals, yerr=sds, fmt="o-", color=colors[qty],
+            sds = np.asarray([p[2] for p in pts])
+            # Truncate only displayed lower displacement bars, not the SD
+            # or source readings. Upper bars remain mean + sample SD.
+            errors = np.vstack([np.minimum(sds, vals), sds]) if qty == "Displacement" else sds
+            ax.errorbar(loads, vals, yerr=errors, fmt="o-", color=colors[qty],
                         markersize=4, linewidth=1.2, capsize=3, elinewidth=0.9)
+        if qty == "Displacement":
+            ax.set_ylim(bottom=0)
         ax.set_title(qty)
         ax.set_xlabel("Speed setpoint (% of rated speed)")
         ax.set_ylabel(f"{qty} ({units[qty]})")
         ax.grid(alpha=0.3)
     print("Fig. 4 error bars: mean +/- sample SD (ddof=1), per quantity per XLS file.")
+    print("Fig. 4c lower error bars truncated at zero; displacement resolution 0.001 mm.")
     export_figure_panels(fig, axes, path)
 
 
@@ -371,6 +379,13 @@ def fmt_loads(loads):
 
 def setup_document():
     doc = Document()
+    # Preserve source PNG pixels on subsequent Word saves. python-docx
+    # changes display size when embedding, not raster resolution.
+    compression = doc.settings.element.find(qn("w:doNotAutoCompressPictures"))
+    if compression is None:
+        compression = OxmlElement("w:doNotAutoCompressPictures")
+        doc.settings.element.append(compression)
+    compression.set(qn("w:val"), "true")
     normal = doc.styles["Normal"]
     normal.font.name = "Times New Roman"
     normal.font.size = Pt(11)
@@ -781,23 +796,32 @@ def build(stats, fig_ok):
         add_figure(doc, FIGDIR / "fig2_current.png", width_in=6.4)
     caption(doc,
             "Fig. 2. Representative armature-current recording (normal operation, "
-            "no reversal, 50 % speed setpoint): (a) a 60 ms window of the AC-coupled "
-            "waveform and (b) its single-sided amplitude spectrum, showing the "
-            "300 Hz six-pulse converter ripple and its harmonics.", center=True)
+            "no reversal, 50 % speed setpoint): (a) time-domain signal in recorded volts "
+            "(first 60 ms shown) and (b) single-sided amplitude spectrum in volts "
+            "computed from the first 2 s, showing the 300 Hz (6 × 50 Hz converter ripple) "
+            "component and its harmonics. A symmetric Hann window and a 2,000,000-point "
+            "FFT were used (frequency-bin spacing approximately 0.5 Hz), with window "
+            "coherent-gain correction, no averaging, detrending or zero padding.", center=True)
 
     if fig_ok.get("fig3"):
         add_figure(doc, FIGDIR / "fig3_vibrometer.png", width_in=6.4)
     caption(doc,
             "Fig. 3. Representative vibrometer vibration recording (normal "
-            "operation, no reversal, 50 % speed setpoint): (a) a 1 s window of the waveform "
-            "and (b) its spectrogram up to 10 kHz.", center=True)
+            "operation, no reversal, 50 % speed setpoint): (a) time-domain waveform "
+            "(first 1 s shown), normalized by dividing the first-channel signed 16-bit "
+            "PCM samples by 32,768, and (b) spectrogram (first 6 s, frequencies up to "
+            "10 kHz). The initial silent segment (approximately 0.27 s) is retained.", center=True)
 
     if fig_ok.get("fig4"):
         add_figure(doc, FIGDIR / "fig4_vibration.png", width_in=6.4)
     caption(doc,
-            "Fig. 4. AV-160B vibration spot readings (mean velocity, acceleration "
-            "and displacement) as a function of speed setpoint (% of rated speed) "
-            "for the normal, no-reversal condition.", center=True)
+            "Fig. 4. AV-160B spot measurements of vibration: (a) velocity, "
+            "(b) acceleration and (c) displacement over the available speed setpoints "
+            "for normal operation without direction reversal. Markers show the mean "
+            "and error bars the sample standard deviation of 8–22 readings per quantity "
+            "at each setpoint. Lower displacement error bars are truncated at zero; "
+            "displacement values are close to the instrument resolution (0.001 mm).",
+            center=True)
 
     # ---- EXPERIMENTAL DESIGN, MATERIALS AND METHODS ---- #
     h1(doc, "EXPERIMENTAL DESIGN, MATERIALS AND METHODS")
