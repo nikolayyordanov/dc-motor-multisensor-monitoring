@@ -1,6 +1,6 @@
 # Multi-Sensor Condition-Monitoring Dataset of a Brushed DC Servo Motor
 
-**Built:** 2026-06-26  ·  **Files:** 386 (98 BIN, 98 M4A, 1 STP, 98 WAV, 91 XLS)  ·  **License:** CC BY 4.0
+**Built:** 2026-06-26  ·  **Data files:** 386 (98 BIN, 98 M4A, 1 STP, 98 WAV, 91 XLS)  ·  **License:** CC BY 4.0
 
 ## 1. Overview
 
@@ -133,7 +133,9 @@ data/
     vibration/          speedNNN_vibration.xls
 scope_setup/            Rigol MSO5074 oscilloscope setup file (.stp)
 metadata.csv            one row per file
+quality/                qc_report.py, requirements.txt, qc_per_file.csv, checksums_sha256.txt
 README.md
+LICENSE.txt
 ```
 
 `NNN` is the zero-padded speed setpoint (e.g. `speed020` = 20 % of rated speed).
@@ -145,7 +147,50 @@ runs unloaded, so this is not a mechanical load.
 traceability. Together, `condition` and `speed_percent` identify the operating
 point.
 
-### Example: first five current-channel samples
+## 7. Suggested use (guidance)
+
+- **Phone-vs-instrument comparison (main motivation):** train a model on
+  `sound_phone` and compare it against the same model trained on `current` and
+  `sound_vibrometer` at matching operating points, to explore whether a
+  smartphone could complement invasive probes under these laboratory conditions.
+- **Time–frequency images** from the vibrometer WAV (1 s segments, optional
+  50 % overlap): Mel-spectrogram, cochleogram, tempogram, chromagram, or CWT
+  scalograms — e.g. resized to 224×224 for a CNN.
+- **Current signature analysis:** FFT/envelope of the armature current; mind the
+  300/600/900 Hz converter ripple and the speed-tracking commutation band.
+- **Targets:** speed setpoint (% of rated speed) and the condition folders give
+  regression and classification labels. Use grouped splits by operating point
+  (e.g. leave one speed setpoint out); random file-level splits overestimate
+  performance.
+- **Multimodal comparison:** compare current, vibrometer and vibration spot
+  readings at matched operating points (recorded sequentially, not
+  synchronized; not suitable for sample-level fusion).
+- Results obtained on this single-motor, no-load laboratory dataset do not
+  establish diagnostic performance on other machines or in industrial settings.
+
+**Reading the files.** `quality/qc_report.py` contains readers for all file
+formats (Rigol BIN, WAV, M4A, XLS) and for `metadata.csv`; they can be reused to
+load and convert individual recordings (see *Reproducing the quality checks*).
+The WAV files can also be read with any audio library, e.g.:
+
+```python
+import soundfile as sf   # pip install soundfile
+audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/speed020_sound_vibrometer.wav")
+```
+
+The native Rigol `.bin` current files can be read with `load_rigol_file()` from
+`quality/qc_report.py` (run from the dataset root):
+
+```python
+import sys; sys.path.insert(0, "quality")
+from qc_report import load_rigol_file
+
+_, _, channels, info = load_rigol_file("data/normal_no_reversal/current/speed050_current.bin")
+name, values = next(iter(channels.items()))   # e.g. "CH1(V)"
+dt = info["tInc"]                             # sample interval, s
+```
+
+**Example: first five current-channel samples.**
 
 The following readings were decoded from
 [data/normal_no_reversal/current/speed050_current.bin](data/normal_no_reversal/current/speed050_current.bin):
@@ -167,33 +212,6 @@ These are the exported oscilloscope channel values in **volts**, not amperes.
 Conversion to armature current requires the documented current-probe transfer
 factor and any applicable offset correction; do not assume 1 V = 1 A.
 
-## 7. Suggested use (guidance)
-
-- **Phone-vs-instrument benchmark (main hypothesis):** train a model on
-  `sound_phone` and compare it against the same model trained on `current` and
-  `sound_vibrometer` at matching operating conditions. Strong phone-only
-  performance supports replacing invasive probes with a smartphone.
-- **Time–frequency images** from the vibrometer WAV (1 s segments, optional
-  50 % overlap): Mel-spectrogram, cochleogram, tempogram, chromagram, or CWT
-  scalograms — e.g. resized to 224×224 for a CNN.
-- **Current signature analysis:** FFT/envelope of the armature current; mind the
-  300/600/900 Hz converter ripple and the speed-tracking commutation band.
-- **Targets:** speed setpoint (% of rated speed) and the condition folders give
-  regression and classification labels. Use grouped splits by operating point
-  (e.g. leave one speed setpoint out); random file-level splits overestimate
-  performance.
-- **Multimodal comparison:** compare current, vibrometer and vibration spot
-  readings at matched operating points (recorded sequentially, not
-  synchronized; not suitable for sample-level fusion).
-- Results obtained on this single-motor, no-load laboratory dataset do not
-  establish diagnostic performance on other machines or in industrial settings.
-
-```python
-import soundfile as sf   # pip install soundfile
-audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/speed020_sound_vibrometer.wav")
-# Rigol .bin: 'RG01' header + samples (sample rate in metadata.csv).
-```
-
 ## 8. Coverage & limitations
 
 - Single motor and test rig, no external load, one recording per sensor and
@@ -208,7 +226,12 @@ audio, fs = sf.read("data/normal_no_reversal/sound_vibrometer/speed020_sound_vib
   (13 setpoints each).
 - **Vibration (XLS)** are spot readings, not waveforms; 7 files at 1 % / 2 % are
   absent because vibration is negligible at near-zero speed (expected).
-- **Current (BIN)** coverage is complete (98 files; 8-bit Rigol ADC).
+- **Current (BIN)**: all 98 files are present (8-bit Rigol ADC); one file
+  (`normal_with_reversal`, 100 %) is incomplete (11.3 s of 20 s) and is
+  retained as recorded — see *Data quality checks*.
+- **Vibrometer (WAV)**: a small fraction of samples (at most 0.93 %) is clipped
+  in 94 of 98 files; all WAV and M4A recordings begin with a short silent
+  segment (see *Data quality checks*).
 - **Phone audio (M4A)** is lossy — prefer the vibrometer WAV for spectral work.
 
 ### Per-file coverage (x = present, · = missing; columns = speed setpoint, % of rated speed)
@@ -259,7 +282,7 @@ All 385 measurement files were checked automatically (see `quality/qc_per_file.c
 | Duplicate files (identical SHA-256) | none | none | none | none |
 | Clipping (files affected; max % of samples) | unverifiable (ADC rails absent from scaled-volts export) | 94 file(s); max 0.9347% | not detected at digital limits | n/a |
 | Flat / silent segments | 0 files with flat/silent runs >=0.1 s; no leading run >=0.1 s | initial 0.27-0.27 s in 98 files; 98 files with runs >=0.1 s; cause requires confirmation | initial 0.40-0.41 s in 98 files; 98 files with runs >=0.1 s; cause requires confirmation | n/a |
-| Within-recording RMS variation, 1-s windows (median / max) | median 13.3%, max 430.6% | median 25.1%, max 176.2% | median 50.5%, max 234.3% | reading CV: median 168.0%, max 282.8% (not time windows) |
+| Within-recording RMS range, 1-s windows (max–min / median; includes silent start and reversals; median / max) | median 13.3%, max 430.6% | median 25.1%, max 176.2% | median 50.5%, max 234.3% | reading CV: median 168.0%, max 282.8% (not time windows) |
 | Missing files | 0 | 0 | 0 | 7 (1%, 2% speed; paths listed below) |
 
 Coverage: 98 expected operating points x 4 sensors = 392 expected measurements; 7 missing.
@@ -268,9 +291,9 @@ Methods: full-recording native samples, channels assessed separately (no mono mi
 
 DC offset is recorded per channel in the CSV. Maximum absolute mean / RMS: Current (BIN) 73.0%; Vibrometer (WAV) 0.2%; Phone (M4A) 5.6%. Current DC is physically expected and is not automatically an error.
 
-**Interpretation of quiet starts.** Leading quiet segments (Phone (M4A): 98 recordings, 0.40-0.41 s; Vibrometer (WAV): 98 recordings, 0.27-0.27 s) may reflect recording-chain startup behavior, such as software/hardware muting, buffer initialization or gain-control settling, rather than motor behavior; this explanation is not confirmed. Similar onset durations across operating points, at the QC's 10-ms resolution, are consistent with a repeatable acquisition artifact but do not identify its cause. The phone model, recording app, processing settings and recorder used for the vibrometer AC output are not documented. Phone hardware/software could explain the WAV starts only if that signal was recorded through a phone; this is unknown. AAC encoder priming or container timing may affect M4A onset, but cannot explain the uncompressed WAV onset and have not been shown to account for the measured 0.40-0.41 s. Confirmation requires recording an already-active source with the same device/app and checking startup muting, gain processing and codec timing. For steady-state analysis, exclude the measured quiet start and verify the subsequent onset has settled before selecting windows; preserve the raw files and report any exclusion. Full-recording QC RMS statistics include these starts.
-
-Human review: confirm the cause of quiet/flat starts and whether amplitude changes are expected during reversals. The documented low-speed detection-threshold explanation cannot be established from missing files alone.
+**Quiet starts.** All WAV and M4A recordings begin with a silent segment
+(0.27 s and 0.40–0.41 s, respectively), consistent across all operating points.
+Exclude it from steady-state analysis; the raw files are kept unmodified.
 
 Missing expected measurements:
 - data/loose_foundation_no_reversal/vibration/speed001_vibration.xls
@@ -283,103 +306,32 @@ Missing expected measurements:
 
 Opening / metadata exceptions:
 - data/normal_with_reversal/current/speed100_current.bin: open/decode failed: truncated BIN payload: 11264000 of 20000000 samples (11.264000 of 20.000000 s); file 45056164 bytes, header declares 80000164
+  — retained as recorded (incomplete capture; 11.3 s of 20 s). Use with caution.
 
 #### Reproducing the quality checks
 
-The `quality/` folder includes the standalone `qc_report.py` and a small
-`requirements.txt` dependency list. All required readers and coverage utilities
-are embedded in this script, adapted from the original repository utilities.
-No companion Python files or copy of the development repository is needed.
-The dependency list is convenient but optional: install the same five packages
-with `python -m pip install numpy pandas soundfile av xlrd` if sharing only the
-script. Python and these external packages are still required.
-
-**Quick start (if Python is already installed).** Open a terminal in the
-downloaded dataset root, alongside `metadata.csv` and `README.md`, and run:
+`quality/` contains the standalone script `qc_report.py` (all readers embedded;
+no other code needed) and `requirements.txt` (NumPy, pandas, SoundFile, PyAV,
+xlrd). Tested with 64-bit Python 3.13 on Windows. From the dataset root (the
+folder containing `metadata.csv`):
 
 ```text
 python -m pip install -r quality/requirements.txt
 python quality/qc_report.py .
 ```
 
-The final `.` means the current dataset folder. If you are instead inside
-`quality/`, use `python qc_report.py ..`. Upload the standalone script and
-dependency list together with the existing reports in `quality/`; no other
-Python scripts are needed. To avoid changing an existing Python environment,
-use the isolated-environment setup below. Preserve the published checksum file
-before rerunning if you intend to verify download integrity against it.
+The script reads every file completely (allow several minutes and 1–2 GB of
+RAM). It never modifies measurement files, `metadata.csv` or this README. It
+writes `qc_per_file.csv`, `checksums_sha256.txt` and `qc_summary.txt` to
+`quality/`, **overwriting the published reports** — verify your download first
+(Linux: `sha256sum -c quality/checksums_sha256.txt`; macOS:
+`shasum -a 256 -c quality/checksums_sha256.txt`; Windows: `Get-FileHash -Algorithm SHA256`),
+or keep a copy of the published files.
 
-**Setup.** Install 64-bit Python 3.11–3.13 (the report was tested with Python
-3.13 on Windows). Download and extract the complete dataset, preserving its
-folder structure, and open a terminal in the dataset root (the folder containing
-`metadata.csv`, `README.md`, `data/`, and `quality/`). Create an isolated environment:
-
-```text
-python -m venv .qc-venv
-```
-
-On Windows PowerShell (activation is not required):
-
-```text
-.\.qc-venv\Scripts\python.exe -m pip install --upgrade pip
-.\.qc-venv\Scripts\python.exe -m pip install -r quality/requirements.txt
-.\.qc-venv\Scripts\python.exe quality/qc_report.py .
-```
-
-On Linux/macOS:
-
-```text
-.qc-venv/bin/python -m pip install --upgrade pip
-.qc-venv/bin/python -m pip install -r quality/requirements.txt
-.qc-venv/bin/python quality/qc_report.py .
-```
-
-Use `python3` instead of `python` to create the environment if required by your
-system. Dependencies are NumPy, pandas, SoundFile, PyAV and xlrd. Standard wheels
-for common platforms include the audio libraries; a separate FFmpeg executable,
-Excel, MATLAB, and the ML/training dependencies are not required. If pip attempts
-to compile an audio dependency, use a supported 64-bit Python/platform with
-available wheels; nonstandard platforms may require native library installation.
-The version ranges are compatibility constraints, not an exact environment lock.
-
-**Usage.** The argument is the dataset root, not its `data/` or `quality/` folder.
-From inside `quality/`, the equivalent command is `python qc_report.py ..` using
-an interpreter with the dependencies installed. Paths containing spaces must be
-quoted. The script reads every measurement completely and hashes the files;
-allow several minutes and roughly 1–2 GB of free RAM for the large BIN captures.
-Actual time depends on disk speed. Run only one QC process at a time.
-
-**Outputs and interpretation.** The script writes `qc_per_file.csv`,
-`checksums_sha256.txt`, and `qc_summary.txt` directly inside `quality/`.
-**Existing reports with these names are overwritten on each run.** Preserve a
-copy of the published reports, especially the checksum file, before running the
-script if you need them for comparison or download-integrity verification.
-There is no separate rerun folder or special rerun mode.
-The dataset README is maintained manually: the script neither generates nor
-updates it, including its quality table and example sample readings. Measurement
-files, metadata, scripts and the dependency list are also never modified.
-`qc_summary.txt` is a standalone report containing the current QC table and
-qualifications; it does not include README setup instructions. The console summary identifies
-failures, warnings, and issues needing human explanation. A successful execution
-does not mean all measurements passed: inspect the summary and CSV.
-
-- Open `qc_per_file.csv` in a spreadsheet or pandas. Filter `exists=False` for
-    missing files, `opened_ok=False`/nonempty `error` for decoding or inventory
-    problems, and explicit `False` match fields for metadata disagreements. Blank
-    match fields mean unavailable/unverifiable, not a pass. `clip_fraction` is a
-    fraction (multiply by 100 for percent); `leading_flat_s` is the threshold-based
-    leading flat **or silent** duration. Per-channel metrics and segment locations
-    are stored as JSON in the corresponding columns. These are QC flags, not fault
-    labels; the thresholds and limitations are described above.
-- `checksums_sha256.txt` stores SHA-256 and dataset-relative paths for inventoried
-    files (including the scope setup), not for the QC scripts or reports. Save the
-    published checksum file before rerunning: the regenerated file describes the
-    current download and does not by itself verify it against the published copy.
-    Verify download integrity before running QC (which replaces the checksum file),
-    or use your separately preserved published copy. On Linux, from the dataset root, use
-    `sha256sum -c quality/checksums_sha256.txt`; on macOS use
-    `shasum -a 256 -c quality/checksums_sha256.txt`. Windows users can compare
-    individual digests using PowerShell `Get-FileHash -Algorithm SHA256`.
+Outputs: `qc_per_file.csv` (one row per file; blank match fields mean
+"not verifiable", not "pass"; `clip_fraction` is a fraction, not a percentage)
+`checksums_sha256.txt`, and `qc_summary.txt` (summary table). The values are
+quality-check flags, not fault labels.
 
 
 ## 9. License & citation
@@ -387,4 +339,4 @@ does not mean all measurements passed: inspect the summary and CSV.
 Released under **Creative Commons Attribution 4.0 (CC BY 4.0)**:
 
 > Zhilevski, M., Slavov, D., Yordanov, N. (2026). *Multi-Sensor Condition-Monitoring Dataset
-> of a Brushed DC Servo Motor*. Mendeley Data. DOI: 10.17632/g28trvywnx].
+> of a Brushed DC Servo Motor*. Mendeley Data. DOI: 10.17632/g28trvywnx.[version].

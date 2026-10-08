@@ -5,15 +5,19 @@ The script:
   1. Reads DCData_mendeley/metadata.csv to compute exact file inventories.
   2. Generates four data-descriptive figures (organisation schematic,
      armature-current waveform + spectrum, vibrometer waveform + spectrogram,
-     vibration spot readings vs speed) into paper/figures/.
+    vibration spot readings vs speed) into paper/figures_dib/.
+    Figs. 2–4 retain their combined filenames and also export individual
+    panels with _a/_b/_c suffixes, in 600-dpi PNG and lossless TIF.
   3. Builds the manuscript following the Data in Brief template, in the style of
      the completed sample article, and embeds the figures.
 
 All figures are wrapped in try/except so the manuscript is always produced even
 if a raw file cannot be read; a caption-only note is inserted instead.
+Use --figures-only to regenerate Figs. 2–4 without building a Word document.
 """
 from __future__ import annotations
 
+import argparse
 import struct
 import wave
 from pathlib import Path
@@ -96,30 +100,44 @@ def read_wav_mono(path: Path, seconds: float | None = None):
 
 
 def read_vibration_xls_dir(folder: Path):
-    """Return {quantity: [(load, mean_value), ...]} from a vibration/ folder."""
+    """Return {quantity: [(speed, mean, sample_sd, count), ...]} per XLS file.
+
+    SD uses ddof=1 across readings of the same quantity within each file,
+    not across speeds or across quantities. With one reading SD is undefined.
+    """
     import xlrd  # BIFF spot-reading spreadsheets
     quantities = {"Velocity": [], "Acceleration": [], "Displacement": []}
     for f in sorted(folder.glob("*.xls")):
-        try:
-            load = int("".join(ch for ch in f.stem if ch.isdigit())[:3])
-        except ValueError:
-            continue
-        try:
-            book = xlrd.open_workbook(str(f))
-            sh = book.sheet_by_index(0)
-        except Exception:
-            continue
+        load = int(f.stem.split("_", 1)[0].removeprefix("speed"))
+        book = xlrd.open_workbook(str(f))
         acc = {k: [] for k in quantities}
-        for r in range(1, sh.nrows):
-            if sh.ncols < 5:
-                continue
-            qty = str(sh.cell_value(r, 3)).strip()
-            val = sh.cell_value(r, 4)
-            if qty in acc and isinstance(val, float):
-                acc[qty].append(val)
+        for sh in book.sheets():
+            for r in range(sh.nrows):
+                if sh.ncols < 5:
+                    continue
+                qty = str(sh.cell_value(r, 3)).strip()
+                if qty not in acc:
+                    continue
+                cell = sh.cell(r, 4)
+                # These BIFF exports may label a numeric Python value as TEXT.
+                # Validate the actual value, while still rejecting Excel errors.
+                try:
+                    value = float(cell.value)
+                except (TypeError, ValueError) as exc:
+                    raise ValueError(f"Invalid {qty} reading in {f.name}, sheet {sh.name}, row {r + 1}") from exc
+                if cell.ctype == xlrd.XL_CELL_ERROR or not np.isfinite(value):
+                    raise ValueError(f"Invalid {qty} reading in {f.name}, sheet {sh.name}, row {r + 1}")
+                acc[qty].append(value)
+        counts = []
         for k, lst in acc.items():
+            counts.append(f"{k} n={len(lst)}")
             if lst:
-                quantities[k].append((load, float(np.mean(lst))))
+                sd = float(np.std(lst, ddof=1)) if len(lst) > 1 else float("nan")
+                quantities[k].append((load, float(np.mean(lst)), sd, len(lst)))
+        print(f"Fig. 4 {f.name}: " + "; ".join(counts), flush=True)
+        if any(len(values) < 2 for values in acc.values()):
+            print("  SD undefined for quantities with fewer than two readings; no SD bar shown.")
+        book.release_resources()
     for k in quantities:
         quantities[k].sort()
     return quantities
@@ -128,6 +146,41 @@ def read_vibration_xls_dir(folder: Path):
 # --------------------------------------------------------------------------- #
 # Figure generation
 # --------------------------------------------------------------------------- #
+
+def single_sided_amplitude(y: np.ndarray, fs: float):
+    """Hann-windowed peak-amplitude spectrum in the input units.
+
+    Divide by the window sum (coherent-gain correction), double only
+    positive-frequency bins other than Nyquist; retain DC without detrending.
+    No averaging or zero padding is applied.
+    """
+    n = y.size
+    if n < 3 or fs <= 0 or not np.all(np.isfinite(y)):
+        raise ValueError("Spectrum requires at least three finite samples and positive sampling rate")
+    window = np.hanning(n)
+    amplitude = np.abs(np.fft.rfft(y * window)) / window.sum()
+    amplitude[1:-1 if n % 2 == 0 else None] *= 2.0
+    return np.fft.rfftfreq(n, d=1.0 / fs), amplitude
+
+
+def export_figure_panels(fig, axes, path: Path):
+    """Keep the combined filename and export cropped panels as _a/_b/_c."""
+    fig.tight_layout()
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    bounds = [(ax.get_tightbbox(renderer).transformed(fig.dpi_scale_trans.inverted())
+               .padded(0.08)) for ax in axes]
+    for suffix in (".png", ".tif"):
+        options = {"pil_kwargs": {"compression": "tiff_lzw"}} if suffix == ".tif" else {}
+        combined = path.with_suffix(suffix)
+        fig.savefig(combined, dpi=600, bbox_inches="tight", **options)
+        print(f"Exported {combined.name} (600 dpi)", flush=True)
+        for letter, bbox in zip("abc", bounds):
+            panel = path.with_name(f"{path.stem}_{letter}{suffix}")
+            fig.savefig(panel, dpi=600, bbox_inches=bbox, **options)
+            print(f"Exported {panel.name} (600 dpi)", flush=True)
+    plt.close(fig)
+
 
 def fig1_organisation(path: Path):
     fig, ax = plt.subplots(figsize=(9.2, 5.6))
@@ -187,35 +240,39 @@ def fig1_organisation(path: Path):
 
 def fig2_current(path: Path, bin_path: Path):
     t, y, fs = read_rigol_bin_segment(bin_path, seconds=2.0)
-    y = y - np.mean(y)
+    # Float BIN samples are recorded channel volts; preserve their DC component.
     # Time window: 60 ms
     win = t <= 0.06
-    # Spectrum
     n = y.size
-    freqs = np.fft.rfftfreq(n, d=1.0 / fs)
-    amp = np.abs(np.fft.rfft(y * np.hanning(n))) * 2.0 / n
+    freqs, amp = single_sided_amplitude(y, fs)
     fmask = freqs <= 1500
+    print(f"Fig. 2 FFT settings: symmetric Hann window (numpy.hanning); "
+          f"sampling rate={fs:.12g} Hz; samples/FFT length={n}; "
+          f"record duration={n / fs:.12g} s; frequency resolution={fs / n:.12g} Hz; "
+          "one segment, no averaging; no detrending or mean removal; no zero padding; "
+          "single-sided peak amplitude in V, normalized by window sum, "
+          "DC/Nyquist not doubled; plotted range 0-1500 Hz.", flush=True)
 
     fig, axes = plt.subplots(1, 2, figsize=(9.4, 3.5))
     axes[0].plot(t[win] * 1e3, y[win], color="#c0392b", linewidth=0.8)
     axes[0].set_xlabel("Time (ms)")
-    axes[0].set_ylabel("Armature-current signal (a.u., AC-coupled)")
+    axes[0].set_ylabel("Current signal (V)")
     axes[0].set_title("(a) Time domain (60 ms window)")
     axes[0].grid(alpha=0.3)
 
     axes[1].plot(freqs[fmask], amp[fmask], color="#2c3e50", linewidth=0.9)
     for h in (300, 600, 900, 1200):
         axes[1].axvline(h, color="#7f8c8d", linestyle=":", linewidth=0.8)
-    axes[1].annotate("300 Hz\n(6-pulse ripple)", xy=(300, amp[fmask].max()),
-                     xytext=(430, amp[fmask].max() * 0.85), fontsize=8,
+    ripple_bin = int(np.argmin(np.abs(freqs - 300)))
+    axes[1].annotate("300 Hz (6 × 50 Hz converter ripple)",
+                     xy=(freqs[ripple_bin], amp[ripple_bin]),
+                     xytext=(430, amp[fmask].max() * 0.85), fontsize=7,
                      arrowprops=dict(arrowstyle="->", color="#555"))
     axes[1].set_xlabel("Frequency (Hz)")
-    axes[1].set_ylabel("Amplitude (a.u.)")
+    axes[1].set_ylabel("Amplitude (V)")
     axes[1].set_title("(b) Single-sided amplitude spectrum")
     axes[1].grid(alpha=0.3)
-    fig.tight_layout()
-    fig.savefig(path, dpi=200, bbox_inches="tight")
-    plt.close(fig)
+    export_figure_panels(fig, axes, path)
 
 
 def fig3_vibrometer(path: Path, wav_path: Path):
@@ -226,7 +283,7 @@ def fig3_vibrometer(path: Path, wav_path: Path):
     fig, axes = plt.subplots(1, 2, figsize=(9.4, 3.5))
     axes[0].plot(t[win], y[win], color="#1f6f8b", linewidth=0.6)
     axes[0].set_xlabel("Time (s)")
-    axes[0].set_ylabel("Amplitude (normalised)")
+    axes[0].set_ylabel("Amplitude (normalized)")
     axes[0].set_title("(a) Vibration waveform (1 s window)")
     axes[0].grid(alpha=0.3)
 
@@ -235,14 +292,13 @@ def fig3_vibrometer(path: Path, wav_path: Path):
     axes[1].set_xlabel("Time (s)")
     axes[1].set_ylabel("Frequency (Hz)")
     axes[1].set_title("(b) Spectrogram (0-10 kHz)")
-    fig.tight_layout()
-    fig.savefig(path, dpi=200, bbox_inches="tight")
-    plt.close(fig)
+    # No trimming or onset alignment: the initial silent samples are retained.
+    export_figure_panels(fig, axes, path)
 
 
 def fig4_vibration(path: Path, vib_dir: Path):
     data = read_vibration_xls_dir(vib_dir)
-    units = {"Velocity": "mm/s", "Acceleration": "m/s^2", "Displacement": "mm"}
+    units = {"Velocity": "mm/s", "Acceleration": "m/s²", "Displacement": "mm"}
     colors = {"Velocity": "#8e44ad", "Acceleration": "#16a085", "Displacement": "#d35400"}
     fig, axes = plt.subplots(1, 3, figsize=(9.6, 3.2))
     for ax, qty in zip(axes, ["Velocity", "Acceleration", "Displacement"]):
@@ -250,14 +306,15 @@ def fig4_vibration(path: Path, vib_dir: Path):
         if pts:
             loads = [p[0] for p in pts]
             vals = [p[1] for p in pts]
-            ax.plot(loads, vals, "o-", color=colors[qty], markersize=4, linewidth=1.2)
+            sds = [p[2] for p in pts]
+            ax.errorbar(loads, vals, yerr=sds, fmt="o-", color=colors[qty],
+                        markersize=4, linewidth=1.2, capsize=3, elinewidth=0.9)
         ax.set_title(qty)
         ax.set_xlabel("Speed setpoint (% of rated speed)")
-        ax.set_ylabel(f"Mean {qty.lower()} ({units[qty]})")
+        ax.set_ylabel(f"{qty} ({units[qty]})")
         ax.grid(alpha=0.3)
-    fig.tight_layout()
-    fig.savefig(path, dpi=200, bbox_inches="tight")
-    plt.close(fig)
+    print("Fig. 4 error bars: mean +/- sample SD (ddof=1), per quantity per XLS file.")
+    export_figure_panels(fig, axes, path)
 
 
 # --------------------------------------------------------------------------- #
@@ -890,6 +947,18 @@ def build(stats, fig_ok):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--figures-only", action="store_true",
+                        help="Export Figs. 2–4 only; leave the manuscript and Fig. 1 untouched")
+    args = parser.parse_args()
+    if args.figures_only:
+        fig2_current(FIGDIR / "fig2_current.png",
+                     DATASET / "data/normal_no_reversal/current/speed050_current.bin")
+        fig3_vibrometer(FIGDIR / "fig3_vibrometer.png",
+                        DATASET / "data/normal_no_reversal/sound_vibrometer/speed050_sound_vibrometer.wav")
+        fig4_vibration(FIGDIR / "fig4_vibration.png",
+                       DATASET / "data/normal_no_reversal/vibration")
+        return
     stats = compute_stats()
 
     fig_ok = {}
