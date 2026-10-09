@@ -8,7 +8,7 @@ Raw multi-sensor recordings from a **brushed permanent-magnet DC servo motor**
 (3PI12.06) driven by a 4-quadrant **thyristor (SCR) converter**. Each sensor data was
 recorded separately under the **same operating conditions** — matched speed setpoint
 and mechanical condition — using four sensors: armature current, an AV-160B
-vibrometer probe, a budget Android phone microphone, and vibrometer spot
+vibrometer probe, a Huawei P smart Z Android phone microphone, and vibrometer spot
 readings. Recordings are condition-matched, not synchronized (see Section 5,
 *Data structure and independence of recordings*).
 
@@ -57,16 +57,23 @@ percentage is a commanded speed, not a load level:
 |---|---|
 | `suboptimal_control_no_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient), without reversal |
 | `suboptimal_control_with_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient), with reversal |
-| `suboptimal_control_rt_no_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient + non-optimal current-regulator gain coefficient), without reversal |
-| `suboptimal_control_rt_with_reversal` | Suboptimal control (non-optimal speed-regulator gain coefficient + non-optimal current-regulator gain coefficient), with reversal |
+| `suboptimal_control_rt_no_reversal` | Suboptimal current-regulator tuning (non-optimal current-regulator gain coefficient, nominal speed regulator), without reversal |
+| `suboptimal_control_rt_with_reversal` | Suboptimal current-regulator tuning (non-optimal current-regulator gain coefficient, nominal speed regulator), with reversal |
 | `normal_no_reversal` | Normal operation, without reversal |
 | `normal_with_reversal` | Normal operation, with reversal |
 | `loose_foundation_no_reversal` | Loose foundation, without reversal |
 | `loose_foundation_with_reversal` | Loose foundation, with reversal |
 
 Naming note: `suboptimal_control_*` means a non-optimal **speed-regulator
-gain coefficient**, while `suboptimal_control_rt_*` means non-optimal
-**speed-regulator and current-regulator gain coefficients** (RT variant).
+gain** (current regulator at its nominal setting), while
+`suboptimal_control_rt_*` means a non-optimal **current-regulator gain**
+(speed regulator at its nominal setting). Settings on the ELL converter:
+
+| State | P05.04 speed-regulator gain (Kp2) | P06.02 current-regulator gain (Kp1) |
+|---|---|---|
+| Normal (nominal) | 10 | 2 |
+| `suboptimal_control_*` | 0.2 (−98 %) | 2 (nominal) |
+| `suboptimal_control_rt_*` | 10 (nominal) | 0.1 (−95 %) |
 
 ## 4. Sensors
 
@@ -74,7 +81,7 @@ gain coefficient**, while `suboptimal_control_rt_*` means non-optimal
 |---|---|---|
 | `sound_vibrometer` | WAV (44.1 kHz, 16-bit stereo, ~20.5 s) | True vibration waveform from the AV-160B probe's AC output jack (flat to 10 kHz in acceleration mode). Lossless and complete — **recommended primary source.** |
 | `current` | BIN (Rigol MSO5074) | Armature-current waveform, 8-bit ADC; sample rate and scaling are in each file header. |
-| `sound_phone` | M4A (AAC, lossy) | Budget Android phone microphone ~1 m away. Qualitative use only. |
+| `sound_phone` | M4A (AAC, lossy) | Huawei P smart Z Android phone microphone, hand-held ~1 m away. Qualitative use only. |
 | `vibration` | XLS | AV-160B **spot readings** (velocity mm/s, acceleration m/s², displacement mm), per ISO 2954. Not a waveform — use for trending vs speed. |
 
 The `sound_vibrometer` and `vibration` data both come from one **AV-160B
@@ -94,6 +101,11 @@ commanded to a speed setpoint of 1, 2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90 and
 **Conditions.** The speed sweep was repeated for each of the eight conditions in
 Section 3 (four operating states, each without and with periodic direction
 reversal); the `suboptimal_control_*` conditions stop at 65 % (see Section 8).
+In the `*_with_reversal` conditions the rotation direction was reversed
+manually with a switch, approximately every 4 s (timed by the operator against a
+clock), so the reversal instants are not exactly periodic.
+In the `loose_foundation_*` conditions the motor's mounting bolts were loosened
+by hand; the tightening torque and the degree of loosening were not measured.
 
 **Acquisition (each sensor recorded separately, under the same operating
 conditions — not simultaneously):**
@@ -105,8 +117,11 @@ conditions — not simultaneously):**
   2.0 V AC analog output recorded as 44.1 kHz / 16-bit stereo WAV (~20.5 s).
 - *Vibration spot readings* — the same AV-160B in display mode (velocity,
   acceleration, displacement per ISO 2954), logged to XLS.
-- *Acoustic* — a budget Android smartphone microphone ~1 m from the machine,
-  saved as M4A (AAC).
+- *Acoustic* — a Huawei P smart Z Android smartphone, hand-held approximately 1 m from
+  the motor at the height of the motor, with the bottom edge of the phone
+  (microphone side) [facing / not facing] the motor; saved as M4A (AAC). The
+  phone's built-in audio processing settings (e.g., automatic gain control)
+  were not documented, so levels should be treated as relative.
 
 **Procedure.** For each condition and speed setpoint the motor was brought to steady
 state, then each sensor was recorded in turn. Files are named
@@ -221,9 +236,8 @@ recorded, so use them as relative values (do not assume 1 V = 1 A).
   **65 % top speed setpoint**: above it the detuned controller / DC-link
   protection trips, so 70–100 % of rated speed cannot be captured. This is a
   physical limit of that detuned setting, not a missing recording.
-- **Current-regulator-coefficient variant (`suboptimal_control_rt_*`)** is a
-  milder detuning that does reach 100 %; all four sensors are complete
-  (13 setpoints each).
+- **Suboptimal current-regulator tuning (`suboptimal_control_rt_*`)** reaches
+  100 %; all four sensors are complete (13 setpoints each).
 - **Vibration (XLS)** are spot readings, not waveforms; 7 files at 1 % / 2 % are
   absent because vibration is negligible at near-zero speed (expected).
 - **Current (BIN)**: all 98 files are present (8-bit Rigol ADC); one file
@@ -339,4 +353,4 @@ quality-check flags, not fault labels.
 Released under **Creative Commons Attribution 4.0 (CC BY 4.0)**:
 
 > Zhilevski, M., Slavov, D., Yordanov, N. (2026). *Multi-Sensor Condition-Monitoring Dataset
-> of a Brushed DC Servo Motor*. Mendeley Data. DOI: 10.17632/g28trvywnx.[version].
+> of a Brushed DC Servo Motor*. Mendeley Data. DOI: 10.17632/g28trvywnx.13.
