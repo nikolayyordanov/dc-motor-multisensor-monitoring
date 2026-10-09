@@ -353,4 +353,4 @@ quality-check flags, not fault labels.
 Released under **Creative Commons Attribution 4.0 (CC BY 4.0)**:
 
 > Zhilevski, M., Slavov, D., Yordanov, N. (2026). *Multi-Sensor Condition-Monitoring Dataset
-> of a Brushed DC Servo Motor*. Mendeley Data. DOI: 10.17632/g28trvywnx.13.
+> of a Brushed DC Servo Motor*. Mendeley Data. DOI: 10.17632/g28trvywnx.
