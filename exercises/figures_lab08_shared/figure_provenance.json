@@ -1,0 +1,72 @@
+{
+  "setpoint_percent": 30,
+  "measured_speed_available": false,
+  "nominal_base_speed_rpm": 2000,
+  "commanded_speed_rpm": 600,
+  "reversal": false,
+  "dataset_root": "C:\\Users\\wb568126.WB\\Downloads\\DataFromTU\\DCData_mendeley",
+  "mean_removal": "mean of selected interval, separately per recording",
+  "FFT": "symmetric Hann; window-sum correction; double interior positive bins only; no averaging or zero padding",
+  "waveform_window_ms": 60.0,
+  "spectral_range_Hz": [
+    0,
+    1500.0
+  ],
+  "waveform_layout": "four condition rows; full interval (s) left, detail (ms) right",
+  "overview_rendering": "min/max envelope in at most 2000 bins; display only; all samples contribute",
+  "analysis_samples": "FFT and metrics use all original selected samples, not the rendering envelope",
+  "shared_waveform_ylim_V": [
+    -1.5285329716075517,
+    1.5285329716075517
+  ],
+  "records": [
+    {
+      "source": "data/normal_no_reversal/current/speed030_current.bin",
+      "sha256": "00a811571c6461b86582e03ca24ae255b652978ab77ce3f9e3acf85c816f21fb",
+      "sample_rate_Hz": 1000000.0025247573,
+      "first_sample_index": 2000000,
+      "samples": 2000000,
+      "start_s": 1.9999999949504854,
+      "duration_s": 1.9999999949504854,
+      "frequency_bin_spacing_Hz": 0.5000000012623786,
+      "overview_bins": 2000,
+      "detail_samples": 60001
+    },
+    {
+      "source": "data/loose_foundation_no_reversal/current/speed030_current.bin",
+      "sha256": "9182bb4b9d94c127c0e5038be41603c8f8570b14a71639360d219d4fd9b56617",
+      "sample_rate_Hz": 1000000.0025247573,
+      "first_sample_index": 2000000,
+      "samples": 2000000,
+      "start_s": 1.9999999949504854,
+      "duration_s": 1.9999999949504854,
+      "frequency_bin_spacing_Hz": 0.5000000012623786,
+      "overview_bins": 2000,
+      "detail_samples": 60001
+    },
+    {
+      "source": "data/suboptimal_control_no_reversal/current/speed030_current.bin",
+      "sha256": "0a205490d6ca17cfa5a080f2e9f53505818fa475198d79080fa01d26063e8e7e",
+      "sample_rate_Hz": 1000000.0025247573,
+      "first_sample_index": 2000000,
+      "samples": 2000000,
+      "start_s": 1.9999999949504854,
+      "duration_s": 1.9999999949504854,
+      "frequency_bin_spacing_Hz": 0.5000000012623786,
+      "overview_bins": 2000,
+      "detail_samples": 60001
+    },
+    {
+      "source": "data/suboptimal_control_rt_no_reversal/current/speed030_current.bin",
+      "sha256": "747612053b9894a8344b092a4ae0f016efee37f9278618435d50fce6b1a723c7",
+      "sample_rate_Hz": 1000000.0025247573,
+      "first_sample_index": 2000000,
+      "samples": 2000000,
+      "start_s": 1.9999999949504854,
+      "duration_s": 1.9999999949504854,
+      "frequency_bin_spacing_Hz": 0.5000000012623786,
+      "overview_bins": 2000,
+      "detail_samples": 60001
+    }
+  ]
+}
