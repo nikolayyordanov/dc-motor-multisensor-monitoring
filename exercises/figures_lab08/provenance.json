@@ -1,0 +1,186 @@
+{
+  "speeds": [
+    1,
+    2,
+    5,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60
+  ],
+  "recordings": 36,
+  "windows": 1599,
+  "channel": 1,
+  "skip_s": 1,
+  "window_s": 0.5,
+  "overlap": 0,
+  "features": [
+    "RMS",
+    "PTP",
+    "CF",
+    "Kurtosis",
+    "band_0_100",
+    "band_100_250",
+    "band_250_500",
+    "band_500_1000",
+    "band_1000_2000",
+    "band_2000_5000",
+    "band_5000_10000"
+  ],
+  "spectral_method": "periodic Hann periodogram; relative band power / total power through Nyquist; half-open bands",
+  "validation": "5-fold StratifiedGroupKFold, group=source recording, seed=42; fixed hyperparameters; no tuning",
+  "primary_metrics": "pooled out-of-fold recording majority vote; ties choose lowest class index",
+  "models": {
+    "kNN": "Pipeline(steps=[('standardscaler', StandardScaler()),\n                ('kneighborsclassifier', KNeighborsClassifier())])",
+    "SVM": "Pipeline(steps=[('standardscaler', StandardScaler()), ('svc', SVC(C=1))])",
+    "Random Forest": "RandomForestClassifier(class_weight='balanced', min_samples_leaf=2,\n                       n_estimators=200, n_jobs=-1, random_state=42)"
+  },
+  "sources": [
+    {
+      "path": "data/loose_foundation_no_reversal/sound_vibrometer/speed001_sound_vibrometer.wav",
+      "sha256": "e717cba1c2664172eec950f661f41ccd712cac65438a159a8ad55cd8b76bdaed"
+    },
+    {
+      "path": "data/loose_foundation_no_reversal/sound_vibrometer/speed002_sound_vibrometer.wav",
+      "sha256": "19ecc25c2a98a82cf7580d1b276a752df282177034970ca5b66c4828bf7cd589"
+    },
+    {
+      "path": "data/loose_foundation_no_reversal/sound_vibrometer/speed005_sound_vibrometer.wav",
+      "sha256": "e4a70af55044e8a3ea40c048323d705293aa8d50420c11377492b46c2730c309"
+    },
+    {
+      "path": "data/loose_foundation_no_reversal/sound_vibrometer/speed010_sound_vibrometer.wav",
+      "sha256": "3be4437640a783e46bad1948bf4abe5e015fb24a541dda90377c9a136ff90ddd"
+    },
+    {
+      "path": "data/loose_foundation_no_reversal/sound_vibrometer/speed020_sound_vibrometer.wav",
+      "sha256": "7a021f5b30fee9e62b626ea08779626c39ac7388e95f085d5f08b70d854418c3"
+    },
+    {
+      "path": "data/loose_foundation_no_reversal/sound_vibrometer/speed030_sound_vibrometer.wav",
+      "sha256": "ae3038d7b76a900a419ce9b1fecac5a11604e45291ea50a6a499ce38db21d215"
+    },
+    {
+      "path": "data/loose_foundation_no_reversal/sound_vibrometer/speed040_sound_vibrometer.wav",
+      "sha256": "b0b76e0e9d50b1690299b28ced9bf17567041cc299d445528ccff5431f8838fc"
+    },
+    {
+      "path": "data/loose_foundation_no_reversal/sound_vibrometer/speed050_sound_vibrometer.wav",
+      "sha256": "4a9703fa44f617f3db012bade5cd4104924f14a388395dd031e1fb29581b209d"
+    },
+    {
+      "path": "data/loose_foundation_no_reversal/sound_vibrometer/speed060_sound_vibrometer.wav",
+      "sha256": "9895dd10a9312ad1aab8672164b8b7216db187d9cb3c59619d2f81e8f1e2cfad"
+    },
+    {
+      "path": "data/normal_no_reversal/sound_vibrometer/speed001_sound_vibrometer.wav",
+      "sha256": "23e6b5b6e1a1c3314172b5e0968c8ecd95fc8af23ca637972e59bcb55a6efc6e"
+    },
+    {
+      "path": "data/normal_no_reversal/sound_vibrometer/speed002_sound_vibrometer.wav",
+      "sha256": "b229120a126dec6b7656ba424137a0858e46d3ba8b88c4e213f9437ff7cc0b0b"
+    },
+    {
+      "path": "data/normal_no_reversal/sound_vibrometer/speed005_sound_vibrometer.wav",
+      "sha256": "98884a075f173dad04b0c5ebd9febc8a620aee60a9aa04235936ae8aca91d041"
+    },
+    {
+      "path": "data/normal_no_reversal/sound_vibrometer/speed010_sound_vibrometer.wav",
+      "sha256": "7c1bbe22896cbdd8c14ea36753ce6f9ebb3ccdfd094bc8b00506acb08bc7c4a0"
+    },
+    {
+      "path": "data/normal_no_reversal/sound_vibrometer/speed020_sound_vibrometer.wav",
+      "sha256": "7cc1c59f37c1e99fd2730125b1742d3fb0e3a581a1be1f01fae7d130016c8953"
+    },
+    {
+      "path": "data/normal_no_reversal/sound_vibrometer/speed030_sound_vibrometer.wav",
+      "sha256": "e7f9765902b7247a6c3441eb36b0d62f20d2cc17ad1f395c4c442214112d1b9d"
+    },
+    {
+      "path": "data/normal_no_reversal/sound_vibrometer/speed040_sound_vibrometer.wav",
+      "sha256": "6210d7f890516e118b1540933252604f5027e0eec715705e2f43b48b4b850fd7"
+    },
+    {
+      "path": "data/normal_no_reversal/sound_vibrometer/speed050_sound_vibrometer.wav",
+      "sha256": "d513acf75ad187e1030f9d31dbb0206f3149f27225acc7f866b545961cbd2abc"
+    },
+    {
+      "path": "data/normal_no_reversal/sound_vibrometer/speed060_sound_vibrometer.wav",
+      "sha256": "50c53263837ac101aa663c4a566e24dfa71866fd57bba0e1e6dc44e76b07fbea"
+    },
+    {
+      "path": "data/suboptimal_control_no_reversal/sound_vibrometer/speed001_sound_vibrometer.wav",
+      "sha256": "8b3d137544a960e5c7ef8318f6d64f40c592bb748ddf270ba2cb2fcdc67eba76"
+    },
+    {
+      "path": "data/suboptimal_control_no_reversal/sound_vibrometer/speed002_sound_vibrometer.wav",
+      "sha256": "88ac8b759874d72d64b838322d4a5501aba1f01e1d3ccad1fe28942d4ddfb2ef"
+    },
+    {
+      "path": "data/suboptimal_control_no_reversal/sound_vibrometer/speed005_sound_vibrometer.wav",
+      "sha256": "f8ea7e904072ee8058b6247f6190d9e355b796ec9e7e093cdc50dfef16b1f31e"
+    },
+    {
+      "path": "data/suboptimal_control_no_reversal/sound_vibrometer/speed010_sound_vibrometer.wav",
+      "sha256": "87df7f6207872ac2fcd4747f37ff84df554d6e7efa842a8b8a952e9b7c955231"
+    },
+    {
+      "path": "data/suboptimal_control_no_reversal/sound_vibrometer/speed020_sound_vibrometer.wav",
+      "sha256": "7a0ee71dfb111460ea1edc0cbdfe4db24bd552229e905439d46c8c5c8ca46ff7"
+    },
+    {
+      "path": "data/suboptimal_control_no_reversal/sound_vibrometer/speed030_sound_vibrometer.wav",
+      "sha256": "97a95ee38350895f495a48c146449c73d7d4cdbe46ba5f531461c6874a95f63e"
+    },
+    {
+      "path": "data/suboptimal_control_no_reversal/sound_vibrometer/speed040_sound_vibrometer.wav",
+      "sha256": "46c29205977ee3c80d106b217494a8a08ae1a11bc99d92329c6d53d32f6eff22"
+    },
+    {
+      "path": "data/suboptimal_control_no_reversal/sound_vibrometer/speed050_sound_vibrometer.wav",
+      "sha256": "7bda8ccbbc19ae1030c6d81ddac2d450e904133dea979898e40ca4cfb2f620a2"
+    },
+    {
+      "path": "data/suboptimal_control_no_reversal/sound_vibrometer/speed060_sound_vibrometer.wav",
+      "sha256": "f7145d191171bd1e51a96649696ca3cef9fb1b9fd07ebc593b2fe7dff964f4f3"
+    },
+    {
+      "path": "data/suboptimal_control_rt_no_reversal/sound_vibrometer/speed001_sound_vibrometer.wav",
+      "sha256": "bd98e15f518978336db47656efd5f545b95e272c0837d12238e461f5b1e84d8f"
+    },
+    {
+      "path": "data/suboptimal_control_rt_no_reversal/sound_vibrometer/speed002_sound_vibrometer.wav",
+      "sha256": "78e80e86aafc77b110c2d948e1ad324ee28f2cfe807f823ae92f6af88163f609"
+    },
+    {
+      "path": "data/suboptimal_control_rt_no_reversal/sound_vibrometer/speed005_sound_vibrometer.wav",
+      "sha256": "bb95eda99ada4dee6b65e83aa5814fee187795e4b364ec7448fe5165cf82bfbf"
+    },
+    {
+      "path": "data/suboptimal_control_rt_no_reversal/sound_vibrometer/speed010_sound_vibrometer.wav",
+      "sha256": "d4361ffeacc66db3bb1dcf7474fa357e431e0088dd5e94da194c171fca80a1c0"
+    },
+    {
+      "path": "data/suboptimal_control_rt_no_reversal/sound_vibrometer/speed020_sound_vibrometer.wav",
+      "sha256": "8dba2c7ecf943abaa8d352f38dce650effd701e0b563b7551c2a732ae34f35b6"
+    },
+    {
+      "path": "data/suboptimal_control_rt_no_reversal/sound_vibrometer/speed030_sound_vibrometer.wav",
+      "sha256": "fe3eb26f52f8420b7d9d630315a6ffe30e105d314fa2264831d12f0b1d815e98"
+    },
+    {
+      "path": "data/suboptimal_control_rt_no_reversal/sound_vibrometer/speed040_sound_vibrometer.wav",
+      "sha256": "b6a80e1a909739c90d8539514cc56516bd9c698277441a3fc8f0ecbea2eaf734"
+    },
+    {
+      "path": "data/suboptimal_control_rt_no_reversal/sound_vibrometer/speed050_sound_vibrometer.wav",
+      "sha256": "0cd9598446a214c7d4b204685cc3848b62217272075f5a3dada3b63db8e28aa0"
+    },
+    {
+      "path": "data/suboptimal_control_rt_no_reversal/sound_vibrometer/speed060_sound_vibrometer.wav",
+      "sha256": "386e33ab6d74d744a16e602ca6577ced1dda2260548af4e38e455b6915fd7812"
+    }
+  ]
+}

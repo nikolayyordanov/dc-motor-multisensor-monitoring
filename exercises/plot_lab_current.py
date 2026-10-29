@@ -162,7 +162,7 @@ def generate(args):
         ax.set_xlim(0, args.max_hz)
         ax.set_ylim(0, amp_max * 1.1 if amp_max else 1.0)
     args.output.mkdir(parents=True, exist_ok=True)
-    for fig, name in ((fig_t, "fig8_5_current_waveforms"), (fig_f, "fig8_6_current_spectra")):
+    for fig, name in ((fig_t, "fig9_5_current_waveforms"), (fig_f, "fig9_6_current_spectra")):
         fig.tight_layout(pad=1.3, h_pad=2.0, w_pad=1.5)
         for extension in ("png", "pdf", "svg"):
             fig.savefig(args.output / f"{name}.{extension}", dpi=600,
@@ -197,7 +197,7 @@ def main():
     parser.add_argument("--duration", type=float, default=2.0, help="Продължителност за FFT, s")
     parser.add_argument("--window-ms", type=float, default=60.0, help="Показан времеви прозорец, ms")
     parser.add_argument("--max-hz", type=float, default=1500.0, help="Горна показана честота, Hz")
-    parser.add_argument("--output", type=Path, default=Path("figures_lab08_shared"), help="Изходна папка")
+    parser.add_argument("--output", type=Path, default=Path("figures_lab09_shared"), help="Изходна папка")
     args = parser.parse_args()
     if not 1 <= args.speed <= 100:
         parser.error("--speed трябва да е между 1 и 100; нужни са записи за четирите състояния")

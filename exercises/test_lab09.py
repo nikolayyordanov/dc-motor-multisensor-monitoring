@@ -22,7 +22,7 @@ from docx.oxml.ns import qn
 from lxml import etree
 from PIL import Image
 
-import build_lab08_figures as builder
+import build_lab09_figures as builder
 import plot_lab_current as shared
 
 sys.path.insert(0, str(builder.ROOT / "paper"))
@@ -159,22 +159,22 @@ class DocumentTests(unittest.TestCase):
         doc = unittest.mock.Mock()
         doc.save.side_effect = [PermissionError(), None]
         with tempfile.TemporaryDirectory() as folder:
-            target = Path(folder) / "Lab08_revised.docx"
-            target.with_stem("Lab08_revised_v2").touch()
-            self.assertEqual(builder.save_revision(doc, target).stem, "Lab08_revised_v3")
+            target = Path(folder) / "Lab09_revised.docx"
+            target.with_stem("Lab09_revised_v2").touch()
+            self.assertEqual(builder.save_revision(doc, target).stem, "Lab09_revised_v3")
 
     def test_generated_docx_and_artifacts(self):
         report = json.loads((builder.OUT / "document_validation.json").read_text(encoding="utf-8"))
         docpath = builder.FOLDER / report["output"]
         doc = Document(docpath)
-        source = Document(builder.FOLDER / "Lab08.docx")
+        source = Document(builder.ORIGINALS / "Lab08.docx")
         self.assertEqual(len(doc.tables), len(source.tables) + 1)
         self.assertEqual(len(doc.inline_shapes), len(source.inline_shapes) + 2)
         self.assertGreater(report["formula_count_preserved"], 0)
         self.assertEqual([etree.tostring(m) for m in source.element.body.xpath(".//m:oMath")],
                          [etree.tostring(m) for m in doc.element.body.xpath(".//m:oMath")])
         text = "\n".join(p.text for p in doc.paragraphs)
-        for prefix, caption in (("Фиг. 8.5.", builder.CAPTION_TIME), ("Фиг. 8.6.", builder.CAPTION_FFT)):
+        for prefix, caption in (("Фиг. 9.5.", builder.CAPTION_TIME), ("Фиг. 9.6.", builder.CAPTION_FFT)):
             self.assertEqual([p.text for p in doc.paragraphs if p.text.startswith(prefix)], [caption])
         for phrase in ("зададени 600", "не е потвърдено", "18 периода", "не е независимо повторно",
                        "честотната стъпка са:", "котвения ток", "постояннотоковите системи"):
@@ -189,20 +189,20 @@ class DocumentTests(unittest.TestCase):
         self.assertEqual(setting.get(qn("w:val")), "true")
         with zipfile.ZipFile(docpath) as archive:
             media = [archive.read(n) for n in archive.namelist() if n.startswith("word/media/")]
-            for stem in ("fig8_5_current_waveforms", "fig8_6_current_spectra"):
+            for stem in ("fig9_5_current_waveforms", "fig9_6_current_spectra"):
                 self.assertIn((builder.OUT / f"{stem}.png").read_bytes(), media)
-        for out in (builder.OUT, builder.FOLDER / "figures_lab08_shared"):
+        for out in (builder.OUT, builder.FOLDER / "figures_lab09_shared"):
             provenance = json.loads((out / "figure_provenance.json").read_text(encoding="utf-8"))
             for r in provenance["records"]:
                 self.assertEqual(builder.digest(Path(provenance["dataset_root"]) / r["source"]), r["sha256"])
                 self.assertEqual(r["overview_bins"], 2000)
-            for stem in ("fig8_5_current_waveforms", "fig8_6_current_spectra"):
+            for stem in ("fig9_5_current_waveforms", "fig9_6_current_spectra"):
                 for ext in ("png", "pdf", "svg"):
                     self.assertGreater((out / f"{stem}.{ext}").stat().st_size, 1000)
                 with Image.open(out / f"{stem}.png") as image:
                     self.assertAlmostEqual(image.info["dpi"][0], 600, places=1)
         self.assertEqual((builder.OUT / "example_metrics.csv").read_bytes(),
-                         (builder.FOLDER / "figures_lab08_shared/example_metrics.csv").read_bytes())
+                         (builder.FOLDER / "figures_lab09_shared/example_metrics.csv").read_bytes())
 
 
 if __name__ == "__main__":

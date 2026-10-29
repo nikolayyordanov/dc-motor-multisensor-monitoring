@@ -1,4 +1,4 @@
-"""Generate shared real-data figures and a separate, XML-verified Lab08 revision."""
+"""Generate current-analysis figures and an XML-verified Lab09 revision."""
 from __future__ import annotations
 
 import argparse
@@ -20,7 +20,8 @@ from plot_lab_current import generate as generate_shared
 
 ROOT = Path(__file__).resolve().parents[1]
 FOLDER = ROOT / "exercises"
-OUT = FOLDER / "figures_lab08"
+OUT = FOLDER / "figures_lab09"
+ORIGINALS = FOLDER / "archive_before_renumbering"
 
 
 def digest(path):
@@ -100,7 +101,7 @@ def save_revision(doc, target):
 
 
 CAPTION_TIME = (
-    "Фиг. 8.5. Примерни времедиаграми при задание за скорост 30%, без реверсиране: "
+    "Фиг. 9.5. Примерни времедиаграми при задание за скорост 30%, без реверсиране: "
     "а) номинални настройки; б) разхлабен фундамент; в) неоптимален РС; "
     "г) неоптимален РТ при номинален РС. Всеки ред показва целия интервал 2–4 s "
     "вляво и първите 60 ms (2,000–2,060 s от записа) вдясно. Общият изглед е "
@@ -108,7 +109,7 @@ CAPTION_TIME = (
     "проби. Средното е отстранено за целите 2 s; общият амплитуден мащаб се определя "
     "от всички проби на четирите интервала, без нормировка по максимум.")
 CAPTION_FFT = (
-    "Фиг. 8.6. Едностранни амплитудни спектри за целите интервали 2–4 s при задание "
+    "Фиг. 9.6. Едностранни амплитудни спектри за целите интервали 2–4 s при задание "
     "30%, без реверсиране: а) номинални настройки; б) разхлабен фундамент; "
     "в) неоптимален РС; г) неоптимален РТ при номинален РС. Прозорец на Хан с "
     "корекция чрез сумата на прозореца; честотна стъпка ≈ 0,5 Hz; без усредняване "
@@ -117,8 +118,8 @@ CAPTION_FFT = (
 
 
 def insert(provenance):
-    source = FOLDER / "Lab08.docx"
-    protected = [source, FOLDER / "Lab08_with_figures.docx"]
+    source = ORIGINALS / "Lab08.docx"
+    protected = [source, ORIGINALS / "Lab08_with_figures.docx"]
     protected_hashes = {path: digest(path) for path in protected if path.exists()}
     dataset = Path(provenance["dataset_root"])
     assert all(digest(dataset / r["source"]) == r["sha256"] for r in provenance["records"])
@@ -210,8 +211,8 @@ def insert(provenance):
               "разграничаване на състоянията. Липса на разлика в тока не доказва изправност; "
               "самостоятелният токов анализ има ограничения.")
 
-    replacements = {"[Място за времедиаграмите при четирите условия.]": "fig8_5_current_waveforms.png",
-                    "[Място за амплитудните спектри при четирите условия.]": "fig8_6_current_spectra.png"}
+    replacements = {"[Място за времедиаграмите при четирите условия.]": "fig9_5_current_waveforms.png",
+                    "[Място за амплитудните спектри при четирите условия.]": "fig9_6_current_spectra.png"}
     section = doc.sections[0]
     width = min(int(section.page_width - section.left_margin - section.right_margin), int(Inches(6.5)))
     for p in paragraphs:
@@ -253,16 +254,25 @@ def insert(provenance):
     math_after = [canonical_xml(m) for m in doc.element.body.xpath(".//m:oMath")]
     assert math_before == math_after, "Formula XML changed"
 
-    target = save_revision(doc, FOLDER / "Lab08_revised.docx")
+    # Change ordinary Word text only, including labels split across runs.
+    # Formula contents stay identical; their adjacent labels are w:t.
+    for element in doc.element.xpath(".//w:p"):
+        paragraph = Paragraph(element, doc._body)
+        for match in list(re.finditer(r"\b8\.(\d+)", paragraph.text)):
+            replace_text(paragraph, match.group(), "9." + match.group(1))
+        replace_text(paragraph, "УПРАЖНЕНИЕ № 8", "УПРАЖНЕНИЕ № 9")
+    assert math_before == [canonical_xml(m) for m in doc.element.body.xpath(".//m:oMath")]
+    target = save_revision(doc, FOLDER / "Lab09_revised.docx")
     check = Document(target)
     assert len(check.inline_shapes) == original_shapes + 2
     assert len(check.tables) == len(Document(source).tables) + 1
     # Round trip must preserve the entire revised body, not merely extracted text.
-    assert doc.element.body.xml == check.element.body.xml, "DOCX round-trip changed XML"
+    assert canonical_xml(doc.element.body) == canonical_xml(check.element.body), "DOCX round-trip changed XML"
+    assert not re.search(r"\b8\.\d+", "\n".join(p.text for p in check.paragraphs))
     assert all(digest(path) == checksum for path, checksum in protected_hashes.items())
     assert all(digest(dataset / r["source"]) == r["sha256"] for r in provenance["records"])
     report = {"output": target.name,
-              "protected_sha256": {p.name: checksum for p, checksum in protected_hashes.items()},
+              "protected_sha256": {p.relative_to(FOLDER).as_posix(): checksum for p, checksum in protected_hashes.items()},
               "changed_original_paragraph_ids": sorted(paragraph_ids[p] for p in changed),
               "image_original_paragraph_ids": sorted(paragraph_ids[p] for p in image_paragraphs),
               "original_body_children_verified": len(originals),

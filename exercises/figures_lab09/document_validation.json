@@ -1,0 +1,29 @@
+{
+  "output": "Lab09_revised.docx",
+  "protected_sha256": {
+    "archive_before_renumbering/Lab08.docx": "b5225e2320dce5478591a2b18e6ea91092b59ff21d01c80edd56a391240853ac",
+    "archive_before_renumbering/Lab08_with_figures.docx": "cdd4acb773a04258a78ddafbbb37d13a5f637dff327336da5ef213c784ee537e"
+  },
+  "changed_original_paragraph_ids": [
+    9,
+    16,
+    48,
+    54,
+    110,
+    126,
+    142,
+    152,
+    160,
+    173,
+    176
+  ],
+  "image_original_paragraph_ids": [
+    141,
+    151
+  ],
+  "original_body_children_verified": 150,
+  "formula_count_preserved": 44,
+  "original_tables_preserved_except_tracked_text_edits": 4,
+  "added_tables": 1,
+  "dataset_sha256_verified": true
+}
