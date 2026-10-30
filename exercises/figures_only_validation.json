@@ -1,0 +1,13 @@
+{
+  "source": "Lab08_working.docx",
+  "output": "Lab08_figures_only.docx",
+  "source_sha256": "583643a41296605a6d68f22388a1d1b73cb85ea6128108cb0b8ab2a7609c4bac",
+  "changed_placeholders": [
+    "10.3",
+    "10.4"
+  ],
+  "all_other_document_xml_byte_identical": true,
+  "tables_and_legacy_objects_unchanged": true,
+  "other_existing_package_parts_byte_identical": true,
+  "captions_numbering_and_text_unchanged": true
+}

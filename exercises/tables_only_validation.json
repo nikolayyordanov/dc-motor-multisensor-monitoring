@@ -1,0 +1,9 @@
+{
+  "source": "Lab08_figures_only.docx",
+  "output": "Lab08_figures_and_tables.docx",
+  "source_sha256": "cae9dff04f7b088069129d6a2c61b2213ebd160289fc4093f6f71e8cc422abdb",
+  "filled_result_cells": 15,
+  "metrics": "recording-level out-of-fold; combined features for classification table; macro-F1 for feature comparison",
+  "all_content_outside_two_result_tables_byte_identical": true,
+  "all_other_package_parts_including_figures_byte_identical": true
+}

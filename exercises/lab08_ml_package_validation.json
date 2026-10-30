@@ -1,0 +1,18 @@
+{
+  "zip": "lab08_ml.zip",
+  "isolated_execution": true,
+  "recordings": 36,
+  "windows": 1599,
+  "features_and_folds_match_approved": true,
+  "record_metrics_match_approved": true,
+  "source_and_word_hashes_verified": true,
+  "zip_sha256": "ec4f665bbad3889012e7d28102fbeb340c59d89ee72e194d2f1aac0f6753fc77",
+  "versions": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "scipy": "1.18.0",
+    "matplotlib": "3.11.0",
+    "scikit-learn": "1.9.0",
+    "soundfile": "0.14.0"
+  }
+}
