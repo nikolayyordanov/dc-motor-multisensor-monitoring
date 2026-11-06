@@ -1,0 +1,30 @@
+{
+  "appendix": "Appendix2_software_bg.docx",
+  "archive": "labs_08_09_10_software_v1.0.zip",
+  "archive_sha256": "760735482f43400e5681383f314fc8a06f10878c35411e6eb3d64ac3f39dfcb4",
+  "archive_bytes": 76380,
+  "files": [
+    "README_START_BG.md",
+    "SHA256SUMS.txt",
+    "TESTED_ENVIRONMENT.json",
+    "docs/Appendix2_software_bg.docx",
+    "docs/Appendix2_software_bg.md",
+    "docs/PUBLISH_software_bg.md",
+    "lab08/README_lab08_ml_bg.md",
+    "lab08/lab08_ml.py",
+    "lab08/requirements_lab08_ml.txt",
+    "lab09/README_figures_bg.md",
+    "lab09/plot_lab_current.py",
+    "lab09/requirements_figures.txt",
+    "lab10/README_lab10_bg.md",
+    "lab10/lab10_vibroacoustics.py",
+    "lab10/requirements_lab10.txt",
+    "requirements_all.txt"
+  ],
+  "script_hashes_match_standalone_sources": true,
+  "three_isolated_help_checks_passed": true,
+  "existing_word_documents_unchanged": true,
+  "includes_measurements_or_credentials": false,
+  "uploaded": false,
+  "download_and_dataset_urls": "explicit placeholders; not yet published"
+}

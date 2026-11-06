@@ -1,0 +1,148 @@
+[
+  {
+    "paragraph": 19,
+    "text": " (10.1)\t,",
+    "images": [
+      "media/image1.wmf",
+      "media/image2.png"
+    ]
+  },
+  {
+    "paragraph": 21,
+    "text": "където  е честотата на въртене, Hz, а  е действителната скорост на въртене, min⁻¹.",
+    "images": [
+      "media/image3.wmf",
+      "media/image4.wmf"
+    ]
+  },
+  {
+    "paragraph": 23,
+    "text": "\tВ спектъра на вибрационния сигнал могат да се наблюдават съставки при честотата на въртене  и нейните хармоници 2, 3 и т.н. Повишената амплитуда при  често се свързва с дисбаланс на ротора, докато изразени хармонични съставки могат да възникнат при несъосност и механични хлабини. Тези признаци не са еднозначни и трябва да се разглеждат съвместно с режима на работа и конструктивните особености на електрозадвижването.",
+    "images": [
+      "media/image3.wmf",
+      "media/image3.wmf",
+      "media/image3.wmf",
+      "media/image3.wmf"
+    ]
+  },
+  {
+    "paragraph": 27,
+    "text": "(10.2)\t,",
+    "images": [
+      "media/image5.wmf",
+      "media/image2.png"
+    ]
+  },
+  {
+    "paragraph": 29,
+    "text": "където A е амплитудата на вибропреместването, f е честотата на вибрациите, а  е началната фаза.",
+    "images": [
+      "media/image6.wmf"
+    ]
+  },
+  {
+    "paragraph": 32,
+    "text": "(10.3)\t.",
+    "images": [
+      "media/image7.wmf"
+    ]
+  },
+  {
+    "paragraph": 33,
+    "text": "",
+    "images": [
+      "media/image2.png"
+    ]
+  },
+  {
+    "paragraph": 36,
+    "text": "(10.4)\t.",
+    "images": [
+      "media/image8.wmf"
+    ]
+  },
+  {
+    "paragraph": 41,
+    "text": "(10.5)\t.",
+    "images": [
+      "media/image9.wmf"
+    ]
+  },
+  {
+    "paragraph": 46,
+    "text": "(10.6)\t,",
+    "images": [
+      "media/image10.wmf"
+    ]
+  },
+  {
+    "paragraph": 48,
+    "text": "където  са комплексните спектрални коефициенти,  са отчетите на дискретния сигнал, а k е индексът на честотната съставка. Честотата на съответната съставка се определя чрез  неотрицателната част на спектъра, където  е честотата на дискретизация.",
+    "images": [
+      "media/image11.wmf",
+      "media/image12.wmf",
+      "media/image13.wmf",
+      "media/image14.wmf"
+    ]
+  },
+  {
+    "paragraph": 60,
+    "text": "",
+    "images": [
+      "media/image15.jpeg"
+    ]
+  },
+  {
+    "paragraph": 75,
+    "text": "(10.6)\t,",
+    "images": [
+      "media/image16.wmf"
+    ]
+  },
+  {
+    "paragraph": 77,
+    "text": "където  е стойността от i-тото измерване, а (m=5) е броят на измерванията.",
+    "images": [
+      "media/image17.wmf"
+    ]
+  },
+  {
+    "table": 0,
+    "text": [
+      [
+        "",
+        "",
+        ""
+      ],
+      [
+        "а)",
+        "б)",
+        "в)"
+      ]
+    ],
+    "image_count": 3
+  },
+  {
+    "table": 1,
+    "text": [
+      [
+        "",
+        ""
+      ],
+      [
+        "а)",
+        "б)"
+      ]
+    ],
+    "image_count": 2
+  },
+  {
+    "table": 2,
+    "text": [
+      [
+        "[Място за фигура – получава се с програмата lab9.py от Приложение 2 за условия normal_no_reversal и loose_foundation_no_reversal]"
+      ]
+    ],
+    "image_count": 0
+  }
+]

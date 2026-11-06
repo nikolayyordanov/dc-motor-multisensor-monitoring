@@ -1,0 +1,1130 @@
+{
+  "normal_no_reversal": {
+    "vibration": [
+      5,
+      10,
+      20,
+      30,
+      40,
+      50,
+      60,
+      70,
+      80,
+      90,
+      100
+    ],
+    "sound_vibrometer": [
+      1,
+      2,
+      5,
+      10,
+      20,
+      30,
+      40,
+      50,
+      60,
+      70,
+      80,
+      90,
+      100
+    ],
+    "sound_phone": [
+      1,
+      2,
+      5,
+      10,
+      20,
+      30,
+      40,
+      50,
+      60,
+      70,
+      80,
+      90,
+      100
+    ],
+    "xls_statistics": [
+      {
+        "speed": 5,
+        "file": "data/normal_no_reversal/vibration/speed005_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 8,
+            "mean": 0.0,
+            "sd": 0.0
+          },
+          "Acceleration": {
+            "n": 8,
+            "mean": 1.0375,
+            "sd": 0.18468119248354134
+          },
+          "Displacement": {
+            "n": 8,
+            "mean": 0.001,
+            "sd": 0.0028284271247461905
+          }
+        },
+        "example_rows": [
+          [
+            "True",
+            1.0,
+            "2026-06-01 12:10:27 PM",
+            "Velocity",
+            0.0,
+            "mm/s"
+          ],
+          [
+            "True",
+            2.0,
+            "2026-06-01 12:10:27 PM",
+            "Acceleration",
+            0.9,
+            "m/s?"
+          ],
+          [
+            "True",
+            3.0,
+            "2026-06-01 12:10:28 PM",
+            "Displacement",
+            0.0,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 10,
+        "file": "data/normal_no_reversal/vibration/speed010_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 10,
+            "mean": 0.0,
+            "sd": 0.0
+          },
+          "Acceleration": {
+            "n": 10,
+            "mean": 4.97,
+            "sd": 0.6464432603785804
+          },
+          "Displacement": {
+            "n": 10,
+            "mean": 0.0,
+            "sd": 0.0
+          }
+        },
+        "example_rows": [
+          [
+            "True",
+            1.0,
+            "2026-06-01 12:18:58 PM",
+            "Velocity",
+            0.0,
+            "mm/s"
+          ],
+          [
+            "True",
+            2.0,
+            "2026-06-01 12:18:58 PM",
+            "Acceleration",
+            4.6,
+            "m/s?"
+          ],
+          [
+            "True",
+            3.0,
+            "2026-06-01 12:18:59 PM",
+            "Displacement",
+            0.0,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 20,
+        "file": "data/normal_no_reversal/vibration/speed020_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 8,
+            "mean": 0.0,
+            "sd": 0.0
+          },
+          "Acceleration": {
+            "n": 8,
+            "mean": 7.6625,
+            "sd": 0.5998511720180504
+          },
+          "Displacement": {
+            "n": 8,
+            "mean": 0.00025,
+            "sd": 0.00046291004988627575
+          }
+        },
+        "example_rows": [
+          [
+            "True",
+            1.0,
+            "2026-06-02 11:47:32 AM",
+            "Velocity",
+            0.0,
+            "mm/s"
+          ],
+          [
+            "True",
+            2.0,
+            "2026-06-02 11:47:33 AM",
+            "Acceleration",
+            8.3,
+            "m/s?"
+          ],
+          [
+            "True",
+            3.0,
+            "2026-06-02 11:47:33 AM",
+            "Displacement",
+            0.001,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 30,
+        "file": "data/normal_no_reversal/vibration/speed030_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 9,
+            "mean": 0.008888888888888889,
+            "sd": 0.026666666666666665
+          },
+          "Acceleration": {
+            "n": 9,
+            "mean": 12.166666666666666,
+            "sd": 0.6
+          },
+          "Displacement": {
+            "n": 9,
+            "mean": 0.0007777777777777778,
+            "sd": 0.001715938356831167
+          }
+        },
+        "example_rows": [
+          [
+            "True",
+            1.0,
+            "2026-06-02 11:50:40 AM",
+            "Velocity",
+            0.0,
+            "mm/s"
+          ],
+          [
+            "True",
+            2.0,
+            "2026-06-02 11:50:41 AM",
+            "Acceleration",
+            12.3,
+            "m/s?"
+          ],
+          [
+            "True",
+            3.0,
+            "2026-06-02 11:50:41 AM",
+            "Displacement",
+            0.0,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 40,
+        "file": "data/normal_no_reversal/vibration/speed040_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 8,
+            "mean": 0.0,
+            "sd": 0.0
+          },
+          "Acceleration": {
+            "n": 8,
+            "mean": 17.0375,
+            "sd": 1.3479481761975443
+          },
+          "Displacement": {
+            "n": 8,
+            "mean": 0.002125,
+            "sd": 0.004611708700997618
+          }
+        },
+        "example_rows": [
+          [
+            "True",
+            1.0,
+            "2026-06-02 11:53:22 AM",
+            "Velocity",
+            0.0,
+            "mm/s"
+          ],
+          [
+            "True",
+            2.0,
+            "2026-06-02 11:53:22 AM",
+            "Acceleration",
+            16.3,
+            "m/s?"
+          ],
+          [
+            "True",
+            3.0,
+            "2026-06-02 11:53:22 AM",
+            "Displacement",
+            0.013,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 50,
+        "file": "data/normal_no_reversal/vibration/speed050_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 8,
+            "mean": 0.00375,
+            "sd": 0.010606601717798212
+          },
+          "Acceleration": {
+            "n": 8,
+            "mean": 17.9,
+            "sd": 1.2351980754981304
+          },
+          "Displacement": {
+            "n": 8,
+            "mean": 0.0,
+            "sd": 0.0
+          }
+        },
+        "example_rows": [
+          [
+            "",
+            1.0,
+            "2026-06-02 11:55:23 AM",
+            "Velocity",
+            0.0,
+            "mm/s"
+          ],
+          [
+            "",
+            2.0,
+            "2026-06-02 11:55:23 AM",
+            "Acceleration",
+            16.1,
+            "m/s?"
+          ],
+          [
+            "",
+            3.0,
+            "2026-06-02 11:55:23 AM",
+            "Displacement",
+            0.0,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 60,
+        "file": "data/normal_no_reversal/vibration/speed060_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 10,
+            "mean": 0.086,
+            "sd": 0.030983866769659335
+          },
+          "Acceleration": {
+            "n": 10,
+            "mean": 32.7,
+            "sd": 0.9368979548370132
+          },
+          "Displacement": {
+            "n": 10,
+            "mean": 0.0014000000000000002,
+            "sd": 0.0005163977794943222
+          }
+        },
+        "example_rows": [
+          [
+            "True",
+            1.0,
+            "2026-06-02 11:57:06 AM",
+            "Velocity",
+            0.08,
+            "mm/s"
+          ],
+          [
+            "True",
+            2.0,
+            "2026-06-02 11:57:06 AM",
+            "Acceleration",
+            32.9,
+            "m/s?"
+          ],
+          [
+            "True",
+            3.0,
+            "2026-06-02 11:57:06 AM",
+            "Displacement",
+            0.002,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 70,
+        "file": "data/normal_no_reversal/vibration/speed070_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 9,
+            "mean": 0.05777777777777778,
+            "sd": 0.030731814857642956
+          },
+          "Acceleration": {
+            "n": 9,
+            "mean": 26.133333333333336,
+            "sd": 3.9588508433635123
+          },
+          "Displacement": {
+            "n": 9,
+            "mean": 0.0017777777777777779,
+            "sd": 0.0024381231397212987
+          }
+        },
+        "example_rows": [
+          [
+            "True",
+            1.0,
+            "2026-06-02 12:03:58 PM",
+            "Velocity",
+            0.05,
+            "mm/s"
+          ],
+          [
+            "True",
+            2.0,
+            "2026-06-02 12:03:58 PM",
+            "Acceleration",
+            27.2,
+            "m/s?"
+          ],
+          [
+            "True",
+            3.0,
+            "2026-06-02 12:03:58 PM",
+            "Displacement",
+            0.005,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 80,
+        "file": "data/normal_no_reversal/vibration/speed080_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 8,
+            "mean": 0.2225,
+            "sd": 0.06475227519444504
+          },
+          "Acceleration": {
+            "n": 8,
+            "mean": 44.0875,
+            "sd": 3.6701255330807716
+          },
+          "Displacement": {
+            "n": 9,
+            "mean": 0.003,
+            "sd": 0.00239791576165636
+          }
+        },
+        "example_rows": [
+          [
+            "True",
+            1.0,
+            "2026-06-02 12:05:33 PM",
+            "Displacement",
+            0.002,
+            "mm"
+          ],
+          [
+            "True",
+            2.0,
+            "2026-06-02 12:05:36 PM",
+            "Velocity",
+            0.22,
+            "mm/s"
+          ],
+          [
+            "True",
+            3.0,
+            "2026-06-02 12:05:37 PM",
+            "Acceleration",
+            40.6,
+            "m/s?"
+          ]
+        ]
+      },
+      {
+        "speed": 90,
+        "file": "data/normal_no_reversal/vibration/speed090_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 21,
+            "mean": 0.11333333333333336,
+            "sd": 0.04258325179379017
+          },
+          "Acceleration": {
+            "n": 22,
+            "mean": 37.13636363636363,
+            "sd": 4.610293395740144
+          },
+          "Displacement": {
+            "n": 22,
+            "mean": 0.001954545454545455,
+            "sd": 0.004990250234466946
+          }
+        },
+        "example_rows": [
+          [
+            "True",
+            1.0,
+            "2026-06-02 12:07:29 PM",
+            "Acceleration",
+            38.0,
+            "m/s?"
+          ],
+          [
+            "True",
+            2.0,
+            "2026-06-02 12:07:29 PM",
+            "Displacement",
+            0.002,
+            "mm"
+          ],
+          [
+            "True",
+            3.0,
+            "2026-06-02 12:07:33 PM",
+            "Velocity",
+            0.11,
+            "mm/s"
+          ]
+        ]
+      },
+      {
+        "speed": 100,
+        "file": "data/normal_no_reversal/vibration/speed100_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 22,
+            "mean": 0.11545454545454543,
+            "sd": 0.017654696590094995
+          },
+          "Acceleration": {
+            "n": 21,
+            "mean": 35.94761904761905,
+            "sd": 3.960254922049721
+          },
+          "Displacement": {
+            "n": 21,
+            "mean": 0.0005714285714285715,
+            "sd": 0.0012071217242444346
+          }
+        },
+        "example_rows": [
+          [
+            "True",
+            1.0,
+            "2026-06-02 12:09:20 PM",
+            "Velocity",
+            0.11,
+            "mm/s"
+          ],
+          [
+            "True",
+            2.0,
+            "2026-06-02 12:09:21 PM",
+            "Acceleration",
+            39.3,
+            "m/s?"
+          ],
+          [
+            "True",
+            3.0,
+            "2026-06-02 12:09:21 PM",
+            "Displacement",
+            0.0,
+            "mm"
+          ]
+        ]
+      }
+    ]
+  },
+  "loose_foundation_no_reversal": {
+    "vibration": [
+      5,
+      10,
+      20,
+      30,
+      40,
+      50,
+      60,
+      70,
+      80,
+      90,
+      100
+    ],
+    "sound_vibrometer": [
+      1,
+      2,
+      5,
+      10,
+      20,
+      30,
+      40,
+      50,
+      60,
+      70,
+      80,
+      90,
+      100
+    ],
+    "sound_phone": [
+      1,
+      2,
+      5,
+      10,
+      20,
+      30,
+      40,
+      50,
+      60,
+      70,
+      80,
+      90,
+      100
+    ],
+    "xls_statistics": [
+      {
+        "speed": 5,
+        "file": "data/loose_foundation_no_reversal/vibration/speed005_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 6,
+            "mean": 0.0,
+            "sd": 0.0
+          },
+          "Acceleration": {
+            "n": 6,
+            "mean": 1.3999999999999997,
+            "sd": 0.8024961059095551
+          },
+          "Displacement": {
+            "n": 6,
+            "mean": 0.0,
+            "sd": 0.0
+          }
+        },
+        "example_rows": [
+          [
+            "",
+            1.0,
+            "2026-06-17 03:01:49 PM",
+            "Velocity",
+            0.0,
+            "mm/s"
+          ],
+          [
+            "",
+            2.0,
+            "2026-06-17 03:01:49 PM",
+            "Acceleration",
+            1.3,
+            "m/s?"
+          ],
+          [
+            "",
+            3.0,
+            "2026-06-17 03:01:49 PM",
+            "Displacement",
+            0.0,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 10,
+        "file": "data/loose_foundation_no_reversal/vibration/speed010_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 7,
+            "mean": 0.0,
+            "sd": 0.0
+          },
+          "Acceleration": {
+            "n": 7,
+            "mean": 3.214285714285714,
+            "sd": 0.38047589248453684
+          },
+          "Displacement": {
+            "n": 7,
+            "mean": 0.0,
+            "sd": 0.0
+          }
+        },
+        "example_rows": [
+          [
+            "",
+            1.0,
+            "2026-06-17 03:02:43 PM",
+            "Velocity",
+            0.0,
+            "mm/s"
+          ],
+          [
+            "",
+            2.0,
+            "2026-06-17 03:02:43 PM",
+            "Acceleration",
+            3.7,
+            "m/s?"
+          ],
+          [
+            "",
+            3.0,
+            "2026-06-17 03:02:43 PM",
+            "Displacement",
+            0.0,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 20,
+        "file": "data/loose_foundation_no_reversal/vibration/speed020_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 8,
+            "mean": 0.0,
+            "sd": 0.0
+          },
+          "Acceleration": {
+            "n": 8,
+            "mean": 7.0625,
+            "sd": 0.7744813933022721
+          },
+          "Displacement": {
+            "n": 8,
+            "mean": 0.0,
+            "sd": 0.0
+          }
+        },
+        "example_rows": [
+          [
+            "",
+            1.0,
+            "2026-06-17 03:06:40 PM",
+            "Velocity",
+            0.0,
+            "mm/s"
+          ],
+          [
+            "",
+            2.0,
+            "2026-06-17 03:06:40 PM",
+            "Acceleration",
+            6.6,
+            "m/s?"
+          ],
+          [
+            "",
+            3.0,
+            "2026-06-17 03:06:41 PM",
+            "Displacement",
+            0.0,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 30,
+        "file": "data/loose_foundation_no_reversal/vibration/speed030_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 8,
+            "mean": 0.0,
+            "sd": 0.0
+          },
+          "Acceleration": {
+            "n": 8,
+            "mean": 11.15,
+            "sd": 0.602376246923086
+          },
+          "Displacement": {
+            "n": 8,
+            "mean": 0.0,
+            "sd": 0.0
+          }
+        },
+        "example_rows": [
+          [
+            "",
+            1.0,
+            "2026-06-17 03:08:41 PM",
+            "Velocity",
+            0.0,
+            "mm/s"
+          ],
+          [
+            "",
+            2.0,
+            "2026-06-17 03:08:41 PM",
+            "Acceleration",
+            10.8,
+            "m/s?"
+          ],
+          [
+            "",
+            3.0,
+            "2026-06-17 03:08:41 PM",
+            "Displacement",
+            0.0,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 40,
+        "file": "data/loose_foundation_no_reversal/vibration/speed040_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 8,
+            "mean": 0.0,
+            "sd": 0.0
+          },
+          "Acceleration": {
+            "n": 8,
+            "mean": 16.8375,
+            "sd": 0.899106699531739
+          },
+          "Displacement": {
+            "n": 8,
+            "mean": 0.0,
+            "sd": 0.0
+          }
+        },
+        "example_rows": [
+          [
+            "",
+            1.0,
+            "2026-06-17 03:10:28 PM",
+            "Velocity",
+            0.0,
+            "mm/s"
+          ],
+          [
+            "",
+            2.0,
+            "2026-06-17 03:10:29 PM",
+            "Acceleration",
+            18.2,
+            "m/s?"
+          ],
+          [
+            "",
+            3.0,
+            "2026-06-17 03:10:29 PM",
+            "Displacement",
+            0.0,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 50,
+        "file": "data/loose_foundation_no_reversal/vibration/speed050_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 8,
+            "mean": 0.015,
+            "sd": 0.03207134902949093
+          },
+          "Acceleration": {
+            "n": 8,
+            "mean": 22.1375,
+            "sd": 1.5136875503220608
+          },
+          "Displacement": {
+            "n": 8,
+            "mean": 0.0,
+            "sd": 0.0
+          }
+        },
+        "example_rows": [
+          [
+            "",
+            1.0,
+            "2026-06-17 03:12:02 PM",
+            "Velocity",
+            0.03,
+            "mm/s"
+          ],
+          [
+            "",
+            2.0,
+            "2026-06-17 03:12:03 PM",
+            "Acceleration",
+            20.5,
+            "m/s?"
+          ],
+          [
+            "",
+            3.0,
+            "2026-06-17 03:12:03 PM",
+            "Displacement",
+            0.0,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 60,
+        "file": "data/loose_foundation_no_reversal/vibration/speed060_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 8,
+            "mean": 0.1275,
+            "sd": 0.012817398889233113
+          },
+          "Acceleration": {
+            "n": 8,
+            "mean": 36.5625,
+            "sd": 0.8927285621700948
+          },
+          "Displacement": {
+            "n": 8,
+            "mean": 0.00275,
+            "sd": 0.00046291004988627575
+          }
+        },
+        "example_rows": [
+          [
+            "True",
+            1.0,
+            "2026-06-17 03:14:08 PM",
+            "Velocity",
+            0.11,
+            "mm/s"
+          ],
+          [
+            "True",
+            2.0,
+            "2026-06-17 03:14:08 PM",
+            "Acceleration",
+            36.3,
+            "m/s?"
+          ],
+          [
+            "True",
+            3.0,
+            "2026-06-17 03:14:09 PM",
+            "Displacement",
+            0.002,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 70,
+        "file": "data/loose_foundation_no_reversal/vibration/speed070_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 8,
+            "mean": 0.1725,
+            "sd": 0.012817398889233115
+          },
+          "Acceleration": {
+            "n": 9,
+            "mean": 28.91111111111111,
+            "sd": 2.30241419191055
+          },
+          "Displacement": {
+            "n": 9,
+            "mean": 0.0021111111111111113,
+            "sd": 0.0006009252125773316
+          }
+        },
+        "example_rows": [
+          [
+            "",
+            1.0,
+            "2026-06-17 03:15:11 PM",
+            "Acceleration",
+            26.6,
+            "m/s?"
+          ],
+          [
+            "",
+            2.0,
+            "2026-06-17 03:15:11 PM",
+            "Displacement",
+            0.003,
+            "mm"
+          ],
+          [
+            "",
+            3.0,
+            "2026-06-17 03:15:15 PM",
+            "Velocity",
+            0.19,
+            "mm/s"
+          ]
+        ]
+      },
+      {
+        "speed": 80,
+        "file": "data/loose_foundation_no_reversal/vibration/speed080_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 8,
+            "mean": 0.3075,
+            "sd": 0.01669045920792562
+          },
+          "Acceleration": {
+            "n": 8,
+            "mean": 52.875,
+            "sd": 1.499285544136654
+          },
+          "Displacement": {
+            "n": 8,
+            "mean": 0.0011250000000000001,
+            "sd": 0.0006408699444616558
+          }
+        },
+        "example_rows": [
+          [
+            "",
+            1.0,
+            "2026-06-17 03:17:52 PM",
+            "Velocity",
+            0.31,
+            "mm/s"
+          ],
+          [
+            "",
+            2.0,
+            "2026-06-17 03:17:52 PM",
+            "Acceleration",
+            53.9,
+            "m/s?"
+          ],
+          [
+            "",
+            3.0,
+            "2026-06-17 03:17:52 PM",
+            "Displacement",
+            0.001,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 90,
+        "file": "data/loose_foundation_no_reversal/vibration/speed090_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 8,
+            "mean": 0.08875,
+            "sd": 0.017268882005337976
+          },
+          "Acceleration": {
+            "n": 8,
+            "mean": 33.075,
+            "sd": 3.5632048174962625
+          },
+          "Displacement": {
+            "n": 8,
+            "mean": 0.00075,
+            "sd": 0.0013887301496588273
+          }
+        },
+        "example_rows": [
+          [
+            "",
+            1.0,
+            "2026-06-17 03:19:08 PM",
+            "Velocity",
+            0.08,
+            "mm/s"
+          ],
+          [
+            "",
+            2.0,
+            "2026-06-17 03:19:08 PM",
+            "Acceleration",
+            33.7,
+            "m/s?"
+          ],
+          [
+            "",
+            3.0,
+            "2026-06-17 03:19:09 PM",
+            "Displacement",
+            0.0,
+            "mm"
+          ]
+        ]
+      },
+      {
+        "speed": 100,
+        "file": "data/loose_foundation_no_reversal/vibration/speed100_vibration.xls",
+        "readings": {
+          "Velocity": {
+            "n": 8,
+            "mean": 0.1,
+            "sd": 0.015118578920369092
+          },
+          "Acceleration": {
+            "n": 8,
+            "mean": 42.8625,
+            "sd": 4.977072432665612
+          },
+          "Displacement": {
+            "n": 8,
+            "mean": 0.0012499999999999998,
+            "sd": 0.003150963571444682
+          }
+        },
+        "example_rows": [
+          [
+            "",
+            1.0,
+            "2026-06-17 03:20:15 PM",
+            "Velocity",
+            0.09,
+            "mm/s"
+          ],
+          [
+            "",
+            2.0,
+            "2026-06-17 03:20:16 PM",
+            "Acceleration",
+            44.0,
+            "m/s?"
+          ],
+          [
+            "",
+            3.0,
+            "2026-06-17 03:20:16 PM",
+            "Displacement",
+            0.0,
+            "mm"
+          ]
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "output": "Lab10_revised.docx",
+  "changes": {
+    "speeds": 3,
+    "method": 3,
+    "mean_number": 1,
+    "figures": 2
+  },
+  "legacy_objects_preserved": 19,
+  "untouched_body_elements_verified": 116,
+  "all_original_media_and_embeddings_byte_identical": true,
+  "original_doc_sha256": "c636a5b713cd4d251aa02d0fc1b69f0f06facf82c40120f9863be97377f6fe10"
+}

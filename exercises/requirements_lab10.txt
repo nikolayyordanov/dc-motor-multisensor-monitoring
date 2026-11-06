@@ -1,0 +1,7 @@
+numpy>=1.26,<3
+pandas>=2.2,<4
+scipy>=1.11,<2
+matplotlib>=3.8,<4
+soundfile>=0.12,<1
+av>=12,<18
+xlrd>=2,<3

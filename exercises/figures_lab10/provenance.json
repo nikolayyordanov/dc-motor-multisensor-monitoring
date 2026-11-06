@@ -1,0 +1,77 @@
+{
+  "speeds_percent": [
+    10,
+    20,
+    50,
+    80,
+    100
+  ],
+  "audio_speed_percent": 50,
+  "start_s": 2.0,
+  "duration_s": 4.0,
+  "channel": "first channel, no stereo averaging",
+  "mean_removal": "per selected interval",
+  "amplitude_units": "digital full scale; WAV not calibrated mechanical units",
+  "FFT": "symmetric Hann, window-sum correction, double interior positive bins only",
+  "STFT": "periodic Hann, 2048 samples, 1024 overlap, PSD density; 10log10(PSD / 1FS²/Hz)",
+  "color_scales": "same for both conditions within each modality; 80dB range; not calibrated SPL",
+  "independence": "sequential nonsynchronous sensor recordings; XLS readings not independent repeats",
+  "sources": [
+    {
+      "path": "data/normal_no_reversal/vibration/speed010_vibration.xls",
+      "sha256": "dbee7efed4f423a67ba2bd06300b65e3138e26a523049bb6a379063c18fc7f4d"
+    },
+    {
+      "path": "data/normal_no_reversal/vibration/speed020_vibration.xls",
+      "sha256": "1f95a3a8e045b488fc765b93a3608d84c8e2e52829fd197c438c451d4022b16c"
+    },
+    {
+      "path": "data/normal_no_reversal/vibration/speed050_vibration.xls",
+      "sha256": "da0d05e680eac0425cacb0a60a32bc8227c5e4dc87a0840c51da321d88e7739e"
+    },
+    {
+      "path": "data/normal_no_reversal/vibration/speed080_vibration.xls",
+      "sha256": "e8ae4a2a595e205301d01104091c358d602f69c8c58d0561ac9c968f620e9b5e"
+    },
+    {
+      "path": "data/normal_no_reversal/vibration/speed100_vibration.xls",
+      "sha256": "1c1feeea7287066a551e9dc92e0d1db17b6b1e1508b08b989b95751dc517734d"
+    },
+    {
+      "path": "data/normal_no_reversal/sound_vibrometer/speed050_sound_vibrometer.wav",
+      "sha256": "d513acf75ad187e1030f9d31dbb0206f3149f27225acc7f866b545961cbd2abc"
+    },
+    {
+      "path": "data/normal_no_reversal/sound_phone/speed050_sound_phone.m4a",
+      "sha256": "6f162e1ed0a5bb3393857cfe0f72ff00ea4beba3a88c3ef089b0822358b4c398"
+    },
+    {
+      "path": "data/loose_foundation_no_reversal/vibration/speed010_vibration.xls",
+      "sha256": "011eb3a8cc676f219b41deaaa68845287150178efe36e56bcc388850d23d4792"
+    },
+    {
+      "path": "data/loose_foundation_no_reversal/vibration/speed020_vibration.xls",
+      "sha256": "8461049c7405df0095cf1dfa7240fba98ae18775ab522be0b085168f940e09bb"
+    },
+    {
+      "path": "data/loose_foundation_no_reversal/vibration/speed050_vibration.xls",
+      "sha256": "8f8ca23f07d88bb7e14cb6eba8349a2c5c4491dca1cd5aec5e0bc3aff97d949b"
+    },
+    {
+      "path": "data/loose_foundation_no_reversal/vibration/speed080_vibration.xls",
+      "sha256": "04ec8f464c74f2a82500a0b160fbf10d324fb795c480a42d013a568c2d0b8c37"
+    },
+    {
+      "path": "data/loose_foundation_no_reversal/vibration/speed100_vibration.xls",
+      "sha256": "9084beda31f4e02bd414ca681aeaaad72e158f92d1e3d08a3960cfcf098e84d6"
+    },
+    {
+      "path": "data/loose_foundation_no_reversal/sound_vibrometer/speed050_sound_vibrometer.wav",
+      "sha256": "4a9703fa44f617f3db012bade5cd4104924f14a388395dd031e1fb29581b209d"
+    },
+    {
+      "path": "data/loose_foundation_no_reversal/sound_phone/speed050_sound_phone.m4a",
+      "sha256": "0ab6ee635a6b6f2edc152f4cef86b53468e8940c8a8e869b143c35b05e22144e"
+    }
+  ]
+}
