@@ -1,5 +1,5 @@
 """Build Appendix 2 DOCX and an allowlisted, validated three-exercise ZIP."""
-from datetime import datetime
+import argparse
 import hashlib
 from importlib.metadata import version
 from io import BytesIO
@@ -18,20 +18,13 @@ HERE = Path(__file__).resolve().parent
 NAME = "labs_08_09_10_software_v1.0"
 FILES = {
     "lab08/lab08_ml.py": "lab08_ml.py",
-    "lab08/requirements_lab08_ml.txt": "requirements_lab08_ml.txt",
-    "lab08/README_lab08_ml_bg.md": "README_lab08_ml_bg.md",
     "lab09/plot_lab_current.py": "plot_lab_current.py",
-    "lab09/requirements_figures.txt": "requirements_figures.txt",
-    "lab09/README_figures_bg.md": "README_figures_bg.md",
     "lab10/lab10_vibroacoustics.py": "lab10_vibroacoustics.py",
-    "lab10/requirements_lab10.txt": "requirements_lab10.txt",
-    "lab10/README_lab10_bg.md": "README_lab10_bg.md",
 }
 START = """# Програмни средства за упражнения №08, №09 и №10
 
-Версия 1.0, 06.11.2026. Прочетете docs/Appendix2_software_bg.md или Word
-варианта на приложението за описание и команди. Кодът е в lab08/, lab09/, lab10/.
-Всяка папка може да се използва самостоятелно, със своя файл със зависимости.
+Кодът е в lab08/, lab09/, lab10/. Подробната методика е в Приложение 2
+на лабораторното ръководство, което не е включено в този архив.
 
 Изисква 64-битов Python 3.11+. Разархивирайте пакета извън измерванията.
 Инсталиране за трите упражнения от основната папка:
@@ -50,13 +43,6 @@ python lab10/lab10_vibroacoustics.py "C:/work/DCData_mendeley" --output "../resu
 инсталират отделно, не са включени в ZIP. Данните също не са включени;
 запазете структурата metadata.csv и data/ и спазвайте лиценза на набора.
 
-SHA256SUMS.txt съдържа контролните суми на останалите файлове в пакета.
-TESTED_ENVIRONMENT.json описва средата при проверката; това не означава
-гаранция за еднакви числени стойности при всички версии на библиотеките.
-
-За публикуване вижте docs/PUBLISH_software_bg.md. Публичният адрес на кода
-и DOI/адресът на данните трябва да се попълнят в приложението след избор
-на място за публикуване. Лиценз за собствения код не е избран автоматично.
 """
 
 
@@ -161,19 +147,18 @@ def save_new_version(path, data):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--zip-only", action="store_true", help="Update code ZIP without reading or rebuilding Appendix 2")
+    args = parser.parse_args()
     protected = {p: sha(p.read_bytes()) for p in HERE.glob("*.docx")
                  if not p.name.startswith("Appendix2_software_bg") and not p.name.startswith("~$")}
-    appendix = (HERE / "Appendix2_software_bg.md").read_text(encoding="utf-8")
-    document = make_docx(appendix)
-    docpath = save_new_version(HERE / "Appendix2_software_bg.docx", document)
+    docpath = HERE / "Appendix2_software_bg.docx"
+    if not args.zip_only:
+        appendix = (HERE / "Appendix2_software_bg.md").read_text(encoding="utf-8")
+        document = make_docx(appendix)
+        docpath = save_new_version(docpath, document)
     payload = {target: (HERE / source).read_bytes() for target, source in FILES.items()}
-    # Exclude an internal Word-builder section from the standalone Lab09 README.
-    lab09 = payload["lab09/README_figures_bg.md"].decode("utf-8")
-    payload["lab09/README_figures_bg.md"] = lab09.split("## Отделен редактиран документ")[0].rstrip().encode("utf-8") + b"\n"
     payload["README_START_BG.md"] = START.encode("utf-8")
-    payload["docs/Appendix2_software_bg.md"] = appendix.encode("utf-8")
-    payload["docs/Appendix2_software_bg.docx"] = document
-    payload["docs/PUBLISH_software_bg.md"] = (HERE / "PUBLISH_software_bg.md").read_bytes()
     requirements = []
     for path in ("requirements_lab08_ml.txt", "requirements_figures.txt", "requirements_lab10.txt"):
         for line in (HERE / path).read_text(encoding="utf-8").splitlines():
@@ -183,8 +168,7 @@ def main():
     environment = {"python": sys.version, "checked_on": "2026-11-06",
                    "packages": {name: version(name) for name in
                                 ("numpy", "pandas", "scipy", "matplotlib", "scikit-learn", "soundfile", "av", "xlrd")}}
-    payload["TESTED_ENVIRONMENT.json"] = json.dumps(environment, indent=2).encode("utf-8")
-    payload["SHA256SUMS.txt"] = "".join(f"{sha(data)}  {name}\n" for name, data in sorted(payload.items())).encode("utf-8")
+    assert len(payload) == 5
     with tempfile.TemporaryDirectory() as folder:
         root = Path(folder)
         for name, data in payload.items():
@@ -196,11 +180,12 @@ def main():
             result = subprocess.run([sys.executable, "-I", "-X", "utf8", str(root / script), "--help"],
                                     cwd=root, capture_output=True, check=True)
             assert b"usage:" in result.stdout.lower()
-        check = Document(root / "docs/Appendix2_software_bg.docx")
-        text = "\n".join(p.text for p in check.paragraphs)
-        assert all(label in text for label in ("П2.4.", "П2.5.", "П2.6.", "ПОПЪЛВА СЕ"))
-        assert len(check.tables) == 1
-        assert "**" not in text and "```" not in text
+        if not args.zip_only:
+            check = Document(docpath)
+            text = "\n".join(p.text for p in check.paragraphs)
+            assert all(label in text for label in ("П2.4.", "П2.5.", "П2.6.", "ПОПЪЛВА СЕ"))
+            assert len(check.tables) == 1
+            assert "**" not in text and "```" not in text
     stream = BytesIO()
     with zipfile.ZipFile(stream, "w", zipfile.ZIP_DEFLATED) as archive:
         for name, data in sorted(payload.items()):
@@ -214,9 +199,11 @@ def main():
     validation = {"appendix": docpath.name, "archive": zippath.name,
                   "archive_sha256": sha(zippath.read_bytes()), "archive_bytes": zippath.stat().st_size,
                   "files": sorted(payload), "script_hashes_match_standalone_sources": True,
+                  "tested_environment": environment, "appendix_rebuilt": not args.zip_only,
                   "three_isolated_help_checks_passed": True, "existing_word_documents_unchanged": True,
                   "includes_measurements_or_credentials": False, "uploaded": False,
-                  "download_and_dataset_urls": "explicit placeholders; not yet published"}
+                  "download_url": "https://drive.google.com/file/d/1LlVQMX3yqZYAH65RPqLYxUDout2uI_2R/view?usp=drive_link",
+                  "dataset_url": "explicit placeholder; not provided"}
     (HERE / "software_appendix_validation.json").write_text(json.dumps(validation, indent=2), encoding="utf-8")
     print(f"Created {docpath.name} and {zippath.name}; {len(payload)} allowlisted files; isolated CLI checks passed.")
 

@@ -1,30 +1,35 @@
 {
   "appendix": "Appendix2_software_bg.docx",
   "archive": "labs_08_09_10_software_v1.0.zip",
-  "archive_sha256": "760735482f43400e5681383f314fc8a06f10878c35411e6eb3d64ac3f39dfcb4",
-  "archive_bytes": 76380,
+  "archive_sha256": "8a19e928391747e2fcb9fdde074cbcf8dcf4ab4aa627c435d3a629241e709035",
+  "archive_bytes": 15560,
   "files": [
     "README_START_BG.md",
-    "SHA256SUMS.txt",
-    "TESTED_ENVIRONMENT.json",
-    "docs/Appendix2_software_bg.docx",
-    "docs/Appendix2_software_bg.md",
-    "docs/PUBLISH_software_bg.md",
-    "lab08/README_lab08_ml_bg.md",
     "lab08/lab08_ml.py",
-    "lab08/requirements_lab08_ml.txt",
-    "lab09/README_figures_bg.md",
     "lab09/plot_lab_current.py",
-    "lab09/requirements_figures.txt",
-    "lab10/README_lab10_bg.md",
     "lab10/lab10_vibroacoustics.py",
-    "lab10/requirements_lab10.txt",
     "requirements_all.txt"
   ],
   "script_hashes_match_standalone_sources": true,
+  "tested_environment": {
+    "python": "3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)]",
+    "checked_on": "2026-11-06",
+    "packages": {
+      "numpy": "2.4.6",
+      "pandas": "3.0.3",
+      "scipy": "1.18.0",
+      "matplotlib": "3.11.0",
+      "scikit-learn": "1.9.0",
+      "soundfile": "0.14.0",
+      "av": "17.1.0",
+      "xlrd": "2.0.2"
+    }
+  },
+  "appendix_rebuilt": true,
   "three_isolated_help_checks_passed": true,
   "existing_word_documents_unchanged": true,
   "includes_measurements_or_credentials": false,
   "uploaded": false,
-  "download_and_dataset_urls": "explicit placeholders; not yet published"
+  "download_url": "https://drive.google.com/file/d/1LlVQMX3yqZYAH65RPqLYxUDout2uI_2R/view?usp=drive_link",
+  "dataset_url": "explicit placeholder; not provided"
 }
