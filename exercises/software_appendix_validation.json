@@ -1,19 +1,19 @@
 {
-  "appendix": "Appendix2_software_bg.docx",
-  "archive": "labs_08_09_10_software_v1.0.zip",
-  "archive_sha256": "8a19e928391747e2fcb9fdde074cbcf8dcf4ab4aa627c435d3a629241e709035",
-  "archive_bytes": 15560,
+  "appendix": "17. \u041f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435 1.doc",
+  "archive": "labs_8_9_10_software_v1.0.zip",
+  "archive_sha256": "22efffc019acea6cd4a76075403f4da2b41629f1183f8a9b4c9bb2bf9222a6ce",
+  "archive_bytes": 15529,
   "files": [
     "README_START_BG.md",
-    "lab08/lab08_ml.py",
-    "lab09/plot_lab_current.py",
     "lab10/lab10_vibroacoustics.py",
+    "lab8/lab8_ml.py",
+    "lab9/plot_lab_current.py",
     "requirements_all.txt"
   ],
   "script_hashes_match_standalone_sources": true,
   "tested_environment": {
     "python": "3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)]",
-    "checked_on": "2026-11-06",
+    "checked_on": "2026-11-11",
     "packages": {
       "numpy": "2.4.6",
       "pandas": "3.0.3",
@@ -25,7 +25,25 @@
       "xlrd": "2.0.2"
     }
   },
-  "appendix_rebuilt": true,
+  "appendix_rebuilt": false,
+  "archive_to_source": {
+    "lab8/lab8_ml.py": "lab08_ml.py",
+    "lab9/plot_lab_current.py": "plot_lab_current.py",
+    "lab10/lab10_vibroacoustics.py": "lab10_vibroacoustics.py"
+  },
+  "protected_document_hashes": {
+    "17. \u041f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435 1.doc": "9d924304e93f248d1b1b7e6ad494bafa2ae14320f686611e5e25162931d67594",
+    "Lab10.doc": "c636a5b713cd4d251aa02d0fc1b69f0f06facf82c40120f9863be97377f6fe10",
+    "Appendix2_software_bg.docx": "42f9b5da6438efab7e728ac4d6f14920a8ef82c7f20eb96b8726dc3b6200b608",
+    "Lab08_figures_and_tables.docx": "e51983d421224f1e3964f711cbe6b99cd116ef08157fe24e84df95b95880a677",
+    "Lab08_figures_only.docx": "cae9dff04f7b088069129d6a2c61b2213ebd160289fc4093f6f71e8cc422abdb",
+    "Lab08_revised.docx": "8fdfcdd6079c2ae1ba700ee97ba19a024616d1e36611c890db0b522f1f124722",
+    "Lab08_working.docx": "583643a41296605a6d68f22388a1d1b73cb85ea6128108cb0b8ab2a7609c4bac",
+    "Lab09_revised.docx": "627600dce05ecf09ecdb3414d72a20533b10707e811dd4471bf5c0ce63a6d3f1",
+    "Lab10_revised.docx": "bf611142089a3626861068ac660434ae46a731bb4a5edfee6c622867e2852d19",
+    "\u041b\u0430\u043108_figures_added.docx": "57f836388c47e8982f1391422d67c61050b74b9c3b3e50e844a7ef0f2b253886",
+    "\u041b\u0430\u043108_figures_added_track_changes.docx": "5956fd3cce1ed1788dda090a8253ec2c5473ad69b79eaa1de7425736473c1430"
+  },
   "three_isolated_help_checks_passed": true,
   "existing_word_documents_unchanged": true,
   "includes_measurements_or_credentials": false,

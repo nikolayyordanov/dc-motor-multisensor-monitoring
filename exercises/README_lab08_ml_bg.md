@@ -46,7 +46,7 @@ python lab08_ml.py "C:/path/to/DCData_mendeley" --output "results_lab08"
   комбинираните признаци;
 - **table8_3_feature_comparison.csv** — Macro-F1 за времеви, честотни и
   комбинирани признаци;
-- **tables_lab08.md** — двете таблици с удобни за четене закръглени стойности;
+- **tables_lab8.md** — двете таблици с удобни за четене закръглени стойности;
 - **classification_metrics.csv** — незакръглени показатели по записи и прозорци;
 - **features_predictions.csv** — прозоречни признаци, дял и предсказвания за
   комбинираните признаци;

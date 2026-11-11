@@ -1,7 +1,7 @@
 """Standalone Lab08 WAV experiment. No Word or project-specific modules needed.
 
-Usage: python lab08_ml.py /path/to/DCData_mendeley --output results_lab08
-Python >=3.11. See README_lab08_ml_bg.md for methods and limitations.
+Package usage: python lab8/lab8_ml.py /path/to/DCData_mendeley --output results8
+Python >=3.11. See Appendix 1 for methods and limitations.
 """
 from __future__ import annotations
 
@@ -213,7 +213,7 @@ def save_tables(metrics, output):
     lines += ["", "## Таблица 8.3", "", "| Признаци | kNN | SVM | Random Forest |", "|---|---:|---:|---:|"]
     for name, row in table3.iterrows():
         lines.append(f"| {name} | " + " | ".join(f"{v:.3f}" for v in row) + " |")
-    (output / "tables_lab08.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (output / "tables_lab8.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def main(argv=None):
