@@ -1,0 +1,43 @@
+ 
+111
+ 
+ЛИТЕРАТУРА 
+ 
+1. Михов М., Системи за електрозадвижване, Тeхнически универси-
+тет – София, 2023, ISBN 978-954-438-922-2. 
+2. Михов М., Системи за управление на електрозадвижванията, Тех-
+нически университет - София, 2009, ISBN 978-954-438-628-3. 
+3. Boldea I., S. Nasar, Electric drives, CRC Press, Boca Raton, 2016, 
+ISBN 9781315368573. 
+4. Mikhov M., Mathematical Modeling and Dynamic Simulation of a Class 
+of Drive Systems with Permanent Magnet Synchronous Motors, Ap-
+plied and Computational Mechanics, Vol. 3, No. 2, pp. 331-338, Plzen, 
+Czech Republic, 2009, ISSN 1802-680X. 
+5. Mikhov M., Modeling and Investigation of a Step Motor Drive with Mic-
+rostepping Control, Proceedings of the International Conference Au-
+tomatics and Informatics, pp. 135-138, Sofia, 2005, ISBN 954-9641-
+43-0.  
+6. Krishnan R., Switched reluctance motor drives: modeling, simulation, 
+analysis, design, and applications, Boca Raton, Florida, 2001, ISBN  
+9780849308383. 
+7. Mikhov M., An Approach to Control of Multi-Motor Electromechanical 
+Systems. Journal of Proceedings in Manufacturing Systems, Vol. 5, 
+No. 2, pp. 67-70, Romania, 2010, ISSN 2067-9238. 
+8.  Михов М., Синтез и анализ на системи за позиционно електрозад-
+вижване с повишени показатели, Инфовижън, 2019, ISBN 978-619-
+7442-36-6.  
+9. Yordanov N., M. Zhilevski, M. Mikhov, Fault Detection in Electric Motors 
+using Acoustic Signals and Image Classification, Proceedings of the 
+24 International Conference on Applied and Theoretical Electricity, pp. 
+1-6, Craiova, Romania, 2024, ISBN 978-8-3503-8810-7. 
+10. Yordanov N., M. Zhilevski, M. Mikhov, M. Ertarğın, A Hybrid Machine 
+Learning Architecture for Acoustic Fault Diagnosis in Electric Motors: 
+Offline and Online Modes via Mobile Phone, Proceedings of the 11th 
+International Conference on Engineering and Emerging Technologies, 
+pp. 1-6, Kuala Lumpur, Malaysia, IEEE Xplore, 2025, ISBN 979-8-
+3315-6755-2. 
+11. Yordanov N., M. Zhilevski, M. Mikhov, O. Krol, V. Sokolov, Vibro-
+Acoustic Analysis of Loose Foundation  Effects in Electric Motors at 
+Varying Rotational Speeds, International Journal of Mechatronics and 
+Applied Mechanics, Issue 22, Vol. 2, pp. 125-131, 2025, ISSN: 2559-
+6497.  
