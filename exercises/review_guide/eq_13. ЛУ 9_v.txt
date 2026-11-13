@@ -1,0 +1,47 @@
+ObjectPool/_1854251536 ÷}}
+ObjectPool/_1854254203 ω}}
+ObjectPool/_1854264669 e[T15.1:a}(t)=k[T15.1:e}ω(t)}}
+ObjectPool/_1854264673 M[T15.1:e}(t)=k[T15.1:m}i[T15.1:a}(t)}}
+ObjectPool/_1854264687 ω}}
+ObjectPool/_1854264702 k[T15.1:m}}}
+ObjectPool/_1854264717 k[T15.1:e}}}
+ObjectPool/_1854264742 J[T15.1:∑}[T14.0:dω(t)}dt}}=M[T15.1:e}(t)−M[T15.1:c}(t)}}
+ObjectPool/_1854264746 J[T15.1:∑}}}
+ObjectPool/_1854264751 M[T15.1:c}}}
+ObjectPool/_1854264759 f[T15.1:p}=pf[T15.1:мp}}}
+ObjectPool/_1854264786 p=6}}
+ObjectPool/_1854264801 f[T15.1:мp}}}
+ObjectPool/_1854264816 f[T15.1:k}=mZ[T15.1:k}f[T15.1:r,}}}
+ObjectPool/_1854264819 m=1,2,3,...,}}
+ObjectPool/_1854264824 Z[T15.1:k}}}
+ObjectPool/_1854264827 rad/s}}
+ObjectPool/_1854264832 ω}}
+ObjectPool/_1854264839 f[T15.1:p}}}
+ObjectPool/_1854264843 f[T15.1:r}}}
+ObjectPool/_1854264846 f[T15.1:k}}}
+ObjectPool/_1854264851 x[n]}}
+ObjectPool/_1854264855 w[n]}}
+ObjectPool/_1854264861 A[T15.1:k}=[T14.0:2}∑[T15.1:n}w[n]}}|∑[T15.2:n=0}N−1}}w[n]x[n]e[T15.0:−j2πkn/N}}|}}
+ObjectPool/_1854264865 Δf=[T14.0:f[T15.1:s}}N}}=[T14.0:1}T}}}}
+ObjectPool/_1854264869 f[T15.1:s}}}
+ObjectPool/_1854264876 I[T15.1:rms}=[T13.0:[T14.0:1}N}}[T29.2:[T15.2:N=0}N−1}}(x[n]−[T17.0:x}})}∑}[T15.0:2}}}}}
+ObjectPool/_1854264879 I[T15.1:pp}=maxx[n]−minx[n]}}
+ObjectPool/_1854264883 CF=[T14.0:max|x[n]−[T17.0:x}}|}I[T15.1:rms}}}}}
+ObjectPool/_1854264939 [T17.0:x}}}}
+ObjectPool/_1854264959 CF=[T13.0:2}≈1.41}}
+ObjectPool/_1854265170 X[T15.1:еф}}}
+ObjectPool/_1854265199 X[T15.1:рр}}}
+ObjectPool/_1854265292 rad/s}}
+ObjectPool/_1854275444 u[T15.1:a}(t)=R[T15.1:a}i[T15.1:a}(t)+L[T15.1:a}[T14.0:di[T15.1:a}(t)}dt}}+e[T15.1:a}(t)}}
+ObjectPool/_1854275455 u[T15.1:a}}}
+ObjectPool/_1854275471 f[T15.1:мp}}}
+ObjectPool/_1854275490 f[T15.1:r}=[T14.0:ωπ}2}}}}
+ObjectPool/_1854275787 U[T15.1:nom}=55 V}}
+ObjectPool/_1854275796 I[T15.1:nom}=12.5 A}}
+ObjectPool/_1854275804 ω[T15.1:nom}=209.44 rad/s}}
+ObjectPool/_1854275886 62.83 rad/s}}
+ObjectPool/_1854275962 M[T15.1:nom}=2.7 Nm}}
+ObjectPool/_1854276057 i[T15.1:a}}}
+ObjectPool/_1854276107 R[T15.1:a}}}
+ObjectPool/_1854276133 L[T15.1:a}}}
+ObjectPool/_1854276150 e[T15.1:a}}}

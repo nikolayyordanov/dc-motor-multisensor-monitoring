@@ -1,0 +1,13 @@
+ObjectPool/_1854251536 ≈}}
+Traceback (most recent call last):
+  File "C:\Users\wb568126.WB\Downloads\DataFromTU\exercises\dump_equation_native.py", line 83, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\wb568126.WB\Downloads\DataFromTU\exercises\dump_equation_native.py", line 79, in main
+    print("/".join(entry[:-1]), mtef_chars(data)[:160])
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WBG\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u03c9' in position 0: character maps to <undefined>
+ObjectPool/_1854254203 

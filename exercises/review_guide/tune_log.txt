@@ -1,0 +1,7 @@
+12. ЛУ 8_v.docx omath1 base=14.0: []
+12. ЛУ 8_v.docx omath2 base=14.0: []
+12. ЛУ 8_v.docx omath3 base=14.0: ['frac arg -> 19.5']
+13. ЛУ 9_v.docx omath1 base=14.0: ['frac arg -> 19.5']
+13. ЛУ 9_v.docx omath2 base=14.0: []
+13. ЛУ 9_v.docx omath3 base=14.0: ['frac arg -> 19.5']
+14. ЛУ 10_v.docx omath1 base=14.0: ['frac arg -> 19.5']

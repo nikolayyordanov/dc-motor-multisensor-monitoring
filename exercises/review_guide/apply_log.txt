@@ -1,0 +1,37 @@
+## 12. ЛУ 8_v.docx
+  compat=12 revisions_before=0
+  equation: field type 35 #1 -> x[n]
+  equation: field type 58 #3 -> N=T_w f_s=22050
+  equation: field type 58 #1 -> E_(b,m)=(∑_(k∈B_b)▒〖|X_m [k]|^2〗)/(∑_(k=0)^(N-1)▒〖|X_m [k]|^2〗)
+  replace 'е нормализираният спектрален показател за b-тата' -> 'е относителната мощност в b-тата'
+  append sentence after band definition
+  replace 'скрипта lab8.py в архив lab08_ml.zip' -> 'скрипта lab8/lab8_ml.py от архива labs_8_9_10_software_v1.0.zip'
+  replace 'се използва групова кръстосана проверка (GroupKFold)' -> 'се използва стратифицирана групова кръстосана проверка с пет дяла (StratifiedGroupKFold)'
+  append record-level sentence
+  replace 'Фиг. 10.4. Матрици на объркванията' -> 'Фиг. 8.4. Матрици на объркванията'
+  saved; revisions=16 omaths=3
+## 13. ЛУ 9_v.doc
+  saved as 13. ЛУ 9_v.docx (compat 11)
+  compat=11 revisions_before=0
+  replace 'параметрите на котвената верига..' -> 'параметрите на котвената верига.'
+  equation: field type 58 #1 -> f_r=ω/(2π)
+  equation: field type 35 #2 -> N
+  replace 'е броя на отчета, умножен с прозорецът на Хан' -> 'отчета, умножен с прозореца на Хан'
+  replace ', а ' -> ', съдържащ '
+  equation: field type 58 #1 -> I_rms=√(1/N ∑_(n=0)^(N-1)▒〖(x[n]-x̅)〗^2 )
+  replace 'plot_lab_current.py и указанията README_figures_bg.md, споделяни към Приложение 2' -> 'lab9/plot_lab_current.py от архива към Приложение 1 (указания в README_START_BG.md)'
+  saved; revisions=13 omaths=3
+## 14. ЛУ 10_v.doc
+  saved as 14. ЛУ 10_v.docx (compat 11)
+  compat=11 revisions_before=0
+  equation: field type 58 #1 -> f_r=ω/(2π)
+  replace 'Скриптът lab10_vibroacoustics.py генерира' -> 'Скриптът lab10/lab10_vibroacoustics.py (Приложение 1) генерира'
+  replace 'указанията са в README_lab10_bg.md' -> 'указанията са в README_START_BG.md.'
+  delete stray '.' paragraph
+  replace '1 Кои са основните източници на вибрации' -> '1. Кои са основните източници на вибрации'
+  saved; revisions=8 omaths=1
+## 17. Приложение 1 (1).doc
+  compat=11 revisions_before=0
+  replace '[ПОПЪЛВА СЕ С АДРЕСА НА ПУБЛИКУВАНИЯ НАБОР]' -> 'https://doi.org/10.17632/g28trvywnx.1, версия 1'
+  delete 'Адресът на набора от измервания ще се попълни допълнително. '
+  saved; revisions=3 omaths=0

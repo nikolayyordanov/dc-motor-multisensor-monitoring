@@ -1,0 +1,39 @@
+word/embeddings/oleObject1.bin x[T15.1:m}[n]=x[mS+n]}}
+word/embeddings/oleObject10.bin K[T15.1:m}}}
+word/embeddings/oleObject11.bin x[T15.1:RMS,m}=[T13.0:[T14.0:1}N}}[T29.1:|x[T15.1:m}[n]|[T15.0:2}}}n=0}N−1}∑}}}}
+word/embeddings/oleObject12.bin x[T15.1:pp,m}=[T43.1:0≤n<N}max{x[T15.1:m}[n]}}}-[T43.1:0≤n<N}min{x[T15.1:m}[n]}}}}}
+word/embeddings/oleObject13.bin CF[T44.1:m}=[T14.0:[T43.1:0≤n<N}max}}|x[T15.1:m}[n]|}x[T15.1:RMS,m}}}}}
+word/embeddings/oleObject14.bin K[T15.1:m}=[T14.0:[T14.0:1}N}}[T29.1:(x[T15.1:m}[n]−[T17.0:x}}[T15.1:m})[T15.0:4}}}n=0}N−1}∑}}[T3.0:[T14.0:1}N}}[T29.1:(x[T15.1:m}[n]−[T17.0:x}}[T15.1:m})[T15.0
+word/embeddings/oleObject15.bin [T17.0:x}}[T15.1:m}=[T14.0:1}N}}[T29.1:x[T15.1:m}[n]}n=0}N−1}∑}}}
+word/embeddings/oleObject16.bin X[T15.1:m}[k]=[T29.1:x[T15.1:m}[n]}n=0}N−1}∑} e[T15.0:−j2πkn/N}}}}
+word/embeddings/oleObject17.bin k=0,1,...N−1}}
+word/embeddings/oleObject18.bin X[T15.1:m}[k]}}
+word/embeddings/oleObject19.bin Е[T15.1:b,m}[k]=[T14.0:1}N[T15.0:2}}}}[T29.0:|x[T15.1:m}[k]}k∈B[T15.1:b}}∑}|[T15.0:2}}}}
+word/embeddings/oleObject2.bin n=0,1,...N−1}}
+word/embeddings/oleObject20.bin Е[T15.1:b,m}}}
+word/embeddings/oleObject21.bin B[T15.1:b}}}
+word/embeddings/oleObject22.bin z[T15.1:i,j}=[T14.0:f[T15.1:i,j}−μ[T15.1:j}}σ[T15.1:j}}}}}
+word/embeddings/oleObject23.bin f[T15.1:i,j}}}
+word/embeddings/oleObject24.bin μ[T15.1:j}}}
+word/embeddings/oleObject25.bin σ[T15.1:j}}}
+word/embeddings/oleObject26.bin μ[T15.1:j}}}
+word/embeddings/oleObject27.bin σ[T15.1:j}}}
+word/embeddings/oleObject28.bin d(z[T15.1:a},z[T15.1:b})=[T13.0:[T29.1:(}j=1}p}∑}z[T15.1:a,j}−z[T15.1:b,j})[T15.0:2}}}}}
+word/embeddings/oleObject29.bin z[T15.1:a}}}
+word/embeddings/oleObject3.bin x[T15.1:m}[n]}}
+word/embeddings/oleObject30.bin z[T15.1:b}}}
+word/embeddings/oleObject31.bin K(z[T15.1:a},z[T15.1:b})=exp(−γ||z[T15.1:a}−z[T15.1:b}||[T15.0:2}})}}
+word/embeddings/oleObject32.bin γ}}
+word/embeddings/oleObject33.bin Accuracy=[T14.0:N[T15.1:correct}}N[T15.1:total}}}.100%}}
+word/embeddings/oleObject34.bin N[T15.1:correct}}}
+word/embeddings/oleObject35.bin N[T15.1:total}}}
+word/embeddings/oleObject36.bin F1[T15.1:c}=2[T14.0:P[T15.1:c}R[T15.1:c}}P[T15.1:c}+R[T15.1:c}}}}}
+word/embeddings/oleObject37.bin P[T15.1:c}}}
+word/embeddings/oleObject38.bin R[T15.1:c}}}
+word/embeddings/oleObject39.bin F1[T15.1:macro}=[T14.0:1}C}}[T29.1:F1[T15.1:c}}c=1}C}∑}}}
+word/embeddings/oleObject4.bin T[T15.1:w}=0.5 s}}
+word/embeddings/oleObject5.bin f[T15.1:s}=44,1  kHz}}
+word/embeddings/oleObject6.bin N=T[T15.1:v}f[T15.1:s}=22050}}
+word/embeddings/oleObject7.bin x[T15.1:RMS}}}
+word/embeddings/oleObject8.bin x[T15.1:pp,m}}}
+word/embeddings/oleObject9.bin CF[T44.1:m}}}

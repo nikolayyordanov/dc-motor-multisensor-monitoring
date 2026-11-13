@@ -1,0 +1,62 @@
+######## 12. ЛУ 8_v.docx format=12
+ P24 shapes=2 fields=1
+   type=3 start=3467 w=26.0 h=17.5 ClassType=ERR ProgID=ERR IconLabel=ERR field=QUOTE  bold=0 color=-16777216
+   type=3 start=3470 w=26.0 h=17.5 ClassType=ERR ProgID=ERR IconLabel=ERR field=QUOTE  bold=0 color=-16777216
+   FIELD type=35 code=QUOTE 
+ P26 shapes=2 fields=2
+   type=1 start=3624 w=114.0 h=19.0 ClassType=Equation.3 ProgID= IconLabel= field=EMBED Equation.3 bold=0 color=-16777216
+   type=1 start=3649 w=90.0 h=17.0 ClassType=Equation.3 ProgID= IconLabel= field=EMBED Equation.3 bold=0 color=-16777216
+   FIELD type=58 code=EMBED Equation.3
+   FIELD type=58 code=EMBED Equation.3
+ P28 shapes=2 fields=2
+   type=1 start=3681 w=39.0 h=19.0 ClassType=Equation.3 ProgID= IconLabel= field=EMBED Equation.3 bold=0 color=-16777216
+   type=3 start=3774 w=241.0 h=17.5 ClassType=ERR ProgID=ERR IconLabel=ERR field=QUOTE  bold=0 color=-16777216
+   FIELD type=58 code=EMBED Equation.3
+   FIELD type=35 code=QUOTE 
+ P29 shapes=3 fields=3
+   type=1 start=3877 w=65.0 h=19.0 ClassType=Equation.3 ProgID= IconLabel= field=EMBED Equation.3 bold=0 color=-16777216
+   type=1 start=3927 w=84.0 h=19.0 ClassType=Equation.3 ProgID= IconLabel= field=EMBED Equation.3 bold=0 color=-16777216
+   type=1 start=3971 w=109.0 h=19.0 ClassType=Equation.3 ProgID= IconLabel= field=EMBED Equation.3 bold=0 color=-16777216
+   FIELD type=58 code=EMBED Equation.3
+   FIELD type=58 code=EMBED Equation.3
+   FIELD type=58 code=EMBED Equation.3
+ P52 shapes=1 fields=1
+   type=1 start=6094 w=163.0 h=42.0 ClassType=Equation.3 ProgID= IconLabel= field=EMBED Equation.3 bold=0 color=-16777216
+   FIELD type=58 code=EMBED Equation.3
+ P54 shapes=2 fields=2
+   type=1 start=6127 w=32.0 h=21.0 ClassType=Equation.3 ProgID= IconLabel= field=EMBED Equation.3 bold=0 color=-16777216
+   type=1 start=6233 w=19.0 h=19.0 ClassType=Equation.3 ProgID= IconLabel= field=EMBED Equation.3 bold=0 color=-16777216
+   FIELD type=58 code=EMBED Equation.3
+   FIELD type=58 code=EMBED Equation.3
+######## 13. ЛУ 9_v.doc format=0
+ P45 shapes=2 fields=2
+   type=1 start=4604 w=51.0 h=35.0 ClassType=Equation.3 ProgID= IconLabel= field=EMBED Equation.3 bold=0 color=-16777216
+   type=3 start=4636 w=47.0 h=23.0 ClassType=ERR ProgID=ERR IconLabel=ERR field=QUOTE  bold=0 color=-16777216
+   FIELD type=58 code=EMBED Equation.3
+   FIELD type=35 code=QUOTE 
+ P50 shapes=6 fields=5
+   type=1 start=5201 w=28.0 h=18.0 ClassType=Equation.3 ProgID= IconLabel= field=EMBED Equation.3 bold=0 color=-16777216
+   type=3 start=5232 w=26.0 h=17.5 ClassType=ERR ProgID=ERR IconLabel=ERR field=QUOTE  bold=0 color=-16777216
+   type=3 start=5248 w=10.5 h=17.0 ClassType=ERR ProgID=ERR IconLabel=ERR field=QUOTE  bold=0 color=-16777216
+   type=3 start=5251 w=10.5 h=17.0 ClassType=ERR ProgID=ERR IconLabel=ERR field=QUOTE  bold=0 color=-16777216
+   type=1 start=5300 w=30.0 h=18.0 ClassType=Equation.3 ProgID= IconLabel= field=EMBED Equation.3 bold=0 color=-16777216
+   type=3 start=5331 w=29.0 h=17.5 ClassType=ERR ProgID=ERR IconLabel=ERR field=QUOTE  bold=0 color=-16777216
+   FIELD type=58 code=EMBED Equation.3
+   FIELD type=35 code=QUOTE 
+   FIELD type=35 code=QUOTE 
+   FIELD type=58 code=EMBED Equation.3
+   FIELD type=35 code=QUOTE 
+ P52 shapes=2 fields=2
+   type=1 start=5457 w=250.0 h=39.0 ClassType=Equation.3 ProgID= IconLabel= field=EMBED Equation.3 bold=0 color=-16777216
+   type=3 start=5489 w=231.5 h=26.5 ClassType=ERR ProgID=ERR IconLabel=ERR field=QUOTE  bold=0 color=-16777216
+   FIELD type=58 code=EMBED Equation.3
+   FIELD type=35 code=QUOTE 
+ P59 shapes=1 fields=1
+   type=1 start=5808 w=173.0 h=40.0 ClassType=Equation.3 ProgID= IconLabel= field=EMBED Equation.3 bold=0 color=-16777216
+   FIELD type=58 code=EMBED Equation.3
+######## 14. ЛУ 10_v.doc format=0
+ P21 shapes=2 fields=2
+   type=1 start=2167 w=51.0 h=35.0 ClassType=Equation.3 ProgID= IconLabel= field=EMBED Equation.3 bold=0 color=-16777216
+   type=3 start=2199 w=94.0 h=23.0 ClassType=ERR ProgID=ERR IconLabel=ERR field=QUOTE  bold=0 color=-16777216
+   FIELD type=58 code=EMBED Equation.3
+   FIELD type=35 code=QUOTE 
