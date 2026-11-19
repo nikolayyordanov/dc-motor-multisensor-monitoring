@@ -1,0 +1,10 @@
+05. ЛУ 1.docx: ProgIDs={'PBrush': 10, 'Equation.3': 58, 'Equation.2': 11} | embeddings=79 | raster_media=13
+06. ЛУ 2.docx: ProgIDs={'PBrush': 10, 'Equation.2': 3, 'Equation.3': 26} | embeddings=39 | raster_media=14
+07. ЛУ 3.docx: ProgIDs={'Equation.3': 47, 'PBrush': 13, 'Equation.2': 29} | embeddings=89 | raster_media=15
+08. ЛУ 4.docx: ProgIDs={'Equation.3': 66, 'Equation.2': 5, 'PBrush': 16} | embeddings=87 | raster_media=17
+09. ЛУ 5.docx: ProgIDs={'Equation.3': 46, 'Equation.2': 11, 'PBrush': 3} | embeddings=60 | raster_media=9
+10. ЛУ 6.docx: ProgIDs={'Equation.3': 73, 'PBrush': 2, 'Equation.2': 6} | embeddings=81 | raster_media=8
+11. ЛУ 7.docx: ProgIDs={'Equation.3': 57, 'PBrush': 6, 'Equation.2': 16} | embeddings=79 | raster_media=13
+12. ЛУ 8.docx: ProgIDs={'Equation.3': 39} | embeddings=39 | raster_media=7
+13. ЛУ 9.docx: ProgIDs={'Equation.3': 47} | embeddings=47 | raster_media=38
+14. ЛУ 10.docx: ProgIDs={'Equation.3': 23} | embeddings=23 | raster_media=8

@@ -1,0 +1,107 @@
+=== 05. ЛУ 1.docx: PBrush=10 | Normal_figures=3 ===
+  [PBrush oleObject1.bin] preview=426x151px | native=BMP 426x151px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [PBrush oleObject3.bin] preview=301x256px | native=BMP 301x256px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [PBrush oleObject10.bin] preview=573x434px | native=BMP 573x434px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo'])
+  [PBrush oleObject33.bin] preview=618x343px | native=BMP 618x343px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo'])
+  [PBrush oleObject50.bin] preview=621x247px | native=BMP 621x247px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo'])
+  ... (+5 more PBrush)
+  [Normal] image60.png:332x198px
+  [Normal] image63.png:566x195px
+  [Normal] image78.png:365x427px
+=== 06. ЛУ 2.docx: PBrush=10 | Normal_figures=4 ===
+  [PBrush oleObject1.bin] preview=435x166px | native=BMP 435x166px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo'])
+  [PBrush oleObject2.bin] preview=435x162px | native=BMP 435x162px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10Native', '\x03ObjInfo'])
+  [PBrush oleObject6.bin] preview=436x192px | native=BMP 436x192px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo'])
+  [PBrush oleObject9.bin] preview=276x277px | native=BMP 276x277px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [PBrush oleObject10.bin] preview=304x273px | native=BMP 304x273px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  ... (+5 more PBrush)
+  [Normal] image22.png:447x186px
+  [Normal] image23.png:459x230px
+  [Normal] image24.png:649x298px
+  [Normal] image28.png:480x234px
+=== 07. ЛУ 3.docx: PBrush=13 | Normal_figures=2 ===
+  [PBrush oleObject9.bin] preview=337x255px | native=BMP 337x255px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [PBrush oleObject10.bin] preview=304x296px | native=BMP 304x296px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [PBrush oleObject13.bin] preview=271x210px | native=BMP 271x210px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo'])
+  [PBrush oleObject14.bin] preview=271x217px | native=BMP 271x217px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo'])
+  [PBrush oleObject30.bin] preview=338x200px | native=BMP 338x200px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo'])
+  ... (+8 more PBrush)
+  [Normal] image47.png:569x306px
+  [Normal] image49.png:468x115px
+=== 08. ЛУ 4.docx: PBrush=16 | Normal_figures=1 ===
+  [PBrush oleObject10.bin] preview=304x301px | native=BMP 304x301px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [PBrush oleObject11.bin] preview=270x240px | native=BMP 270x240px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [PBrush oleObject18.bin] preview=415x239px | native=BMP 415x239px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo'])
+  [PBrush oleObject23.bin] preview=399x203px | native=BMP 399x203px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [PBrush oleObject28.bin] preview=145x146px | native=BMP 145x146px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  ... (+11 more PBrush)
+  [Normal] image58.png:513x377px
+=== 09. ЛУ 5.docx: PBrush=3 | Normal_figures=6 ===
+  [PBrush oleObject17.bin] preview=322x823px | native=BMP 322x823px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [PBrush oleObject29.bin] preview=226x424px | native=BMP 226x424px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [PBrush oleObject30.bin] preview=226x423px | native=BMP 226x423px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [Normal] image1.png:526x250px
+  [Normal] image48.png:675x368px
+  [Normal] image56.png:320x375px
+  [Normal] image57.png:311x375px
+  [Normal] image65.png:320x378px
+  [Normal] image66.png:312x378px
+=== 10. ЛУ 6.docx: PBrush=2 | Normal_figures=6 ===
+  [PBrush oleObject22.bin] preview=357x655px | native=BMP 357x655px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [PBrush oleObject81.bin] preview=671x493px | native=BMP 671x493px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo'])
+  [Normal] image18.png:526x500px
+  [Normal] image55.png:674x487px
+  [Normal] image63.png:320x374px
+  [Normal] image64.png:320x384px
+  [Normal] image72.png:320x377px
+  [Normal] image73.png:320x418px
+=== 11. ЛУ 7.docx: PBrush=6 | Normal_figures=7 ===
+  [PBrush oleObject11.bin] preview=180x181px | native=BMP 180x181px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [PBrush oleObject75.bin] preview=349x535px | native=BMP 349x535px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [PBrush oleObject76.bin] preview=410x336px | native=BMP 410x336px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [PBrush oleObject77.bin] preview=410x336px | native=BMP 410x336px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  [PBrush oleObject78.bin] preview=410x336px | native=BMP 410x336px 24bpp (streams=['\x01CompObj', '\x01Ole', '\x01Ole10ItemName', '\x01Ole10Native', '\x03ObjInfo', '\x03PRINT'])
+  ... (+1 more PBrush)
+  [Normal] image9.png:180x181px
+  [Normal] image10.png:180x181px
+  [Normal] image11.png:180x181px
+  [Normal] image14.png:221x200px
+  [Normal] image15.png:254x200px
+  [Normal] image49.png:684x425px
+  [Normal] image76.png:349x535px
+=== 12. ЛУ 8.docx: PBrush=0 | Normal_figures=6 ===
+  [Normal] image5.png:482x35px
+  [Normal] image14.png:519x70px
+  [Normal] image41.png:1364x822px
+  [Normal] image42.png:1614x880px
+  [Normal] image43.png:4735x2936px
+  [Normal] image44.png:7690x2400px
+=== 13. ЛУ 9.docx: PBrush=0 | Normal_figures=17 ===
+  [Normal] image2.png:456x51px
+  [Normal] image17.png:323x51px
+  [Normal] image24.png:136x38px
+  [Normal] image31.png:94x46px
+  [Normal] image34.png:326x34px
+  [Normal] image51.png:463x53px
+  [Normal] image53.png:142x50px
+  [Normal] image58.png:682x70px
+  [Normal] image60.png:193x56px
+  [Normal] image64.png:3353x1145px
+  [Normal] image65.jpeg:1165x702px
+  [Normal] image68.jpeg:554x416px
+  [Normal] image69.png:411x563px
+  [Normal] image70.jpeg:635x477px
+  [Normal] image71.jpeg:474x632px
+  [Normal] image83.png:6136x6137px
+  [Normal] image85.png:6139x3739px
+=== 14. ЛУ 10.docx: PBrush=0 | Normal_figures=10 ===
+  [Normal] image2.png:188x46px
+  [Normal] image2.png:188x46px
+  [Normal] image2.png:188x46px
+  [Normal] image17.jpeg:626x637px
+  [Normal] image20.png:281x259px
+  [Normal] image21.png:269x259px
+  [Normal] image22.png:298x259px
+  [Normal] image23.png:433x291px
+  [Normal] image24.png:440x291px
+  [Normal] image26.png:7053x4135px
