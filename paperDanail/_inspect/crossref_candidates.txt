@@ -1,0 +1,31 @@
+
+=== mcsa_dl ===
+  [2025] R. Diversi, A. Lenzi, N. Speciale, M. Barbieri | "An Autoregressive-Based Motor Current Signature Analysis Approach for Fault Diagnosis of Electric Motor-Driven Mechanisms" | Sensors | vol=25, no=4, pp=1130 | https://doi.org/10.3390/s25041130
+  [2022] S. Halder, S. Bhat, D. Zychma, P. Sowa | "Broken Rotor Bar Fault Diagnosis Techniques Based on Motor Current Signature Analysis for Induction Motor—A Review" | Energies | vol=15, no=22, pp=8569 | https://doi.org/10.3390/en15228569
+  [2025] E. Moradi | "Intelligent Fault Diagnosis in Oil-Immersed Transformers: A Deep Learning 1D-CNN Framework with Gray Wolf Optimizer (GWO)" | Arabian Journal for Science and Engineering | vol=51, no=8, pp=11159-11178 | https://doi.org/10.1007/s13369-025-10942-z
+  [2025] X. Lu, G. Han, L. Wang, Z. Zhang, X. Liang | "Fault Diagnosis of Electric Submersible Pump System Based on Motor Current Signal Analysis and Deep Learning Method" | SPE Journal | vol=30, no=05, pp=2238-2255 | https://doi.org/10.2118/225426-pa
+  [2025] Y. J. Goh, K. M. Kim | "Clarke-Park Transformation-Based Input Configuration for CNN Diagnosis of Stator Faults in Three Phase Induction Motors Using Motor Current Signature Analysis" | IEEE Access | vol=13, no=, pp=150505-150516 | https://doi.org/10.1109/access.2025.3602975
+  [2025]  | "A Hybrid Deep Learning Approach for Thyroid Disease Diagnosis Using 1D CNN And Transformers" | International Journal of Intelligent Engineering and Systems | vol=18, no=4, pp=763-782 | https://doi.org/10.22266/ijies2025.0531.49
+
+=== dc_motor_dl ===
+  [2024] P. R | "An effective approach for electric motor fault diagnosis using deep learning" | PRZEGLĄD ELEKTROTECHNICZNY | vol=1, no=6, pp=255-258 | https://doi.org/10.15199/48.2024.06.53
+  [2025] X. Lu, G. Han, L. Wang, Z. Zhang, X. Liang | "Fault Diagnosis of Electric Submersible Pump System Based on Motor Current Signal Analysis and Deep Learning Method" | SPE Journal | vol=30, no=05, pp=2238-2255 | https://doi.org/10.2118/225426-pa
+  [2025] Y. Xie, Q. Chen, J. Shi | "Intelligent motor fault diagnosis based on deep learning" | International Journal of Information and Communication Technology | vol=26, no=9, pp=23-42 | https://doi.org/10.1504/ijict.2025.145829
+  [2022] P. Zhu, Y. Liu, B. Fan | "Fault Diagnosis of the Rotating Rectifier Diode Over a TSSM Based on the Armature Current Calculation and Similarity Measurement" | IEEE Access | vol=10, no=, pp=48031-48038 | https://doi.org/10.1109/access.2022.3172338
+  [2025] V. Sarı, V. Göreke, S. Kockanat | "A Novel Fault Diagnosis Method for a DC Electric Motor Using a Deep Learning Classifier Optimized by an Artificial Bee Colony Algorithm" | Iranian Journal of Science and Technology, Transactions of Electrical Engineering | vol=49, no=4, pp=1673-1692 | https://doi.org/10.1007/s40998-025-00874-7
+  [2025] S. Yousefnejad, F. Bagheri, R. Alshawi, M. T. Hoque, E. Amiri | "Deep Learning Based Fault Detection Method in DC Motor Start" | IEEE Transactions on Energy Conversion | vol=40, no=2, pp=1678-1681 | https://doi.org/10.1109/tec.2025.3560559
+
+=== var_speed_gen ===
+  [2025] Y. Liao, S. Zhou, Y. Liu, et al. | "Episodic Training and Feature Orthogonality-Driven Domain Generalization for Rotating Machinery Fault Diagnosis Under Unseen Working Conditions" | Machines | vol=13, no=7, pp=563 | https://doi.org/10.3390/machines13070563
+  [2025] Y. Xiao, H. Shao, S. Yan, J. Wang, Y. Peng, B. Liu | "Domain generalization for rotating machinery fault diagnosis: A survey" | Advanced Engineering Informatics | vol=64, no=, pp=103063 | https://doi.org/10.1016/j.aei.2024.103063
+  [2023] S. Hong, J. Lee | "Multi-Label Fault Diagnosis of Rotary Machine via Domain Adversarial Neural Network-Based Domain Generalization Targeting High Range  Rotating Speed" | PHM Society Asia-Pacific Conference | vol=4, no=1, pp= | https://doi.org/10.36001/phmap.2023.v4i1.3651
+  [2024] C. Guo, Z. Zhao, J. Ren, S. Wang, Y. Liu, X. Chen | "Causal explaining guided domain generalization for rotating machinery intelligent fault diagnosis" | Expert Systems with Applications | vol=243, no=, pp=122806 | https://doi.org/10.1016/j.eswa.2023.122806
+  [2024] G. Zhang, X. Kong, Q. Wang, J. Du, J. Wang, H. Ma | "Single domain generalization method based on anti-causal learning for rotating machinery fault diagnosis" | Reliability Engineering &amp; System Safety | vol=250, no=, pp=110252 | https://doi.org/10.1016/j.ress.2024.110252
+  [2024]  | "Domain Generalization D3QN for Machinery Fault Diagnosis Across Different Working Conditions" | Journal of Mechanical Engineering | vol=60, no=22, pp=165 | https://doi.org/10.3901/jme.2024.22.165
+
+=== inception_fault ===
+  [2025] J. D. Wu, W. J. Luo, K. C. Yao | "Electric Motor Vibration Signal Classification Using Wigner–Ville Distribution for Fault Diagnosis" | Sensors | vol=25, no=4, pp=1196 | https://doi.org/10.3390/s25041196
+  [2022] Z. Zhang, C. Liu, R. Wang, et al. | "Mechanical Fault Diagnosis of a Disconnector Operating Mechanism Based on Vibration and the Motor Current" | Energies | vol=15, no=14, pp=5194 | https://doi.org/10.3390/en15145194
+  [2025] R. Diversi, A. Lenzi, N. Speciale, M. Barbieri | "An Autoregressive-Based Motor Current Signature Analysis Approach for Fault Diagnosis of Electric Motor-Driven Mechanisms" | Sensors | vol=25, no=4, pp=1130 | https://doi.org/10.3390/s25041130
+  [2022] S. Halder, S. Bhat, D. Zychma, P. Sowa | "Broken Rotor Bar Fault Diagnosis Techniques Based on Motor Current Signature Analysis for Induction Motor—A Review" | Energies | vol=15, no=22, pp=8569 | https://doi.org/10.3390/en15228569
+  [2024] R. Jigyasu, V. Shrivastava, S. Singh | "Deep optimal feature extraction and selection-based motor fault diagnosis using vibration" | Electrical Engineering | vol=106, no=5, pp=6339-6358 | https://doi.org/10.1007/s00202-024-02356-1

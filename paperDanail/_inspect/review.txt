@@ -1,0 +1,52 @@
+=== 69.docx ===
+Paragraphs: 51 | Tables: 3 | Sections: 1
+  Section 1: 21.00x29.70 cm, margins L=2.54 R=2.54 T=2.54 B=2.54
+  Media: 0 | Embeddings: 0 | OMaths: 0 | OLEs: set()
+
+--- PARAGRAPHS ---
+P000 (Heading 1): PAPER ASSESSMENT FORM
+P002 (Normal): Paper Title: RESEARCH ON THE ROBUSTNESS OF DEEP LEARNING-BASED DC MOTOR CONDITION CLASSIFICATION USING ARMATURE CURRENT SIGNALS
+P005 (Normal): Paper ID*: 69
+P006 (Normal): *(as submitted by the review team, for instance:12)
+P009 (Normal): Paper Evaluation Report
+P011 (Normal): Evaluation Result
+P013 (Normal): TOTAL SCORE (Sum of scores obtained for criteria 1-6):  17
+P015 (Normal): Criteria
+P017 (Normal): *Please note that scores must be between 1 and 5.
+P018 (Normal): Interpretation:
+P019 (Normal): 1 – Poor	The criterion is inadequately addressed, or there are several shortcomings.
+P020 (Normal): 2 – Fair	The paper addresses the criterion, but there are significant shortcomings.
+P021 (Normal): 3 – Good	The paper addresses the criterion well, but some shortcomings are still present.
+P022 (Normal): 4 – Very good	The paper addresses the criterion very well, but a small number of shortcomings are present.
+P023 (Normal): 5 – Excellent	The paper successfully addresses all relevant aspects of the criterion.
+P025 (Normal): ■ For a paper to be accepted, a minimum score of 18 is required. ■
+P026 (Normal): Justification of the Scores
+P028 (Normal): Criterion 1: Title, Abstract and Keywords
+P029 (Normal): The title reflects the content of the paper. The abstract is informative, but at 197 words it is slightly below the required range and should be expanded to 200–300 words. It should follow the structure: relevance of the problem, purpose, research methods, main results and practical value of the research; the practical value is currently missing. Abbreviations (CNN, LOSO) should be avoided in the abstract. The keywords “DC motor”, “Armature current” and “Deep learning” repeat words and phrases from the title; they should be replaced with terms that are not used in the title (5–7 keywords in total).
+P031 (Normal): Criterion 2: Overall Quality of Content, Research Approach
+P032 (Normal): The research approach is consistent with the aims of the work. However, the “Materials and Methods” section starts directly with experimental material (power spectral density of the measured signal); the theoretical formulation of the problem is missing. Before the experimental part, the authors should formally state the classification problem and present the mathematical description of the methods used: the signal model, band-pass filtering and Hilbert envelope, windowing (the window-count expression), recording-level aggregation of window probabilities, and the accuracy and macro-F1 metrics, as numbered equations. Since the work is experimental in nature, the design and planning of the experiment must be described: the test bench (motor and converter ratings, the current-measuring sensor and its conversion coefficient, a schematic or photograph of the set-up), the nominal and “non-optimal” regulator gain values, how the foundation looseness was imposed, and the justification of the number of speed settings, recordings, protocols and random seeds. The description of the band-pass filter and Hilbert envelope is repeated three times (Section 2.1 twice and Section 2.2) and should be merged. The fourth class is defined in Section 2.1 as “non-optimal current-regulator”, while the caption of the confusion-matrix figure (second “Figure 2”) uses “SG+CG – combined non-optimal speed- and current-regulator gains”; the class definition should be made consistent. The dataset is cited as [6], which is the InceptionTime paper; the correct source of the dataset (or a data-availability statement) should be given. Standard deviations over seeds should also be reported in Tables 1, 3 and 4, and it should be stated whether population or sample standard deviation is used.
+P034 (Normal): Criterion 3: Significance, Applicability, Scientific Impact
+P035 (Normal): The study addresses a practically relevant task: condition monitoring of DC servo drives using an electrical signal that is already available in the drive, without additional vibration or acoustic sensors. The distinction demonstrated between robustness to unseen speed settings (LOSO accuracy above 98%) and robustness to a changed acquisition protocol (61–76%) is a useful and well-supported result for designing evaluation procedures in condition monitoring. However, the practical usefulness of the research is not explicitly formulated in the Introduction and should be stated there. The applicability is limited to one no-load laboratory motor; this limitation is correctly acknowledged by the authors.
+P037 (Normal): Criterion 4: Originality/Innovation and Complexity
+P038 (Normal): The paper presents a careful comparative evaluation of existing architectures (a one-dimensional CNN and InceptionTime) under several generalisation protocols, complemented by a direction-specific analysis of reversal transients. However, the Introduction does not explicitly formulate the aim of the research, its scientific novelty, practical usefulness and research objectives. The paragraph listing “the objectives” and “the contribution” should be rewritten into a clearly stated aim, a list of research tasks and a separate statement of scientific novelty, explaining what is new compared with previous studies of current-based diagnosis and domain shift in rotating machinery.
+P040 (Normal): Criterion 5: Presentation and Quality of Writing
+P041 (Normal): The manuscript is generally well written and readable. Several issues of structure and presentation should be corrected. The Discussion does not contain the mandatory comparison with the results of other authors: the obtained results should be compared with published studies on the chosen topic (what is common, what differs, which other aspects were considered), naming the authors and the essence of their work, and including works by scientists from different countries; at present the Discussion contains no references at all. The Conclusions should be reworked: they should specifically reflect the results obtained (with key quantitative values), correspond to the aim and title of the paper and the stated objectives, and not repeat the abstract; a separate paragraph describing the prospects for further research should be added. Variables in the text and equations (T, L, S, Nw, p(w, c), etc.) should be typeset in italics. Figure numbering is duplicated: “Fig. 1” and “Fig. 2” (PSD and envelopes) and later “Figure 1” and “Figure 2” (reversal waveform and confusion matrices); figures should be numbered consecutively, with a single caption style, and the in-text references in Sections 2.4, 3.2 and 3.4 corrected accordingly. Macro-F1 values should be presented in the same format as accuracy.
+P043 (Normal): Criterion 6: Coverage of Literature
+P044 (Normal): The reference list contains only 13 items and should be extended to at least 20. The review in the Introduction is not presented in an analytical format: previous works and their content are mentioned, but without critical analysis of their results, limitations and unresolved issues that would lead to the aim of the present study. The list includes sources that are up to 25 years old ([1], 2001) and several older than five years ([2], [5], [6], [7], [12], [13]). For an analytical review of recent developments, sources from the last 3–5 years should be used; older works are acceptable only as exceptions, for a retrospective overview.
+P046 (Normal): Recommendation to Editors
+
+--- TABLES ---
+Table 0 (7x7):
+  R00: Nr. Crt. | Criterion*   / Scores | Poor | Fair | Good | Very good | Excellent
+  R01:  | Title, abstract and keywords (do they reflect/represent the content of the paper?)
+  R02:  | Overall quality of content and research approach
+  R03:  | Significance, applicability, scientific impact
+  R04:  | Originality/innovation and complexity
+  R05:  | Presentation and quality of writing (English)
+  R06:  | Proper coverage of literature | 
+Table 1 (2x5):
+  R00: Verdict | Reject | Resubmission after majour revision | Resubmission after minor revision | Accept
+  R01: N/A
+Table 2 (2x1):
+  R00: Further Comments of the Reviewer (Mandatory):
+  R01: The manuscript addresses a relevant problem and presents a methodologically careful experimental study with recording-level partitioning and several generalisation protocols. The overall impression is positive and the material is good, but the paper requires a substantial revision before it can be accepted for publishing. The main required revisions are: / 1) expand the abstract to more than 200 words following the following generally recommended structure: relevance, purpose, methods, results, practical value, and remove all uncommon abbreviations; / 2) do not use words and phrases from the title in the keywords; / 3) rewrite the literature review in the Introduction in an analytical format, with critical analysis of previous works; / 4) explicitly formulate the aim of the research in the Introduction; / 5) explicitly formulate the scientific novelty, practical usefulness and research objectives; / 6) add a theoretical formulation of the problem at the beginning of “Materials and Methods”, before the experimental part, with numbered equations; / 7) typeset all variables in italics; / 8) describe the experimental set-up and the design and planning of the experiment, given the experimental character of the whole work; / 9) add to the Discussion the mandatory comparison with the achievements of other authors; / 10) rework the Conclusions and add a paragraph on further research; / 11) extend the reference list to at least 20 items, using mainly sources from the last 5 years; older sources only as exceptions for a retrospective overview. / In addition, the authors should correct the dataset citation ([6]), the inconsistent definition of the fourth class, the duplicated figure numbering, and report standard deviations in Tables 1, 3 and 4. / The paper can be re-submitted for consideration of inclusion in IJOMAM only after a deep structural revision.
